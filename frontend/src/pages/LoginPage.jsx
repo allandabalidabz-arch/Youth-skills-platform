@@ -1,0 +1,94 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
+import { GraduationCap, Eye, EyeOff, LogIn } from 'lucide-react';
+
+export default function LoginPage() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [showPw, setShowPw] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const user = await login(form.email, form.password);
+      toast.success(`Welcome back, ${user.name}!`);
+      navigate('/dashboard');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fillDemo = (email) => setForm({ email, password: 'password123' });
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <Link to="/" className="inline-flex items-center gap-2">
+            <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center">
+              <GraduationCap className="w-7 h-7 text-white" />
+            </div>
+            <span className="text-2xl font-bold text-slate-800">YouthSkills</span>
+          </Link>
+          <p className="text-slate-500 mt-2">Sign in to continue learning</p>
+        </div>
+
+        <div className="card shadow-lg">
+          <h1 className="text-xl font-bold text-slate-800 mb-6">Welcome Back</h1>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
+              <input type="email" className="input" placeholder="you@example.com" value={form.email}
+                onChange={e => setForm(p => ({ ...p, email: e.target.value }))} required />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+              <div className="relative">
+                <input type={showPw ? 'text' : 'password'} className="input pr-12" placeholder="••••••••" value={form.password}
+                  onChange={e => setForm(p => ({ ...p, password: e.target.value }))} required />
+                <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                  {showPw ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+            <button type="submit" disabled={loading} className="btn-primary w-full py-3">
+              {loading ? <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" /> : <><LogIn className="w-5 h-5" /> Sign In</>}
+            </button>
+          </form>
+
+          <p className="text-center text-sm text-slate-500 mt-4">
+            Don't have an account? <Link to="/register" className="text-blue-600 font-semibold hover:underline">Create one free</Link>
+          </p>
+
+          {/* Demo accounts */}
+          <div className="mt-6 pt-5 border-t border-slate-100">
+            <p className="text-xs text-slate-400 text-center mb-3 font-medium">DEMO ACCOUNTS (click to fill)</p>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { label: '🎓 Youth', email: 'amara@example.com' },
+                { label: '🏢 Employer', email: 'hr@techafrica.com' },
+                { label: '⚙️ Admin', email: 'admin@youthskills.com' },
+                { label: '🎓 Youth 2', email: 'kwame@example.com' },
+              ].map(d => (
+                <button key={d.email} onClick={() => fillDemo(d.email)}
+                  className="text-xs bg-slate-50 hover:bg-slate-100 text-slate-600 px-3 py-2 rounded-lg transition-colors text-left">
+                  <span className="font-medium">{d.label}</span><br />
+                  <span className="text-slate-400">{d.email}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
