@@ -50,7 +50,21 @@ app.use((err, req, res, next) => {
 });
 
 async function start() {
-  await getDb(); // Initialize DB
+  const db = await getDb(); // Initialize DB
+
+  // Auto-seed if database is empty (first deploy)
+  const userCount = await db.get('SELECT COUNT(*) as count FROM users');
+  if (userCount.count === 0) {
+    console.log('🌱 Empty database detected, running auto-seed...');
+    try {
+      const { seedData } = require('./utils/seed');
+      await seedData(db);
+      console.log('✅ Auto-seed complete');
+    } catch (e) {
+      console.error('Seed error:', e.message);
+    }
+  }
+
   app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
     console.log(`📚 Youth Digital Skills Platform API`);
