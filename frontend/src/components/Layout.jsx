@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
+import Logo from './Logo';
 import {
   LayoutDashboard, BookOpen, Briefcase, Award, User, LogOut,
   Bell, Menu, Building2
