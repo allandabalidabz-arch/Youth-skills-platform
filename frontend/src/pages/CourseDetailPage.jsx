@@ -4,8 +4,8 @@ import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import {
-  BookOpen, Clock, CheckCircle2, Circle, ChevronDown, ChevronUp,
-  Play, Award, Users, ArrowLeft, Lock
+  BookOpen, Clock, CheckCircle2, ChevronDown, ChevronUp,
+  Play, Award, Users, ArrowLeft, Lock, FileText, Send, RotateCcw
 } from 'lucide-react';
 
 export default function CourseDetailPage() {
@@ -22,6 +22,9 @@ export default function CourseDetailPage() {
   const [quizAnswers, setQuizAnswers] = useState({});
   const [quizResult, setQuizResult] = useState(null);
   const [completing, setCompleting] = useState(false);
+  const [assignments, setAssignments] = useState({});
+  const [submissionText, setSubmissionText] = useState({});
+  const [submittingAssignment, setSubmittingAssignment] = useState(false);
 
   const fetchCourse = async () => {
     try {
@@ -29,6 +32,15 @@ export default function CourseDetailPage() {
       setCourse(res.data.course);
       setModules(res.data.modules);
       setEnrollment(res.data.enrollment);
+      // Fetch assignments for all modules
+      const assignmentData = {};
+      for (const mod of res.data.modules) {
+        const aRes = await api.get(`/assignments/module/${mod.id}`);
+        if (aRes.data.assignment) {
+          assignmentData[mod.id] = { assignment: aRes.data.assignment, submission: aRes.data.submission };
+        }
+      }
+      setAssignments(assignmentData);
     } catch {
       toast.error('Course not found');
       navigate('/courses');
@@ -49,6 +61,23 @@ export default function CourseDetailPage() {
       toast.error(err.response?.data?.message || 'Enrollment failed');
     } finally {
       setEnrolling(false);
+    }
+  };
+
+  const handleSubmitAssignment = async (assignmentId, moduleId) => {
+    const text = submissionText[moduleId] || '';
+    if (text.trim().length < 20) {
+      return toast.error('Submission must be at least 20 characters.');
+    }
+    setSubmittingAssignment(true);
+    try {
+      await api.post(`/assignments/${assignmentId}/submit`, { submission_text: text });
+      toast.success('Assignment submitted successfully!');
+      fetchCourse();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Submission failed');
+    } finally {
+      setSubmittingAssignment(false);
     }
   };
 
@@ -194,6 +223,66 @@ export default function CourseDetailPage() {
                           )}
                           {isCompleted && <span className="flex items-center gap-2 text-green-600 font-medium text-sm"><CheckCircle2 className="w-4 h-4" /> Completed</span>}
                         </div>
+
+                        {/* Assignment Section */}
+                        {assignments[module.id] && (
+                          <div className="mt-6 border-t border-slate-100 pt-5">
+                            <div className="flex items-center gap-2 mb-3">
+                              <FileText className="w-5 h-5 text-blue-600" />
+                              <h4 className="font-bold text-slate-800">Assignment</h4>
+                              {assignments[module.id].submission && (
+                                <span className={`badge text-xs ${assignments[module.id].submission.status === 'graded' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                  {assignments[module.id].submission.status === 'graded'
+                                    ? `Graded: ${assignments[module.id].submission.grade}/100`
+                                    : 'Submitted'}
+                                </span>
+                              )}
+                            </div>
+                            <div className="bg-blue-50 rounded-xl p-4 mb-4">
+                              <h5 className="font-semibold text-slate-800 mb-1">{assignments[module.id].assignment.title}</h5>
+                              <p className="text-sm text-slate-600 mb-3">{assignments[module.id].assignment.description}</p>
+                              <div className="bg-white rounded-lg p-3 border border-blue-100">
+                                <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Instructions:</p>
+                                <pre className="text-sm text-slate-700 whitespace-pre-wrap font-sans leading-relaxed">{assignments[module.id].assignment.instructions}</pre>
+                              </div>
+                            </div>
+
+                            {/* Feedback if graded */}
+                            {assignments[module.id].submission?.status === 'graded' && assignments[module.id].submission?.feedback && (
+                              <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">
+                                <p className="text-sm font-semibold text-green-800 mb-1">Instructor Feedback:</p>
+                                <p className="text-sm text-green-700">{assignments[module.id].submission.feedback}</p>
+                              </div>
+                            )}
+
+                            {/* Previous submission */}
+                            {assignments[module.id].submission && (
+                              <div className="bg-slate-50 rounded-xl p-4 mb-4">
+                                <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Your Submission:</p>
+                                <p className="text-sm text-slate-700 whitespace-pre-wrap line-clamp-4">{assignments[module.id].submission.submission_text}</p>
+                              </div>
+                            )}
+
+                            {/* Submission form */}
+                            {enrollment && user?.role === 'youth' && assignments[module.id].submission?.status !== 'graded' && (
+                              <div>
+                                <textarea
+                                  className="input h-36 resize-none text-sm"
+                                  placeholder="Write your assignment submission here... (minimum 20 characters)"
+                                  value={submissionText[module.id] || assignments[module.id].submission?.submission_text || ''}
+                                  onChange={e => setSubmissionText(p => ({ ...p, [module.id]: e.target.value }))}
+                                />
+                                <button
+                                  onClick={() => handleSubmitAssignment(assignments[module.id].assignment.id, module.id)}
+                                  disabled={submittingAssignment}
+                                  className="btn-primary text-sm py-2 mt-2"
+                                >
+                                  {assignments[module.id].submission ? <><RotateCcw className="w-4 h-4" /> Resubmit</> : <><Send className="w-4 h-4" /> Submit Assignment</>}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     ) : (
                       /* Quiz */

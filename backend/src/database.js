@@ -146,6 +146,37 @@ async function initializeDatabase(db) {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
+
+    CREATE TABLE IF NOT EXISTS assignments (
+      id TEXT PRIMARY KEY,
+      module_id TEXT NOT NULL,
+      course_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      instructions TEXT NOT NULL,
+      due_days INTEGER DEFAULT 7,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE CASCADE,
+      FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS assignment_submissions (
+      id TEXT PRIMARY KEY,
+      assignment_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      module_id TEXT NOT NULL,
+      course_id TEXT NOT NULL,
+      submission_text TEXT NOT NULL,
+      file_url TEXT,
+      status TEXT DEFAULT 'submitted',
+      grade INTEGER,
+      feedback TEXT,
+      submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      graded_at DATETIME,
+      UNIQUE(user_id, assignment_id),
+      FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
   `);
   console.log('✅ Database initialized');
 }
