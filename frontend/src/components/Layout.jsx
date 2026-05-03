@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 import {
   LayoutDashboard, BookOpen, Briefcase, Award, User, LogOut,
-  Bell, Menu, X, ChevronDown, GraduationCap, Building2
+  Bell, Menu, Building2
 } from 'lucide-react';
 
 export default function Layout() {
@@ -75,14 +75,9 @@ export default function Layout() {
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-100 transform transition-transform duration-300 lg:relative lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-100">
-            <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <span className="font-bold text-slate-800 text-lg">YouthSkills</span>
-              <p className="text-xs text-slate-400 capitalize">{user?.role} Portal</p>
-            </div>
+          {/* Logo */}
+          <div className="flex items-center px-4 py-4 border-b border-slate-100">
+            <Logo size="sm" />
           </div>
 
           {/* Nav */}

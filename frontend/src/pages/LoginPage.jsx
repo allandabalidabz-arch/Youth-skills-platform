@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { GraduationCap, Eye, EyeOff, LogIn } from 'lucide-react';
+import { Eye, EyeOff, LogIn } from 'lucide-react';
+import Logo from '../components/Logo';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -33,12 +34,9 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center">
-              <GraduationCap className="w-7 h-7 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-slate-800">YouthSkills</span>
+            <Logo size="lg" />
           </Link>
-          <p className="text-slate-500 mt-2">Sign in to continue learning</p>
+          <p className="text-slate-500 mt-2">Sign in to your YouthSkills Program account</p>
         </div>
 
         <div className="card shadow-lg">

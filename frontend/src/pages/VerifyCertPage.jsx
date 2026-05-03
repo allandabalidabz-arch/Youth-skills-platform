@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../utils/api';
-import { Award, CheckCircle2, XCircle, GraduationCap } from 'lucide-react';
+import { Award, CheckCircle2, XCircle } from 'lucide-react';
+import Logo from '../components/Logo';
 
 export default function VerifyCertPage() {
   const { certNumber } = useParams();
@@ -16,11 +17,8 @@ export default function VerifyCertPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-              <GraduationCap className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl font-bold text-slate-800">YouthSkills</span>
+          <Link to="/" className="inline-flex justify-center">
+            <Logo size="lg" />
           </Link>
           <p className="text-slate-500 mt-2 text-sm">Certificate Verification</p>
         </div>

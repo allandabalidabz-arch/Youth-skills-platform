@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { GraduationCap, Eye, EyeOff, UserPlus } from 'lucide-react';
+import { Eye, EyeOff, UserPlus } from 'lucide-react';
+import Logo from '../components/Logo';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -39,12 +40,9 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center">
-              <GraduationCap className="w-7 h-7 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-slate-800">YouthSkills</span>
+            <Logo size="lg" />
           </Link>
-          <p className="text-slate-500 mt-2">Create your free account</p>
+          <p className="text-slate-500 mt-2">Join the YouthSkills Program for free</p>
         </div>
 
         <div className="card shadow-lg">
