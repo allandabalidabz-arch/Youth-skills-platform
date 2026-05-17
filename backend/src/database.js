@@ -177,6 +177,22 @@ async function initializeDatabase(db) {
       FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
+
+    CREATE TABLE IF NOT EXISTS certificate_payments (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      certificate_id TEXT NOT NULL,
+      amount INTEGER DEFAULT 2000,
+      currency TEXT DEFAULT 'ZMW',
+      proof_text TEXT,
+      status TEXT DEFAULT 'pending',
+      submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      approved_at DATETIME,
+      approved_by TEXT,
+      UNIQUE(user_id, certificate_id),
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY (certificate_id) REFERENCES certificates(id) ON DELETE CASCADE
+    );
   `);
   console.log('✅ Database initialized');
 }

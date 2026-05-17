@@ -5,6 +5,7 @@ const path = require('path');
 const { getDb } = require('./database');
 
 const assignmentRoutes = require('./routes/assignments');
+const paymentRoutes = require('./routes/payments');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const courseRoutes = require('./routes/courses');
@@ -35,6 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.use('/api/assignments', assignmentRoutes);
+app.use('/api/payments', paymentRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);

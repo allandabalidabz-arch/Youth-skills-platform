@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import { Award, ExternalLink, Share2, Download, Loader2 } from 'lucide-react';
+import { Award, ExternalLink, Share2, Download, Loader2, Lock, CheckCircle2, Clock, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { jsPDF } from 'jspdf';
 
@@ -181,15 +181,57 @@ export default function CertificatesPage() {
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(null);
+  const [payments, setPayments] = useState({});
+  const [proofText, setProofText] = useState({});
+  const [submitting, setSubmitting] = useState(null);
+  const [showPayForm, setShowPayForm] = useState({});
 
   useEffect(() => {
-    api.get('/certificates/my').then(res => setCertificates(res.data.certificates)).finally(() => setLoading(false));
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const res = await api.get('/certificates/my');
+      setCertificates(res.data.certificates);
+      // Fetch payment status for each certificate
+      const paymentData = {};
+      for (const cert of res.data.certificates) {
+        const pRes = await api.get(`/payments/certificate/${cert.id}/status`);
+        paymentData[cert.id] = pRes.data.payment;
+      }
+      setPayments(paymentData);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isUnlocked = (certId) => payments[certId]?.status === 'approved';
+  const isPending = (certId) => payments[certId]?.status === 'pending';
+  const isRejected = (certId) => payments[certId]?.status === 'rejected';
 
   const copyVerifyLink = (certNumber) => {
     const url = `${window.location.origin}/verify/${certNumber}`;
     navigator.clipboard.writeText(url);
     toast.success('Verification link copied!');
+  };
+
+  const handleSubmitProof = async (certId) => {
+    const proof = proofText[certId] || '';
+    if (proof.trim().length < 5) return toast.error('Please enter your payment reference number.');
+    setSubmitting(certId);
+    try {
+      await api.post(`/payments/certificate/${certId}/submit`, { proof_text: proof });
+      toast.success('Payment proof submitted! Awaiting admin approval.');
+      setShowPayForm(p => ({ ...p, [certId]: false }));
+      fetchData();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Submission failed.');
+    } finally {
+      setSubmitting(null);
+    }
   };
 
   const handleDownload = async (cert) => {
@@ -273,12 +315,24 @@ export default function CertificatesPage() {
                 </div>
                 <p className="text-xs text-slate-400 mb-3">Instructor: {cert.instructor_name}</p>
                 <div className="grid grid-cols-3 gap-2">
-                  <button onClick={() => handleDownload(cert)} disabled={downloading === cert.id}
-                    className="btn-primary text-sm py-2">
-                    {downloading === cert.id
-                      ? <Loader2 className="w-4 h-4 animate-spin" />
-                      : <><Download className="w-4 h-4" /> PDF</>}
-                  </button>
+                  {/* Payment gate for PDF download */}
+                  {isUnlocked(cert.id) ? (
+                    <button onClick={() => handleDownload(cert)} disabled={downloading === cert.id}
+                      className="btn-primary text-sm py-2">
+                      {downloading === cert.id
+                        ? <Loader2 className="w-4 h-4 animate-spin" />
+                        : <><Download className="w-4 h-4" /> PDF</>}
+                    </button>
+                  ) : isPending(cert.id) ? (
+                    <div className="flex items-center gap-1 text-yellow-600 text-xs font-medium col-span-1 bg-yellow-50 rounded-xl px-2 py-2 justify-center">
+                      <Clock className="w-4 h-4" /> Pending
+                    </div>
+                  ) : (
+                    <button onClick={() => setShowPayForm(p => ({ ...p, [cert.id]: !p[cert.id] }))}
+                      className="btn-secondary text-sm py-2 col-span-1">
+                      <Lock className="w-4 h-4" /> 2,000 ZMW
+                    </button>
+                  )}
                   <button onClick={() => copyVerifyLink(cert.certificate_number)} className="btn-secondary text-sm py-2">
                     <Share2 className="w-4 h-4" /> Share
                   </button>
@@ -286,6 +340,37 @@ export default function CertificatesPage() {
                     <ExternalLink className="w-4 h-4" /> Verify
                   </a>
                 </div>
+
+                {/* Payment form */}
+                {showPayForm[cert.id] && !isUnlocked(cert.id) && (
+                  <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
+                    <p className="text-sm font-bold text-slate-800 mb-1">💳 Pay 2,000 ZMW to Download</p>
+                    <p className="text-xs text-slate-500 mb-3">
+                      Send 2,000 ZMW via mobile money or bank transfer, then enter your payment reference number below.
+                    </p>
+                    {isRejected(cert.id) && (
+                      <p className="text-xs text-red-600 bg-red-50 rounded-lg p-2 mb-3">
+                        ❌ Previous proof was rejected. Please resubmit with a valid reference.
+                      </p>
+                    )}
+                    <input
+                      type="text"
+                      className="input text-sm mb-2"
+                      placeholder="Enter payment reference number..."
+                      value={proofText[cert.id] || ''}
+                      onChange={e => setProofText(p => ({ ...p, [cert.id]: e.target.value }))}
+                    />
+                    <button
+                      onClick={() => handleSubmitProof(cert.id)}
+                      disabled={submitting === cert.id}
+                      className="btn-primary text-sm py-2 w-full"
+                    >
+                      {submitting === cert.id
+                        ? <Loader2 className="w-4 h-4 animate-spin" />
+                        : <><Send className="w-4 h-4" /> Submit Payment Proof</>}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))}
