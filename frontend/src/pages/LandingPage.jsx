@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Code2, Monitor, Globe, Award, ArrowRight, Star } from 'lucide-react';
+import { Code2, Monitor, Globe, Award, ArrowRight } from 'lucide-react';
 import Logo, { LogoIcon } from '../components/Logo';
 
 const features = [
@@ -15,12 +15,6 @@ const stats = [
   { value: '9', label: 'Course Modules' },
   { value: '3', label: 'Courses Available' },
   { value: '95%', label: 'Satisfaction Rate' },
-];
-
-const testimonials = [
-  { name: 'Allan D.', role: 'Web Developer', text: 'YouthSkills Program gave me the foundation I needed. Within 3 months of completing the web dev course, I landed my first job!', rating: 5 },
-  { name: 'Ellen M.', role: 'Entrepreneur', text: 'The entrepreneurship course helped me launch my startup. The matching feature connected me with my first investor.', rating: 5 },
-  { name: 'Fatima A.', role: 'Graphic Designer', text: 'I went from zero design knowledge to getting paid freelance projects. The certificate really helped my portfolio.', rating: 5 },
 ];
 
 export default function LandingPage() {
@@ -116,33 +110,6 @@ export default function LandingPage() {
                 <div className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold mx-auto mb-4">{item.step}</div>
                 <h3 className="font-bold text-slate-800 mb-2 text-lg">{item.title}</h3>
                 <p className="text-slate-500 text-sm">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-slate-800 mb-3">Success Stories</h2>
-            <p className="text-slate-500">Real youth, real results</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map(t => (
-              <div key={t.name} className="card">
-                <div className="flex gap-1 mb-3">
-                  {[...Array(t.rating)].map((_, i) => <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />)}
-                </div>
-                <p className="text-slate-600 text-sm mb-4 italic">"{t.text}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold">{t.name.charAt(0)}</div>
-                  <div>
-                    <p className="font-semibold text-slate-800 text-sm">{t.name}</p>
-                    <p className="text-slate-400 text-xs">{t.role}</p>
-                  </div>
-                </div>
               </div>
             ))}
           </div>
