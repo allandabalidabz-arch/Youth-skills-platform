@@ -6,19 +6,13 @@ import toast from 'react-hot-toast';
 import { jsPDF } from 'jspdf';
 
 const categoryColors = {
+  system: 'from-indigo-500 to-indigo-700',
   coding: 'from-blue-500 to-blue-700',
-  design: 'from-purple-500 to-purple-700',
-  entrepreneurship: 'from-green-500 to-green-700',
-  marketing: 'from-orange-500 to-orange-700',
-  data: 'from-teal-500 to-teal-700'
 };
 
 const categoryBg = {
+  system: '#4f46e5',
   coding: '#2563eb',
-  design: '#7c3aed',
-  entrepreneurship: '#16a34a',
-  marketing: '#ea580c',
-  data: '#0d9488'
 };
 
 function generatePDF(cert, userName, logoBase64) {

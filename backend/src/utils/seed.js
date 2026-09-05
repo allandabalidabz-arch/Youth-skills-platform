@@ -35,160 +35,1576 @@ async function seedData(db) {
       [id, name, email, hashedPw, role, bio, location, JSON.stringify(skills)]);
   };
 
-  await insertUser(adminId, 'Admin User', 'admin@youthskills.com', 'admin', 'Platform administrator', 'Nairobi, Kenya', []);
-  await insertUser(youth1Id, 'Amara Osei', 'amara@example.com', 'youth', 'Passionate about technology and design', 'Accra, Ghana', ['HTML', 'CSS', 'Figma']);
-  await insertUser(youth2Id, 'Kwame Mensah', 'kwame@example.com', 'youth', 'Aspiring entrepreneur and developer', 'Lagos, Nigeria', ['JavaScript', 'Business Planning']);
-  await insertUser(employer1Id, 'TechAfrica Ltd', 'hr@techafrica.com', 'employer', 'Leading tech company in Africa', 'Nairobi, Kenya', []);
-  await insertUser(employer2Id, 'Creative Hub', 'jobs@creativehub.com', 'employer', 'Creative agency for digital content', 'Accra, Ghana', []);
+  await insertUser(adminId, 'Admin User', 'admin@youthskills.com', 'admin', 'Platform administrator', 'Lusaka, Zambia', []);
+  await insertUser(youth1Id, 'Amara Osei', 'amara@example.com', 'youth', 'Passionate about technology and systems', 'Lusaka, Zambia', ['System Analysis', 'Web Development']);
+  await insertUser(youth2Id, 'Kwame Mensah', 'kwame@example.com', 'youth', 'Aspiring software developer', 'Ndola, Zambia', ['HTML', 'CSS', 'JavaScript']);
+  await insertUser(employer1Id, 'TechAfrica Ltd', 'hr@techafrica.com', 'employer', 'Leading tech company in Africa', 'Lusaka, Zambia', []);
+  await insertUser(employer2Id, 'Creative Hub', 'jobs@creativehub.com', 'employer', 'Creative agency for digital content', 'Kitwe, Zambia', []);
 
   const courses = [
-    { id: uuidv4(), title: 'Introduction to Web Development', category: 'coding', level: 'beginner', description: 'Learn the fundamentals of HTML, CSS, and JavaScript to build your first website. This course covers everything from basic structure to interactive web pages.', duration_hours: 20, instructor_name: 'Allan Dabali', instructor_bio: 'Digital Skills Trainer & Platform Director, YouthSkills Program', thumbnail: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400', tags: ['HTML', 'CSS', 'JavaScript', 'Web'] },
-    { id: uuidv4(), title: 'Graphic Design Fundamentals', category: 'design', level: 'beginner', description: 'Master the principles of graphic design including color theory, typography, layout, and branding. Create stunning visuals using industry-standard tools.', duration_hours: 15, instructor_name: 'Allan Dabali', instructor_bio: 'Digital Skills Trainer & Platform Director, YouthSkills Program', thumbnail: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400', tags: ['Design', 'Figma', 'Branding', 'Typography'] },
-    { id: uuidv4(), title: 'Entrepreneurship & Business Basics', category: 'entrepreneurship', level: 'beginner', description: 'Discover how to turn your ideas into a successful business. Learn business planning, market research, financial basics, and pitching to investors.', duration_hours: 12, instructor_name: 'Allan Dabali', instructor_bio: 'Digital Skills Trainer & Platform Director, YouthSkills Program', thumbnail: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400', tags: ['Business', 'Startup', 'Finance', 'Marketing'] },
-    { id: uuidv4(), title: 'Python Programming for Beginners', category: 'coding', level: 'beginner', description: 'Start your programming journey with Python. Learn variables, loops, functions, and build real projects.', duration_hours: 25, instructor_name: 'Allan Dabali', instructor_bio: 'Digital Skills Trainer & Platform Director, YouthSkills Program', thumbnail: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400', tags: ['Python', 'Programming', 'Data', 'Automation'] },
-    { id: uuidv4(), title: 'Digital Marketing Essentials', category: 'marketing', level: 'beginner', description: 'Learn how to grow businesses online through social media marketing, SEO, email campaigns, and content strategy.', duration_hours: 10, instructor_name: 'Allan Dabali', instructor_bio: 'Digital Skills Trainer & Platform Director, YouthSkills Program', thumbnail: 'https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=400', tags: ['Marketing', 'Social Media', 'SEO', 'Content'] },
-    { id: uuidv4(), title: 'Data Analysis with Excel & Google Sheets', category: 'data', level: 'beginner', description: 'Unlock the power of data analysis using spreadsheet tools. Learn formulas, pivot tables, charts, and data insights.', duration_hours: 8, instructor_name: 'Allan Dabali', instructor_bio: 'Digital Skills Trainer & Platform Director, YouthSkills Program', thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400', tags: ['Data', 'Excel', 'Analytics', 'Visualization'] },
+    {
+      id: uuidv4(),
+      title: 'System Analysis and Design',
+      category: 'system',
+      level: 'beginner',
+      description: 'Learn how to analyse, model, and design information systems from scratch. This course covers the full system development life cycle, requirements gathering, data flow diagrams, entity relationship diagrams, and system design principles used in real software projects.',
+      duration_hours: 20,
+      instructor_name: 'Allan Dabali',
+      instructor_bio: 'Digital Skills Trainer & Platform Director, YouthSkills Program',
+      thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400',
+      tags: ['Systems', 'Analysis', 'Design', 'SDLC', 'DFD', 'ERD']
+    },
+    {
+      id: uuidv4(),
+      title: 'Web Development',
+      category: 'coding',
+      level: 'beginner',
+      description: 'Learn the fundamentals of web development using HTML, CSS, and JavaScript. This course takes you from building your first webpage to creating interactive, responsive websites ready for the modern internet.',
+      duration_hours: 25,
+      instructor_name: 'Allan Dabali',
+      instructor_bio: 'Digital Skills Trainer & Platform Director, YouthSkills Program',
+      thumbnail: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400',
+      tags: ['HTML', 'CSS', 'JavaScript', 'Web', 'Frontend']
+    },
+    {
+      id: uuidv4(),
+      title: 'Operating Systems',
+      category: 'system',
+      level: 'beginner',
+      description: 'Understand how operating systems work, manage hardware resources, and provide services to applications. This course covers processes, memory management, file systems, and the fundamentals of both Windows and Linux operating environments.',
+      duration_hours: 18,
+      instructor_name: 'Allan Dabali',
+      instructor_bio: 'Digital Skills Trainer & Platform Director, YouthSkills Program',
+      thumbnail: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400',
+      tags: ['Operating Systems', 'Linux', 'Windows', 'Processes', 'Memory']
+    },
   ];
 
   for (const c of courses) {
-    await db.run('INSERT INTO courses (id, title, description, category, level, duration_hours, thumbnail, instructor_name, instructor_bio, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [c.id, c.title, c.description, c.category, c.level, c.duration_hours, c.thumbnail, c.instructor_name, c.instructor_bio, JSON.stringify(c.tags)]);
+    await db.run(
+      'INSERT INTO courses (id, title, description, category, level, duration_hours, thumbnail, instructor_name, instructor_bio, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [c.id, c.title, c.description, c.category, c.level, c.duration_hours, c.thumbnail, c.instructor_name, c.instructor_bio, JSON.stringify(c.tags)]
+    );
   }
 
-  // ── COURSE 1: Web Development ──────────────────────────────────────────────
-  const webIds = await addModules(db, courses[0].id, [
-    { title: 'HTML Basics', order_index: 1, duration_minutes: 45, content: 'HTML BASICS\n\nHTML (HyperText Markup Language) is the foundation of every web page.\n\nWHAT YOU WILL LEARN:\n- HTML document structure\n- Common tags: headings, paragraphs, links, images\n- Forms and input elements\n- Semantic HTML5 elements\n\nYOUR FIRST HTML PAGE:\n\n<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>My First Page</title>\n</head>\n<body>\n  <h1>Hello, World!</h1>\n  <p>Welcome to web development!</p>\n  <a href="https://google.com">Visit Google</a>\n</body>\n</html>\n\nKEY TAGS:\n- <h1> to <h6>: Headings\n- <p>: Paragraph\n- <a href="">: Link\n- <img src="" alt="">: Image\n- <div>: Container\n- <ul><li>: List\n- <form><input>: Form elements\n\nSemantic tags like <header>, <nav>, <main>, <footer> help describe the purpose of content to browsers and search engines.' },
-    { title: 'CSS Styling', order_index: 2, duration_minutes: 60, content: 'CSS STYLING\n\nCSS (Cascading Style Sheets) controls how HTML looks.\n\nCORE CONCEPTS:\n- Selectors: target HTML elements\n- Properties: what to change\n- Values: how to change it\n\nBASIC SYNTAX:\nelement { property: value; }\n\nEXAMPLES:\n\nbody {\n  font-family: Arial, sans-serif;\n  background-color: #f0f0f0;\n  margin: 0;\n  padding: 20px;\n}\n\nh1 {\n  color: #2563eb;\n  font-size: 2rem;\n  text-align: center;\n}\n\n.card {\n  background: white;\n  border-radius: 8px;\n  padding: 20px;\n  box-shadow: 0 2px 4px rgba(0,0,0,0.1);\n}\n\nBOX MODEL:\nEvery element has: margin > border > padding > content\n\nFLEXBOX:\n.container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 16px;\n}\n\nRESPONSIVE DESIGN:\n@media (max-width: 768px) {\n  .card { padding: 10px; }\n}' },
-    { title: 'JavaScript Fundamentals', order_index: 3, duration_minutes: 90, content: 'JAVASCRIPT FUNDAMENTALS\n\nJavaScript makes web pages interactive.\n\nVARIABLES:\nconst name = "Allan";  // cannot change\nlet age = 25;          // can change\n\nDATA TYPES:\n- String: "Hello"\n- Number: 42\n- Boolean: true / false\n- Array: [1, 2, 3]\n- Object: { name: "Allan", age: 25 }\n\nFUNCTIONS:\nfunction greet(name) {\n  return "Hello, " + name;\n}\n\n// Arrow function\nconst greet = (name) => "Hello, " + name;\n\nDOM MANIPULATION:\nconst btn = document.querySelector("#myBtn");\nconst title = document.querySelector("h1");\n\nbtn.addEventListener("click", () => {\n  title.textContent = "Button was clicked!";\n  title.style.color = "red";\n});\n\nFETCH API (get data from internet):\nasync function getData() {\n  const response = await fetch("https://api.example.com/data");\n  const data = await response.json();\n  console.log(data);\n}\n\ngetData();' },
+  // ── COURSE 1: System Analysis and Design ──────────────────────────────────
+  const sadIds = await addModules(db, courses[0].id, [
+    {
+      title: 'Introduction to System Analysis',
+      order_index: 1,
+      duration_minutes: 55,
+      content: `INTRODUCTION TO SYSTEM ANALYSIS
+
+System Analysis is the process of studying a current system or situation, identifying its problems, and determining the requirements for a new or improved system.
+
+WHAT IS A SYSTEM?
+A system is a set of components that work together to achieve a common goal.
+Examples of information systems:
+- A hospital patient management system
+- A school student records system
+- An online banking system
+- A supermarket point-of-sale system
+
+THE SYSTEM DEVELOPMENT LIFE CYCLE (SDLC)
+The SDLC is the structured process used to develop information systems. It has 6 phases:
+
+1. PLANNING
+   - Define the problem or opportunity
+   - Determine if the project is feasible
+   - Create a project plan with timelines and budget
+   - Key question: Should we build this system?
+
+2. SYSTEM ANALYSIS
+   - Study the current system in detail
+   - Gather requirements from users and stakeholders
+   - Identify what the new system must do
+   - Key question: What does the system need to do?
+
+3. SYSTEM DESIGN
+   - Design the database, user interface, and processes
+   - Create diagrams and models of the new system
+   - Key question: How will the system work?
+
+4. IMPLEMENTATION
+   - Write the actual program code
+   - Build the database
+   - Key question: Build the system
+
+5. TESTING
+   - Test the system thoroughly
+   - Find and fix bugs and errors
+   - Key question: Does the system work correctly?
+
+6. MAINTENANCE
+   - Deploy the system to real users
+   - Monitor and fix issues that arise
+   - Update the system as needs change
+
+TYPES OF SYSTEM ANALYSTS
+- Business Analyst: Focuses on business processes and requirements
+- Systems Analyst: Focuses on technical design and architecture
+- Data Analyst: Focuses on data flows and database design
+
+REQUIREMENTS GATHERING TECHNIQUES
+To understand what a system needs to do, analysts use:
+
+1. INTERVIEWS
+   Talk directly to users and managers.
+   Best for: Detailed, open-ended information.
+   
+2. QUESTIONNAIRES
+   Written questions sent to many people.
+   Best for: Collecting data from large groups.
+
+3. OBSERVATION
+   Watch users doing their current work.
+   Best for: Understanding real workflows, not just what people say they do.
+
+4. DOCUMENT ANALYSIS
+   Study existing forms, reports, and records.
+   Best for: Understanding current data and processes.
+
+5. WORKSHOPS
+   Group sessions with stakeholders to define requirements together.
+   Best for: Getting consensus and resolving conflicts.
+
+FUNCTIONAL vs NON-FUNCTIONAL REQUIREMENTS
+
+Functional Requirements: What the system MUST DO
+Examples:
+- The system shall allow users to register with an email and password
+- The system shall send a confirmation email after registration
+- The system shall allow admins to delete user accounts
+
+Non-Functional Requirements: HOW the system should perform
+Examples:
+- The system shall respond to any request within 2 seconds
+- The system shall be available 99.9% of the time
+- The system shall support 500 simultaneous users
+- All passwords shall be encrypted`
+    },
+    {
+      title: 'Data Flow Diagrams and Use Cases',
+      order_index: 2,
+      duration_minutes: 65,
+      content: `DATA FLOW DIAGRAMS AND USE CASES
+
+DATA FLOW DIAGRAMS (DFD)
+A Data Flow Diagram shows how data moves through a system. It is one of the most important tools in system analysis.
+
+DFD SYMBOLS:
+1. EXTERNAL ENTITY (Rectangle)
+   - A person, organisation, or system outside the system boundary
+   - Examples: Customer, Bank, Government Department
+   - Provides input to or receives output from the system
+
+2. PROCESS (Circle or Rounded Rectangle)
+   - An action that transforms or moves data
+   - Always named with a verb (e.g. "Validate Login", "Generate Report")
+   - Named with a number for reference (1.0, 2.0, etc.)
+
+3. DATA STORE (Open Rectangle / Two parallel lines)
+   - Where data is stored at rest
+   - Examples: Student Records, Product Database, Employee File
+   - Named as a noun (D1 Student Records)
+
+4. DATA FLOW (Arrow)
+   - Shows the movement of data between components
+   - Always labelled with what data is flowing
+   - Examples: "Login Details", "Student Grade", "Payment Confirmation"
+
+LEVELS OF DFD:
+
+CONTEXT DIAGRAM (Level 0)
+The highest level — shows the entire system as ONE process.
+Only shows external entities and data flows in/out of the system.
+Purpose: Shows the system boundary and who interacts with it.
+
+LEVEL 1 DFD
+Breaks the single process in the context diagram into major sub-processes.
+Shows the main processes, data stores, and flows between them.
+
+LEVEL 2 DFD
+Breaks each Level 1 process into further detail.
+Used for complex processes that need more explanation.
+
+DFD RULES:
+- Data cannot flow directly between two external entities (must go through a process)
+- Data cannot flow directly between two data stores (must go through a process)
+- Every process must have at least one input and one output
+- Data stores can only be accessed by processes
+
+EXAMPLE — Library System Context Diagram:
+External Entities: Member, Librarian, Publisher
+System: Library Management System
+Flows in: Book Request, Member Registration, Book Supply
+Flows out: Book Issued, Membership Card, Overdue Notice
+
+USE CASE DIAGRAMS
+A Use Case Diagram shows what a system does from the user's perspective. It is part of UML (Unified Modelling Language).
+
+USE CASE COMPONENTS:
+1. ACTOR (Stick figure)
+   - Any user or external system that interacts with the system
+   - Examples: Student, Teacher, Admin, Payment Gateway
+
+2. USE CASE (Oval)
+   - A specific function or feature of the system
+   - Named with a verb + noun: "Register Account", "Pay Fee", "View Results"
+
+3. SYSTEM BOUNDARY (Rectangle)
+   - A box that encloses all the use cases
+   - Actors appear outside the boundary
+
+4. RELATIONSHIPS (Lines)
+   - Association: Line connecting actor to use case (actor uses this feature)
+   - Include: <<include>> — one use case always includes another
+     Example: "Make Payment" always includes "Validate Card"
+   - Extend: <<extend>> — one use case sometimes extends another
+     Example: "Login" sometimes extends to "Reset Password"
+
+EXAMPLE USE CASES — Student Portal System:
+Actors: Student, Lecturer, Admin
+
+Student use cases:
+- Register Account
+- View Course Results
+- Submit Assignment
+- Pay Tuition Fee
+
+Lecturer use cases:
+- Upload Grades
+- View Student List
+- Post Course Materials
+
+Admin use cases:
+- Manage User Accounts
+- Generate Reports
+- Configure System`
+    },
+    {
+      title: 'System Design and Entity Relationship Diagrams',
+      order_index: 3,
+      duration_minutes: 70,
+      content: `SYSTEM DESIGN AND ENTITY RELATIONSHIP DIAGRAMS
+
+SYSTEM DESIGN
+System design translates the requirements gathered during analysis into a blueprint for the system to be built.
+
+TWO LEVELS OF DESIGN:
+
+1. LOGICAL DESIGN
+   - Describes WHAT the system will do without specifying technology
+   - Independent of hardware and software choices
+   - Includes: Data models, process flows, user interface sketches
+
+2. PHYSICAL DESIGN
+   - Describes HOW the system will be implemented
+   - Specifies exact hardware, software, database, and programming language
+   - Includes: Database schemas, server specifications, network layout
+
+USER INTERFACE DESIGN PRINCIPLES
+A good user interface (UI) makes the system easy and efficient to use.
+
+Key principles:
+1. CONSISTENCY — Use the same layout, colors, and terminology throughout
+2. SIMPLICITY — Show only what the user needs at each step
+3. FEEDBACK — Always tell the user what is happening (loading, success, error)
+4. ERROR PREVENTION — Validate inputs before processing
+5. ACCESSIBILITY — Design for users with disabilities (color contrast, keyboard navigation)
+
+ENTITY RELATIONSHIP DIAGRAMS (ERD)
+An ERD shows the data structure of a system — what data is stored and how it is related.
+
+ERD COMPONENTS:
+
+1. ENTITY (Rectangle)
+   - A thing about which data is stored
+   - Examples: Student, Course, Employee, Product, Order
+   - Named as a singular noun
+
+2. ATTRIBUTE (Oval / listed inside entity)
+   - A property or characteristic of an entity
+   - Examples for Student: StudentID, Name, Email, DateOfBirth
+   - Primary Key attribute is underlined
+
+3. RELATIONSHIP (Diamond / Line between entities)
+   - Describes how two entities are associated
+   - Named with a verb: "ENROLLS IN", "TEACHES", "PLACES", "CONTAINS"
+
+CARDINALITY — How many of each entity participate in a relationship:
+
+ONE-TO-ONE (1:1)
+   One entity is associated with exactly one other.
+   Example: One Employee has one Employee Profile
+   
+ONE-TO-MANY (1:N)
+   One entity is associated with many of another.
+   Example: One Teacher TEACHES many Students
+   Example: One Customer PLACES many Orders
+   
+MANY-TO-MANY (M:N)
+   Many of one entity are associated with many of another.
+   Example: Many Students ENROLL IN many Courses
+   Example: Many Products appear in many Orders
+   Note: Many-to-many relationships require a junction/bridge table in the database
+
+EXAMPLE ERD — School System:
+
+Entities: STUDENT, COURSE, LECTURER, ENROLLMENT
+
+STUDENT attributes: StudentID (PK), Name, Email, DateOfBirth, Programme
+COURSE attributes: CourseID (PK), CourseName, Credits, Department
+LECTURER attributes: LecturerID (PK), Name, Email, Specialisation
+ENROLLMENT attributes: EnrollmentID (PK), StudentID (FK), CourseID (FK), EnrollDate, Grade
+
+Relationships:
+- STUDENT ENROLLS IN COURSE (Many-to-Many → resolved by ENROLLMENT table)
+- LECTURER TEACHES COURSE (One-to-Many)
+
+NORMALIZATION
+Normalization is the process of organizing a database to reduce redundancy.
+
+1NF (First Normal Form):
+- Each column contains only one value (no lists in a cell)
+- Each row is unique
+
+2NF (Second Normal Form):
+- Meet 1NF
+- Every non-key column depends on the whole primary key
+
+3NF (Third Normal Form):
+- Meet 2NF
+- No non-key column depends on another non-key column
+
+THE SYSTEM DESIGN DOCUMENT
+A formal System Design Document includes:
+1. System Overview
+2. Architecture Diagram
+3. Database Design (ERD + table definitions)
+4. User Interface Mockups
+5. Process Descriptions
+6. Security Design
+7. Testing Plan`
+    },
   ]);
+
   await addQuizzes(db, [
-    { moduleId: webIds[0], question: 'What does HTML stand for?', options: ['HyperText Markup Language', 'High Tech Modern Language', 'HyperText Modern Links', 'Home Tool Markup Language'], correct: 0, explanation: 'HTML stands for HyperText Markup Language.' },
-    { moduleId: webIds[0], question: 'Which tag creates the largest heading?', options: ['<h6>', '<heading>', '<h1>', '<head>'], correct: 2, explanation: '<h1> is the largest heading. Headings go from h1 (largest) to h6 (smallest).' },
-    { moduleId: webIds[1], question: 'Which CSS property changes text color?', options: ['font-color', 'text-color', 'color', 'foreground'], correct: 2, explanation: 'The "color" property in CSS sets the text color.' },
-    { moduleId: webIds[1], question: 'What does CSS stand for?', options: ['Computer Style Sheets', 'Cascading Style Sheets', 'Creative Style System', 'Colorful Style Sheets'], correct: 1, explanation: 'CSS stands for Cascading Style Sheets.' },
-    { moduleId: webIds[2], question: 'Which keyword declares a constant in JavaScript?', options: ['var', 'let', 'const', 'define'], correct: 2, explanation: '"const" declares a variable that cannot be reassigned.' },
-    { moduleId: webIds[2], question: 'Which method adds an event listener in JavaScript?', options: ['addEvent()', 'addEventListener()', 'onEvent()', 'listenTo()'], correct: 1, explanation: 'addEventListener() attaches an event handler to an element.' },
+    {
+      moduleId: sadIds[0],
+      question: 'What does SDLC stand for?',
+      options: ['Software Development Life Cycle', 'System Development Life Cycle', 'Structured Design and Logic Concept', 'System Design and Layout Concept'],
+      correct: 1,
+      explanation: 'SDLC stands for System Development Life Cycle — the structured process used to plan, create, test, and deploy an information system.'
+    },
+    {
+      moduleId: sadIds[0],
+      question: 'Which requirements gathering technique involves watching users perform their actual work?',
+      options: ['Interviews', 'Questionnaires', 'Observation', 'Document Analysis'],
+      correct: 2,
+      explanation: 'Observation involves watching users doing their real work, which reveals actual workflows that may differ from what people describe in interviews.'
+    },
+    {
+      moduleId: sadIds[1],
+      question: 'In a Data Flow Diagram, what does an arrow represent?',
+      options: ['A process', 'A data store', 'The movement of data', 'An external entity'],
+      correct: 2,
+      explanation: 'Arrows in a DFD represent data flows — they show data moving between processes, entities, and data stores.'
+    },
+    {
+      moduleId: sadIds[1],
+      question: 'What is a Context Diagram also known as?',
+      options: ['Level 1 DFD', 'Level 2 DFD', 'Level 0 DFD', 'Physical DFD'],
+      correct: 2,
+      explanation: 'A Context Diagram is a Level 0 DFD — it shows the entire system as one process and only depicts external entities and boundary data flows.'
+    },
+    {
+      moduleId: sadIds[2],
+      question: 'In an ERD, what does a one-to-many (1:N) relationship mean?',
+      options: [
+        'One entity relates to exactly one other entity',
+        'One entity is associated with many instances of another entity',
+        'Many entities relate to many other entities',
+        'One entity has no relationship with others'
+      ],
+      correct: 1,
+      explanation: 'A one-to-many relationship means one instance of an entity (e.g. one Teacher) is associated with many instances of another entity (e.g. many Students).'
+    },
+    {
+      moduleId: sadIds[2],
+      question: 'What is the purpose of normalization in database design?',
+      options: [
+        'To make the database run faster',
+        'To add more tables to the database',
+        'To reduce data redundancy and improve data integrity',
+        'To increase the number of relationships'
+      ],
+      correct: 2,
+      explanation: 'Normalization organizes a database to reduce redundancy (repeated data) and ensure data integrity, making the database easier to maintain.'
+    },
   ]);
 
-  // ── COURSE 2: Graphic Design ───────────────────────────────────────────────
-  const designIds = await addModules(db, courses[1].id, [
-    { title: 'Design Principles', order_index: 1, duration_minutes: 50, content: 'DESIGN PRINCIPLES\n\nGood design follows core principles that make visuals effective and beautiful.\n\nTHE 5 CORE PRINCIPLES:\n\n1. CONTRAST\nUse differences in color, size, or shape to make elements stand out.\nExample: Dark text on light background is easy to read.\n\n2. ALIGNMENT\nEvery element should be aligned with something else on the page.\nThis creates order and professionalism.\n\n3. REPETITION\nRepeat visual elements (colors, fonts, shapes) throughout your design.\nThis creates consistency and brand identity.\n\n4. PROXIMITY\nGroup related items together. Separate unrelated items.\nThis helps viewers understand relationships between content.\n\n5. WHITE SPACE\nEmpty space is not wasted space. It gives designs room to breathe.\nDo not crowd elements together.\n\nCOLOR THEORY:\n- Primary colors: Red, Blue, Yellow\n- Complementary colors: Opposite on color wheel (creates contrast)\n- Analogous colors: Next to each other (creates harmony)\n- Warm colors: Red, Orange, Yellow (energetic, exciting)\n- Cool colors: Blue, Green, Purple (calm, professional)\n\nTYPOGRAPHY BASICS:\n- Use maximum 2-3 fonts per design\n- Serif fonts (Times New Roman): formal, traditional\n- Sans-serif fonts (Arial, Helvetica): modern, clean\n- Font size hierarchy: Title > Heading > Body > Caption' },
-    { title: 'Color Theory & Typography', order_index: 2, duration_minutes: 45, content: 'COLOR THEORY AND TYPOGRAPHY\n\nCOLOR PSYCHOLOGY:\nColors trigger emotions and associations.\n\n- RED: Energy, urgency, passion (used by Coca-Cola, YouTube)\n- BLUE: Trust, calm, professionalism (used by Facebook, LinkedIn)\n- GREEN: Nature, health, growth (used by WhatsApp, Spotify)\n- YELLOW: Happiness, optimism, warning (used by McDonald\'s)\n- BLACK: Luxury, sophistication, power (used by Apple, Nike)\n- WHITE: Cleanliness, simplicity, space\n- ORANGE: Creativity, enthusiasm, warmth (used by Amazon)\n\nCREATING A COLOR PALETTE:\n1. Choose a primary brand color\n2. Pick 1-2 complementary or analogous colors\n3. Add neutral colors (white, grey, black)\n4. Test for accessibility (enough contrast)\n\nTYPOGRAPHY IN DEPTH:\n\nFONT PAIRING RULES:\n- Pair a serif with a sans-serif\n- Use one font for headings, another for body\n- Keep it simple - less is more\n\nGOOD FONT PAIRS:\n- Playfair Display + Lato\n- Merriweather + Open Sans\n- Montserrat + Georgia\n\nTEXT HIERARCHY:\n- H1 Title: 36-48px, Bold\n- H2 Heading: 24-32px, Semi-bold\n- Body text: 16-18px, Regular\n- Caption: 12-14px, Light\n\nLINE SPACING: Use 1.5x the font size for comfortable reading.' },
-    { title: 'Branding & Logo Design', order_index: 3, duration_minutes: 60, content: 'BRANDING AND LOGO DESIGN\n\nWHAT IS A BRAND?\nA brand is more than a logo. It is the complete experience and perception of a company.\n\nBRAND ELEMENTS:\n1. Logo - visual symbol\n2. Color palette - consistent colors\n3. Typography - consistent fonts\n4. Voice/Tone - how you communicate\n5. Values - what you stand for\n\nTYPES OF LOGOS:\n1. WORDMARK: Company name in stylized text (Google, Coca-Cola)\n2. LETTERMARK: Initials only (IBM, HBO, CNN)\n3. SYMBOL/ICON: Abstract or pictorial mark (Apple, Twitter)\n4. COMBINATION MARK: Icon + text (Nike, Adidas)\n5. EMBLEM: Text inside a symbol (Starbucks, Harley-Davidson)\n\nLOGO DESIGN PROCESS:\n1. Research the brand and competitors\n2. Sketch multiple concepts (at least 10)\n3. Choose the best 3 and refine digitally\n4. Test in different sizes and backgrounds\n5. Present to client with rationale\n\nLOGO DESIGN RULES:\n- Must work in black and white\n- Must be scalable (small and large)\n- Must be simple and memorable\n- Must be appropriate for the industry\n- Must be unique and original\n\nTOOLS FOR LOGO DESIGN:\n- Figma (free, web-based)\n- Adobe Illustrator (professional)\n- Canva (beginner-friendly)' },
-  ]);
-  await addQuizzes(db, [
-    { moduleId: designIds[0], question: 'Which design principle involves grouping related items together?', options: ['Contrast', 'Alignment', 'Proximity', 'Repetition'], correct: 2, explanation: 'Proximity means grouping related items together to show their relationship.' },
-    { moduleId: designIds[0], question: 'What are the primary colors?', options: ['Red, Green, Blue', 'Red, Blue, Yellow', 'Cyan, Magenta, Yellow', 'Orange, Purple, Green'], correct: 1, explanation: 'The traditional primary colors are Red, Blue, and Yellow.' },
-    { moduleId: designIds[1], question: 'Which color is associated with trust and professionalism?', options: ['Red', 'Yellow', 'Blue', 'Orange'], correct: 2, explanation: 'Blue is associated with trust, calm, and professionalism - used by Facebook and LinkedIn.' },
-    { moduleId: designIds[2], question: 'What type of logo uses only the company initials?', options: ['Wordmark', 'Lettermark', 'Symbol', 'Emblem'], correct: 1, explanation: 'A lettermark logo uses only the initials of the company name, like IBM or CNN.' },
-  ]);
+  await addAssignment(db, sadIds[0], courses[0].id,
+    'Identify System Requirements',
+    'Analyse a real-world scenario and document functional and non-functional requirements.',
+    `A local school wants to replace its paper-based student records system with a computerised system. Students currently register manually, results are written in books, and timetables are printed on paper.
 
-  // ── COURSE 3: Entrepreneurship ─────────────────────────────────────────────
-  const bizIds = await addModules(db, courses[2].id, [
-    { title: 'Finding Your Business Idea', order_index: 1, duration_minutes: 40, content: 'FINDING YOUR BUSINESS IDEA\n\nEvery successful business starts with solving a problem.\n\nHOW TO FIND A GOOD BUSINESS IDEA:\n\n1. IDENTIFY PROBLEMS YOU FACE\nWhat frustrates you daily? What takes too long? What is too expensive?\nExample: "There is no affordable food delivery in my area" → Start a local delivery service.\n\n2. LOOK AT YOUR SKILLS\nWhat are you good at? What do people ask you for help with?\nExample: Good at design → Offer freelance design services.\n\n3. SPOT MARKET GAPS\nWhat products or services are missing in your community?\nExample: No coding school for kids in your city → Start one.\n\n4. IMPROVE EXISTING SOLUTIONS\nCan you do something better, cheaper, or faster than what exists?\n\nTHE BUSINESS IDEA VALIDATION TEST:\nBefore investing time and money, ask:\n- Is there a real problem being solved?\n- Are people willing to PAY for this solution?\n- Is the market big enough?\n- Can you realistically build this?\n\nTYPES OF BUSINESSES:\n- Product business: Sell physical or digital products\n- Service business: Sell your skills and time\n- Platform business: Connect buyers and sellers\n- Subscription business: Charge recurring fees\n\nACTION STEP:\nWrite down 5 problems you have noticed in your community. For each one, think of a business that could solve it.' },
-    { title: 'Business Planning Basics', order_index: 2, duration_minutes: 55, content: 'BUSINESS PLANNING BASICS\n\nA business plan is your roadmap to success.\n\nWHY YOU NEED A BUSINESS PLAN:\n- Clarifies your vision\n- Helps you get funding\n- Guides your decisions\n- Identifies potential problems early\n\nKEY SECTIONS OF A BUSINESS PLAN:\n\n1. EXECUTIVE SUMMARY\nA 1-page overview of your entire business.\nInclude: What you do, who you serve, your goal.\n\n2. PROBLEM AND SOLUTION\nClearly describe the problem and how your business solves it.\n\n3. TARGET MARKET\nWho are your customers?\n- Demographics: Age, gender, location, income\n- Psychographics: Interests, values, behavior\n- Market size: How many potential customers exist?\n\n4. PRODUCTS/SERVICES\nWhat exactly are you selling? What makes it unique?\n\n5. REVENUE MODEL\nHow will you make money?\n- Direct sales\n- Subscription fees\n- Commission\n- Advertising\n- Freemium (free + paid premium)\n\n6. MARKETING STRATEGY\nHow will customers find you?\n- Social media\n- Word of mouth\n- Partnerships\n- Advertising\n\n7. FINANCIAL PROJECTIONS\nEstimate your costs and expected revenue for Year 1.\n\nSTARTUP COSTS TO CONSIDER:\n- Equipment and tools\n- Marketing and advertising\n- Legal registration\n- Website and technology\n- Initial inventory' },
-    { title: 'Marketing & Growing Your Business', order_index: 3, duration_minutes: 50, content: 'MARKETING AND GROWING YOUR BUSINESS\n\nMarketing is how you attract and keep customers.\n\nTHE MARKETING FUNNEL:\n1. AWARENESS: People learn you exist\n2. INTEREST: They want to know more\n3. CONSIDERATION: They compare you to competitors\n4. PURCHASE: They buy from you\n5. LOYALTY: They come back and refer others\n\nDIGITAL MARKETING CHANNELS:\n\n1. SOCIAL MEDIA MARKETING\n- Instagram: Visual products, lifestyle brands\n- Facebook: Broad audience, ads, groups\n- TikTok: Young audience, viral content\n- LinkedIn: B2B, professional services\n- Twitter/X: News, tech, conversations\n\n2. CONTENT MARKETING\nCreate valuable content that attracts customers.\n- Blog posts\n- YouTube videos\n- Podcasts\n- Free guides and ebooks\n\n3. EMAIL MARKETING\nBuild an email list and send regular updates.\nEmail has the highest ROI of any marketing channel.\n\n4. WORD OF MOUTH\nHappy customers are your best marketers.\nAsk for reviews and referrals.\n\nPRICING STRATEGIES:\n- Cost-plus: Add profit margin to your costs\n- Competitive: Match or beat competitor prices\n- Value-based: Charge what customers think it is worth\n- Freemium: Free basic, paid premium\n\nGROWTH TIPS:\n- Focus on customer satisfaction first\n- Reinvest profits back into the business\n- Build partnerships with complementary businesses\n- Track your numbers (revenue, costs, profit)' },
-  ]);
-  await addQuizzes(db, [
-    { moduleId: bizIds[0], question: 'What is the most important first step when validating a business idea?', options: ['Build the product', 'Check if people will pay for it', 'Register the company', 'Hire employees'], correct: 1, explanation: 'Before investing time and money, you must confirm people are willing to pay for your solution.' },
-    { moduleId: bizIds[1], question: 'What is the purpose of an Executive Summary in a business plan?', options: ['Detailed financial projections', 'A 1-page overview of the entire business', 'List of employees', 'Marketing budget'], correct: 1, explanation: 'The Executive Summary is a concise 1-page overview of your entire business plan.' },
-    { moduleId: bizIds[2], question: 'Which marketing channel has the highest return on investment (ROI)?', options: ['Social media ads', 'TV commercials', 'Email marketing', 'Billboard ads'], correct: 2, explanation: 'Email marketing consistently delivers the highest ROI of any marketing channel.' },
-  ]);
+Your task:
+1. Identify and describe the PROBLEM with the current system (at least 3 problems)
+2. Write 6 FUNCTIONAL REQUIREMENTS for the new system (what it must do)
+   Format: "The system shall..."
+3. Write 4 NON-FUNCTIONAL REQUIREMENTS (performance, security, reliability)
+   Format: "The system shall..."
+4. Identify 3 STAKEHOLDERS who would be interviewed during requirements gathering and explain what information you would get from each
+5. Which requirements gathering technique would you use for this project and why? (Choose 2 techniques and justify)
 
-  // ── COURSE 4: Python Programming ───────────────────────────────────────────
-  const pyIds = await addModules(db, courses[3].id, [
-    { title: 'Python Basics', order_index: 1, duration_minutes: 60, content: 'PYTHON BASICS\n\nPython is one of the most popular programming languages in the world.\nIt is used for web development, data science, AI, and automation.\n\nWHY PYTHON?\n- Easy to read and write\n- Huge community and libraries\n- Used by Google, Netflix, Instagram\n- Great for beginners\n\nYOUR FIRST PYTHON PROGRAM:\nprint("Hello, World!")\n\nVARIABLES:\nname = "Allan"\nage = 25\nheight = 5.9\nis_student = True\n\nprint(name)    # Output: Allan\nprint(age)     # Output: 25\n\nDATA TYPES:\n- str: Text ("Hello")\n- int: Whole numbers (25)\n- float: Decimal numbers (5.9)\n- bool: True or False\n- list: [1, 2, 3]\n- dict: {"name": "Allan", "age": 25}\n\nBASIC OPERATIONS:\nprint(10 + 5)   # 15\nprint(10 - 3)   # 7\nprint(10 * 2)   # 20\nprint(10 / 3)   # 3.333\nprint(10 // 3)  # 3 (floor division)\nprint(10 % 3)   # 1 (remainder)\n\nUSER INPUT:\nname = input("What is your name? ")\nprint("Hello, " + name + "!")\n\nSTRING METHODS:\ntext = "hello world"\nprint(text.upper())       # HELLO WORLD\nprint(text.capitalize())  # Hello world\nprint(text.replace("world", "Python"))  # hello Python\nprint(len(text))          # 11' },
-    { title: 'Control Flow & Functions', order_index: 2, duration_minutes: 70, content: 'CONTROL FLOW AND FUNCTIONS\n\nIF STATEMENTS:\nage = 18\n\nif age >= 18:\n    print("You are an adult")\nelif age >= 13:\n    print("You are a teenager")\nelse:\n    print("You are a child")\n\nLOOPS:\n\n# For loop\nfor i in range(5):\n    print(i)  # prints 0, 1, 2, 3, 4\n\n# Loop through a list\nfruits = ["apple", "banana", "mango"]\nfor fruit in fruits:\n    print(fruit)\n\n# While loop\ncount = 0\nwhile count < 5:\n    print(count)\n    count += 1\n\nLISTS:\nnumbers = [1, 2, 3, 4, 5]\nnumbers.append(6)      # Add to end\nnumbers.remove(3)      # Remove value\nprint(numbers[0])      # First item: 1\nprint(numbers[-1])     # Last item: 6\nprint(len(numbers))    # Length: 5\n\nDICTIONARIES:\nstudent = {\n    "name": "Amara",\n    "age": 20,\n    "course": "Python"\n}\nprint(student["name"])  # Amara\nstudent["grade"] = "A"  # Add new key\n\nFUNCTIONS:\ndef greet(name):\n    return "Hello, " + name + "!"\n\nresult = greet("Kwame")\nprint(result)  # Hello, Kwame!\n\n# Function with default parameter\ndef power(base, exponent=2):\n    return base ** exponent\n\nprint(power(3))     # 9\nprint(power(2, 3))  # 8' },
-    { title: 'Python Projects', order_index: 3, duration_minutes: 80, content: 'PYTHON PROJECTS\n\nLet us build real projects to practice what we have learned.\n\nPROJECT 1: SIMPLE CALCULATOR\n\ndef calculator():\n    print("Simple Calculator")\n    num1 = float(input("Enter first number: "))\n    operator = input("Enter operator (+, -, *, /): ")\n    num2 = float(input("Enter second number: "))\n\n    if operator == "+":\n        result = num1 + num2\n    elif operator == "-":\n        result = num1 - num2\n    elif operator == "*":\n        result = num1 * num2\n    elif operator == "/":\n        if num2 != 0:\n            result = num1 / num2\n        else:\n            print("Cannot divide by zero!")\n            return\n    else:\n        print("Invalid operator")\n        return\n\n    print(f"Result: {num1} {operator} {num2} = {result}")\n\ncalculator()\n\nPROJECT 2: STUDENT GRADE TRACKER\n\nstudents = {}\n\ndef add_student(name, grade):\n    students[name] = grade\n    print(f"{name} added with grade {grade}")\n\ndef get_average():\n    if not students:\n        return 0\n    return sum(students.values()) / len(students)\n\nadd_student("Amara", 85)\nadd_student("Kwame", 92)\nadd_student("Fatima", 78)\n\nprint(f"Class average: {get_average():.1f}")\nprint(f"All students: {students}")\n\nPROJECT 3: TO-DO LIST\n\ntodos = []\n\ndef add_task(task):\n    todos.append({"task": task, "done": False})\n\ndef complete_task(index):\n    todos[index]["done"] = True\n\ndef show_tasks():\n    for i, todo in enumerate(todos):\n        status = "DONE" if todo["done"] else "PENDING"\n        print(f"{i+1}. [{status}] {todo[\'task\']}")\n\nadd_task("Learn Python")\nadd_task("Build a project")\nadd_task("Apply for jobs")\ncomplete_task(0)\nshow_tasks()' },
-  ]);
-  await addQuizzes(db, [
-    { moduleId: pyIds[0], question: 'Which function is used to display output in Python?', options: ['console.log()', 'echo()', 'print()', 'display()'], correct: 2, explanation: 'print() is the Python function used to display output to the screen.' },
-    { moduleId: pyIds[0], question: 'What data type is the value True in Python?', options: ['String', 'Integer', 'Boolean', 'Float'], correct: 2, explanation: 'True and False are Boolean values in Python.' },
-    { moduleId: pyIds[1], question: 'What does the range(5) function produce?', options: ['1, 2, 3, 4, 5', '0, 1, 2, 3, 4', '0, 1, 2, 3, 4, 5', '1, 2, 3, 4'], correct: 1, explanation: 'range(5) produces numbers 0, 1, 2, 3, 4 (starts at 0, stops before 5).' },
-    { moduleId: pyIds[2], question: 'Which method adds an item to the end of a Python list?', options: ['add()', 'insert()', 'append()', 'push()'], correct: 2, explanation: 'The append() method adds an item to the end of a list.' },
-  ]);
+Write at least 250 words total.`
+  );
 
-  // ── COURSE 5: Digital Marketing ────────────────────────────────────────────
-  const mktIds = await addModules(db, courses[4].id, [
-    { title: 'Introduction to Digital Marketing', order_index: 1, duration_minutes: 40, content: 'INTRODUCTION TO DIGITAL MARKETING\n\nDigital marketing is promoting products or services using the internet and digital devices.\n\nWHY DIGITAL MARKETING?\n- Reach millions of people at low cost\n- Target specific audiences precisely\n- Measure results in real time\n- Compete with large companies\n\nDIGITAL MARKETING CHANNELS:\n\n1. SEARCH ENGINE OPTIMIZATION (SEO)\nGet your website to appear at the top of Google search results.\nFree but takes time.\n\n2. SOCIAL MEDIA MARKETING\nUse platforms like Instagram, Facebook, TikTok to reach customers.\nCan be free (organic) or paid (ads).\n\n3. EMAIL MARKETING\nSend targeted emails to subscribers.\nHighest ROI of all channels.\n\n4. CONTENT MARKETING\nCreate blogs, videos, podcasts that attract customers.\nBuilds trust and authority.\n\n5. PAY-PER-CLICK ADVERTISING (PPC)\nPay for ads on Google or social media.\nFast results but costs money.\n\n6. INFLUENCER MARKETING\nPartner with social media influencers to promote your brand.\n\nTHE DIGITAL MARKETING FUNNEL:\nAWARENESS → INTEREST → CONSIDERATION → PURCHASE → LOYALTY\n\nKEY METRICS TO TRACK:\n- Reach: How many people saw your content\n- Engagement: Likes, comments, shares\n- Click-through rate (CTR): % who clicked your link\n- Conversion rate: % who took the desired action\n- Return on investment (ROI): Profit vs cost' },
-    { title: 'Social Media Strategy', order_index: 2, duration_minutes: 50, content: 'SOCIAL MEDIA STRATEGY\n\nA social media strategy is a plan for how you will use social platforms to achieve your goals.\n\nCHOOSING THE RIGHT PLATFORMS:\n\nINSTAGRAM:\n- Best for: Visual products, fashion, food, travel, lifestyle\n- Audience: 18-34 year olds\n- Content: Photos, Reels, Stories\n\nFACEBOOK:\n- Best for: Local businesses, events, community groups\n- Audience: 25-55 year olds\n- Content: Posts, videos, ads, groups\n\nTIKTOK:\n- Best for: Entertainment, youth brands, viral content\n- Audience: 16-24 year olds\n- Content: Short videos (15-60 seconds)\n\nLINKEDIN:\n- Best for: B2B, professional services, job seekers\n- Audience: Professionals 25-45\n- Content: Articles, career updates, industry news\n\nCREATING A CONTENT CALENDAR:\n1. Decide how often to post (e.g., 3x per week)\n2. Plan content themes for each day\n3. Create content in batches\n4. Schedule posts in advance\n5. Engage with comments and messages\n\nCONTENT IDEAS:\n- Behind the scenes\n- Customer testimonials\n- Tips and tutorials\n- Product showcases\n- Questions and polls\n- Industry news\n\nHASHTAG STRATEGY:\n- Use 5-15 relevant hashtags\n- Mix popular and niche hashtags\n- Create a branded hashtag\n- Research what competitors use' },
-    { title: 'SEO & Content Marketing', order_index: 3, duration_minutes: 45, content: 'SEO AND CONTENT MARKETING\n\nSEO (Search Engine Optimization) helps people find you on Google.\n\nHOW GOOGLE RANKS WEBSITES:\n1. Relevance: Does your content match the search?\n2. Authority: Do other sites link to you?\n3. User experience: Is your site fast and easy to use?\n\nON-PAGE SEO:\n- Use keywords in your title, headings, and content\n- Write descriptive meta descriptions\n- Use alt text for images\n- Create clear URL structures\n- Make sure your site loads fast\n\nKEYWORD RESEARCH:\n1. Think about what your customers search for\n2. Use Google\'s autocomplete suggestions\n3. Check "People also ask" on Google\n4. Use free tools: Google Keyword Planner, Ubersuggest\n\nCONTENT MARKETING STRATEGY:\n\nTYPES OF CONTENT:\n- Blog posts: Educate and attract organic traffic\n- Videos: Engage and explain complex topics\n- Infographics: Visualize data and processes\n- Podcasts: Build audience while they commute\n- Ebooks/Guides: Generate leads\n\nCONTENT CREATION TIPS:\n- Solve a specific problem for your audience\n- Use clear, simple language\n- Include images and examples\n- Add a call-to-action (what should readers do next?)\n- Publish consistently\n\nMEASURING SUCCESS:\n- Google Analytics: Track website visitors\n- Google Search Console: Track search rankings\n- Social media insights: Track engagement\n- Email open rates and click rates' },
-  ]);
-  await addQuizzes(db, [
-    { moduleId: mktIds[0], question: 'Which digital marketing channel has the highest ROI?', options: ['Social media ads', 'Email marketing', 'TV commercials', 'Billboard ads'], correct: 1, explanation: 'Email marketing consistently delivers the highest return on investment of all digital marketing channels.' },
-    { moduleId: mktIds[1], question: 'Which platform is best for reaching professional B2B audiences?', options: ['TikTok', 'Instagram', 'LinkedIn', 'Snapchat'], correct: 2, explanation: 'LinkedIn is the leading professional network, ideal for B2B marketing and professional services.' },
-    { moduleId: mktIds[2], question: 'What does SEO stand for?', options: ['Social Engagement Optimization', 'Search Engine Optimization', 'Site Experience Online', 'Search Experience Operations'], correct: 1, explanation: 'SEO stands for Search Engine Optimization - the practice of improving your website to rank higher in search results.' },
-  ]);
+  await addAssignment(db, sadIds[1], courses[0].id,
+    'Draw a Context Diagram',
+    'Create a context diagram (Level 0 DFD) for a library management system.',
+    `Design a Context Diagram (Level 0 DFD) for a LIBRARY MANAGEMENT SYSTEM.
 
-  // ── COURSE 6: Data Analysis ────────────────────────────────────────────────
-  const dataIds = await addModules(db, courses[5].id, [
-    { title: 'Introduction to Data Analysis', order_index: 1, duration_minutes: 35, content: 'INTRODUCTION TO DATA ANALYSIS\n\nData analysis is the process of examining data to find useful information and make decisions.\n\nWHY DATA ANALYSIS MATTERS:\n- Businesses use data to make better decisions\n- Helps identify trends and patterns\n- Reduces guesswork\n- High demand skill in the job market\n\nTHE DATA ANALYSIS PROCESS:\n1. DEFINE THE QUESTION\nWhat do you want to find out?\nExample: "Which products sell best on weekends?"\n\n2. COLLECT DATA\nGather relevant data from reliable sources.\nSources: Surveys, databases, sales records, social media\n\n3. CLEAN THE DATA\nRemove errors, duplicates, and incomplete entries.\nThis is often 80% of the work!\n\n4. ANALYZE THE DATA\nUse formulas, charts, and statistics to find patterns.\n\n5. VISUALIZE THE DATA\nCreate charts and graphs to communicate findings.\n\n6. DRAW CONCLUSIONS\nWhat does the data tell you? What actions should be taken?\n\nTYPES OF DATA:\n- Quantitative: Numbers (sales figures, age, temperature)\n- Qualitative: Categories (gender, product type, country)\n- Time series: Data over time (monthly sales, daily visitors)\n\nCOMMON DATA ANALYSIS TOOLS:\n- Excel / Google Sheets (beginner)\n- Python with Pandas (intermediate)\n- Tableau / Power BI (visualization)\n- SQL (database queries)' },
-    { title: 'Excel & Google Sheets Essentials', order_index: 2, duration_minutes: 55, content: 'EXCEL AND GOOGLE SHEETS ESSENTIALS\n\nSpreadsheets are the most widely used data analysis tools in business.\n\nKEY CONCEPTS:\n\nCELLS, ROWS, AND COLUMNS:\n- Cells are identified by column letter + row number (A1, B2, C3)\n- Rows go horizontally (1, 2, 3...)\n- Columns go vertically (A, B, C...)\n\nESSENTIAL FORMULAS:\n\nSUM: Add numbers\n=SUM(A1:A10)  adds all values from A1 to A10\n\nAVERAGE: Calculate mean\n=AVERAGE(B1:B10)\n\nCOUNT: Count cells with numbers\n=COUNT(C1:C10)\n\nCOUNTIF: Count cells meeting a condition\n=COUNTIF(D1:D10, "Yes")  counts cells containing "Yes"\n\nIF: Conditional logic\n=IF(A1>50, "Pass", "Fail")  returns Pass if A1 > 50\n\nVLOOKUP: Look up values in a table\n=VLOOKUP(lookup_value, table_range, column_number, FALSE)\n\nMAX and MIN:\n=MAX(A1:A10)  largest value\n=MIN(A1:A10)  smallest value\n\nPIVOT TABLES:\nPivot tables summarize large datasets quickly.\n1. Select your data\n2. Insert > Pivot Table\n3. Drag fields to Rows, Columns, Values\n4. Instantly see summaries and totals\n\nCHARTS AND GRAPHS:\n- Bar chart: Compare categories\n- Line chart: Show trends over time\n- Pie chart: Show proportions\n- Scatter plot: Show relationships between variables\n\nDATA CLEANING TIPS:\n- Remove duplicate rows\n- Fix inconsistent formatting (dates, names)\n- Fill in or remove blank cells\n- Standardize text (uppercase/lowercase)' },
-    { title: 'Data Visualization & Reporting', order_index: 3, duration_minutes: 45, content: 'DATA VISUALIZATION AND REPORTING\n\nData visualization turns numbers into visual stories that anyone can understand.\n\nWHY VISUALIZATION MATTERS:\n- Humans process visuals 60,000x faster than text\n- Makes complex data easy to understand\n- Helps decision makers act quickly\n- Makes your reports more professional\n\nCHOOSING THE RIGHT CHART:\n\nBAR CHART:\nUse when: Comparing values across categories\nExample: Sales by product, revenue by region\n\nLINE CHART:\nUse when: Showing change over time\nExample: Monthly website visitors, daily temperature\n\nPIE CHART:\nUse when: Showing parts of a whole (use sparingly)\nExample: Market share, budget breakdown\nRule: Use only when you have 5 or fewer categories\n\nSCATTER PLOT:\nUse when: Showing relationship between two variables\nExample: Advertising spend vs sales revenue\n\nHEATMAP:\nUse when: Showing patterns in a matrix of data\nExample: Website clicks by hour and day\n\nDATA STORYTELLING:\n1. Start with the key insight (the "so what")\n2. Provide context (why does this matter?)\n3. Show the data that supports your point\n4. End with a recommendation or action\n\nREPORT STRUCTURE:\n- Executive Summary: Key findings in 3-5 bullet points\n- Background: Why was this analysis done?\n- Methodology: How was data collected and analyzed?\n- Findings: What did the data show?\n- Recommendations: What should be done?\n\nBEST PRACTICES:\n- Keep charts simple and uncluttered\n- Always label axes and include units\n- Use consistent colors throughout\n- Highlight the most important data point\n- Include the data source' },
-  ]);
-  await addQuizzes(db, [
-    { moduleId: dataIds[0], question: 'What is the first step in the data analysis process?', options: ['Collect data', 'Define the question', 'Clean the data', 'Create charts'], correct: 1, explanation: 'You must first define what question you are trying to answer before collecting or analyzing any data.' },
-    { moduleId: dataIds[1], question: 'Which Excel formula calculates the average of a range?', options: ['=SUM()', '=COUNT()', '=AVERAGE()', '=MEAN()'], correct: 2, explanation: '=AVERAGE() calculates the arithmetic mean of a range of cells.' },
-    { moduleId: dataIds[2], question: 'Which chart type is best for showing change over time?', options: ['Pie chart', 'Bar chart', 'Line chart', 'Scatter plot'], correct: 2, explanation: 'Line charts are ideal for showing trends and changes over time.' },
-  ]);
+The system must handle:
+- Members borrowing and returning books
+- Librarians adding new books and managing members
+- Sending overdue notices to members
+- Suppliers delivering new book stock
 
-  // ── OPPORTUNITIES ──────────────────────────────────────────────────────────
-  const oppData = [
-    { employer: employer1Id, title: 'Junior Web Developer', company: 'TechAfrica Ltd', desc: 'Join our team building web applications for African businesses. Great opportunity to learn and grow!', type: 'job', location: 'Nairobi, Kenya', remote: 0, salary: '$500-$800/month', skills: ['HTML', 'CSS', 'JavaScript'], courses: [courses[0].id], deadline: '2026-06-30' },
-    { employer: employer1Id, title: 'Python Developer Intern', company: 'TechAfrica Ltd', desc: 'Join our data team building pipelines and automation scripts. Perfect for recent graduates.', type: 'internship', location: 'Nairobi, Kenya', remote: 1, salary: 'Stipend: $200/month', skills: ['Python', 'Data Analysis'], courses: [courses[3].id], deadline: '2026-07-31' },
-    { employer: employer2Id, title: 'Graphic Design Intern', company: 'Creative Hub', desc: 'Support our creative team on branding projects and social media content.', type: 'internship', location: 'Accra, Ghana', remote: 0, salary: 'Stipend: $150/month', skills: ['Figma', 'Design', 'Branding'], courses: [courses[1].id], deadline: '2026-06-15' },
-    { employer: employer2Id, title: 'Social Media Manager', company: 'Creative Hub', desc: 'Manage clients online presence, create content calendars, and analyze performance metrics.', type: 'job', location: 'Accra, Ghana', remote: 1, salary: '$400-$600/month', skills: ['Social Media', 'Content', 'Marketing'], courses: [courses[4].id], deadline: '2026-07-01' },
-    { employer: employer1Id, title: 'Business Development Volunteer', company: 'TechAfrica Ltd', desc: 'Help expand our reach across Africa through market research and proposals.', type: 'volunteer', location: 'Remote', remote: 1, salary: 'Unpaid (Certificate provided)', skills: ['Business Planning', 'Research'], courses: [courses[2].id], deadline: '2026-08-01' },
-    { employer: employer2Id, title: 'Data Analyst Intern', company: 'Creative Hub', desc: 'Analyze campaign performance data and create reports for our clients using Excel and Google Sheets.', type: 'internship', location: 'Accra, Ghana', remote: 1, salary: 'Stipend: $180/month', skills: ['Data', 'Excel', 'Analytics'], courses: [courses[5].id], deadline: '2026-07-15' },
-  ];
+Your submission must include:
+1. LIST all External Entities and explain the role of each
+2. LIST all Data Flows entering the system (from external entities)
+3. LIST all Data Flows leaving the system (to external entities)
+4. DESCRIBE the system boundary — what is inside and outside the system
+5. DRAW or DESCRIBE your Context Diagram clearly:
+   - Name each external entity
+   - Label every data flow with what data is moving
+   - The system appears as ONE process in the centre
+6. Explain why a Context Diagram is drawn before a Level 1 DFD
 
-  for (const o of oppData) {
-    await db.run('INSERT INTO opportunities (id, employer_id, title, company, description, type, location, is_remote, salary_range, required_skills, required_courses, deadline) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [uuidv4(), o.employer, o.title, o.company, o.desc, o.type, o.location, o.remote, o.salary, JSON.stringify(o.skills), JSON.stringify(o.courses), o.deadline]);
+Note: If you have access to draw.io, Lucidchart, or paper, draw the actual diagram and describe it in words below.`
+  );
+
+  await addAssignment(db, sadIds[2], courses[0].id,
+    'Design an ERD for a Hospital System',
+    'Create an Entity Relationship Diagram for a hospital patient management system.',
+    `Design an ERD for a HOSPITAL PATIENT MANAGEMENT SYSTEM.
+
+The system needs to manage:
+- Patients who are admitted to the hospital
+- Doctors who treat patients
+- Wards where patients stay
+- Treatments and prescriptions given to patients
+- Medical records for each patient visit
+
+Your submission must include:
+1. LIST at least 5 ENTITIES with their attributes
+   For each entity, underline or mark the Primary Key
+2. IDENTIFY all RELATIONSHIPS between entities
+   Name each relationship with a verb
+3. STATE the CARDINALITY of each relationship (1:1, 1:N, or M:N)
+   Explain your reasoning for each
+4. IDENTIFY any Many-to-Many relationships and explain what junction table would resolve them
+5. DRAW or DESCRIBE your complete ERD
+6. Write the database table definition (columns and data types) for any ONE entity
+
+Show clear reasoning for your design choices.`
+  );
+
+  // ── COURSE 2: Web Development ──────────────────────────────────────────────
+  const webIds = await addModules(db, courses[1].id, [
+    {
+      title: 'HTML — Building the Structure of Web Pages',
+      order_index: 1,
+      duration_minutes: 55,
+      content: `HTML — BUILDING THE STRUCTURE OF WEB PAGES
+
+HTML (HyperText Markup Language) is the foundation of every web page on the internet. It defines the structure and content of a page.
+
+WHAT HTML DOES:
+- Tells the browser what content to display
+- Organises content into headings, paragraphs, lists, images, links, and tables
+- Does NOT control how things look (that is CSS's job)
+
+YOUR FIRST HTML DOCUMENT:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My First Web Page</title>
+</head>
+<body>
+  <h1>Hello, World!</h1>
+  <p>This is my first web page.</p>
+</body>
+</html>
+
+UNDERSTANDING THE STRUCTURE:
+- <!DOCTYPE html> — Tells the browser this is an HTML5 document
+- <html> — The root element that wraps everything
+- <head> — Contains information about the page (not visible to users)
+- <title> — The text shown on the browser tab
+- <body> — Everything visible on the web page goes here
+
+ESSENTIAL HTML TAGS:
+
+HEADINGS (h1 to h6):
+<h1>Main Heading</h1>      ← Largest, most important
+<h2>Sub Heading</h2>
+<h3>Section Heading</h3>
+<h6>Smallest Heading</h6>  ← Least important
+Rule: Use only ONE h1 per page. It tells search engines the main topic.
+
+PARAGRAPHS AND TEXT:
+<p>A paragraph of text.</p>
+<strong>Bold text</strong>
+<em>Italic text</em>
+<br>  ← Line break (no closing tag)
+<hr>  ← Horizontal line
+
+LINKS:
+<a href="https://google.com">Visit Google</a>
+<a href="about.html">About Page</a>         ← Link to another page
+<a href="#section1">Jump to Section 1</a>   ← Jump to same page
+<a href="mailto:info@example.com">Email Us</a>
+
+IMAGES:
+<img src="photo.jpg" alt="Description of image" width="300">
+- src: path to the image file
+- alt: description for screen readers and if image fails to load
+- Always include alt text for accessibility
+
+LISTS:
+Unordered list (bullet points):
+<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JavaScript</li>
+</ul>
+
+Ordered list (numbered):
+<ol>
+  <li>Plan the website</li>
+  <li>Build the HTML structure</li>
+  <li>Add CSS styling</li>
+</ol>
+
+TABLES:
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>City</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Amara</td>
+      <td>22</td>
+      <td>Lusaka</td>
+    </tr>
+  </tbody>
+</table>
+
+FORMS:
+<form action="/submit" method="POST">
+  <label for="name">Full Name:</label>
+  <input type="text" id="name" name="name" required>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" required>
+
+  <label for="message">Message:</label>
+  <textarea id="message" name="message" rows="4"></textarea>
+
+  <button type="submit">Send</button>
+</form>
+
+SEMANTIC HTML5 ELEMENTS:
+Semantic tags describe the purpose of their content:
+<header>   — Top section of page (logo, navigation)
+<nav>      — Navigation menu
+<main>     — Main content of the page
+<section>  — A thematic group of content
+<article>  — Independent, self-contained content
+<aside>    — Side content (sidebar, ads)
+<footer>   — Bottom section of page
+
+Why use semantic HTML?
+- Helps search engines understand your page structure
+- Improves accessibility for screen readers
+- Makes your code easier to read and maintain`
+    },
+    {
+      title: 'CSS — Styling and Designing Web Pages',
+      order_index: 2,
+      duration_minutes: 65,
+      content: `CSS — STYLING AND DESIGNING WEB PAGES
+
+CSS (Cascading Style Sheets) controls how HTML elements look — colours, fonts, sizes, spacing, and layout.
+
+HOW CSS WORKS:
+selector {
+  property: value;
+}
+
+Example:
+h1 {
+  color: blue;
+  font-size: 36px;
+  text-align: center;
+}
+
+THREE WAYS TO ADD CSS:
+
+1. INLINE CSS (directly on element — avoid for large projects):
+<p style="color: red; font-size: 18px;">This is red text</p>
+
+2. INTERNAL CSS (inside <style> tag in <head>):
+<style>
+  p { color: red; }
+</style>
+
+3. EXTERNAL CSS (separate .css file — best practice):
+<link rel="stylesheet" href="styles.css">
+
+CSS SELECTORS:
+
+Element selector — targets all elements of that type:
+p { color: grey; }
+
+Class selector — targets elements with a specific class:
+.card { background: white; border-radius: 8px; }
+<div class="card">Content</div>
+
+ID selector — targets one specific element:
+#header { background: navy; }
+<header id="header">...</header>
+
+THE BOX MODEL:
+Every HTML element is a rectangular box with:
+- Content — the actual text or image
+- Padding — space inside the border
+- Border — line around the element
+- Margin — space outside the border
+
+div {
+  width: 300px;
+  padding: 20px;
+  border: 2px solid black;
+  margin: 10px;
+}
+
+COLOURS IN CSS:
+color: red;                  ← colour name
+color: #2563eb;              ← hex code
+color: rgb(37, 99, 235);     ← RGB values
+color: rgba(37, 99, 235, 0.5); ← RGB with transparency
+
+TYPOGRAPHY:
+body {
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  font-weight: 400;        ← 400=normal, 700=bold
+  line-height: 1.6;        ← spacing between lines
+  letter-spacing: 0.5px;
+}
+
+FLEXBOX — Modern Layout:
+Flexbox makes it easy to align and distribute elements.
+
+.container {
+  display: flex;
+  justify-content: center;   ← horizontal alignment
+  align-items: center;       ← vertical alignment
+  gap: 16px;                 ← space between items
+  flex-wrap: wrap;           ← wrap to next line if needed
+}
+
+justify-content options:
+- flex-start: items at the left
+- flex-end: items at the right
+- center: items in the center
+- space-between: equal space between items
+- space-around: equal space around items
+
+CSS GRID — Two-Dimensional Layout:
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  ← 3 equal columns
+  gap: 20px;
+}
+
+RESPONSIVE DESIGN — Media Queries:
+Media queries change styles based on screen size.
+
+/* Default: mobile first */
+.card {
+  width: 100%;
+}
+
+/* Tablet and above */
+@media (min-width: 768px) {
+  .card {
+    width: 48%;
   }
+}
 
-  // ── ASSIGNMENTS (one per module, 18 total) ─────────────────────────────────
-  // Web Development
-  await addAssignment(db, webIds[0], courses[0].id, 'Build Your First HTML Page', 'Create a complete HTML page about yourself.', 'Create an HTML page that includes:\n1. Proper DOCTYPE and html/head/body structure\n2. A title tag with your name\n3. An h1 heading with your name\n4. A paragraph about yourself (at least 3 sentences)\n5. An unordered list of 5 hobbies\n6. A link to your favourite website\n7. At least one image\n\nPaste your complete HTML code in the submission box.');
-  await addAssignment(db, webIds[1], courses[0].id, 'Style Your Page with CSS', 'Add CSS styling to your HTML page from the previous module.', 'Add a style section to your HTML page and:\n1. Set a background color for the body\n2. Style your h1 with a custom color and font size\n3. Style paragraphs with readable line spacing (1.6)\n4. Add padding and a border-radius to your list\n5. Add one media query for screens smaller than 600px\n\nPaste your complete HTML + CSS code below.');
-  await addAssignment(db, webIds[2], courses[0].id, 'Add JavaScript Interactivity', 'Make your webpage interactive with JavaScript.', 'Add JavaScript to your page to:\n1. A button that changes the background color when clicked\n2. A form that greets the user by name when submitted\n3. A click counter that shows how many times a button was clicked\n4. One additional interactive feature of your choice\n\nPaste your complete HTML + CSS + JavaScript code below.');
+/* Desktop */
+@media (min-width: 1024px) {
+  .card {
+    width: 30%;
+  }
+}
 
-  // Graphic Design
-  await addAssignment(db, designIds[0], courses[1].id, 'Design Principles Analysis', 'Analyze a real-world design using the 5 core principles.', 'Choose any logo, poster, or website you find visually appealing.\n\n1. Name the design and where you found it\n2. Identify how CONTRAST is used (give a specific example)\n3. Identify how ALIGNMENT is used\n4. Identify how REPETITION is used\n5. Identify how PROXIMITY is used\n6. Comment on the use of WHITE SPACE\n7. Overall: What makes this design effective?\n\nWrite at least 200 words in your submission.');
-  await addAssignment(db, designIds[1], courses[1].id, 'Create a Color Palette', 'Design a professional color palette for a fictional brand.', 'Create a color palette for a fictional African tech startup called "SavannaHub".\n\n1. Choose a primary brand color and explain why (psychology)\n2. Choose 2 complementary or analogous colors\n3. Add 2 neutral colors\n4. For each color, write the hex code (e.g. #2563eb)\n5. Explain what emotion or message each color communicates\n6. Choose 2 font pairings for the brand and explain your choice\n\nExample format:\nPrimary: #2563eb (Blue) - communicates trust and technology\nSecondary: #f59e0b (Amber) - communicates energy and innovation\n...');
-  await addAssignment(db, designIds[2], courses[1].id, 'Design a Logo Concept', 'Create a logo concept for a fictional business.', 'Design a logo concept for a fictional business of your choice.\n\n1. State the business name and what it does\n2. Choose the logo type (wordmark, lettermark, symbol, combination, or emblem) and explain why\n3. Describe the visual concept in detail (shapes, symbols, style)\n4. Explain your color choice and what it communicates\n5. Explain your font choice\n6. Describe how the logo would look in black and white\n7. If you have access to Canva or any design tool, attach a link to your design\n\nWrite at least 150 words describing your concept.');
+COMMON CSS PROPERTIES:
+background-color: #f0f0f0;
+background-image: url('image.jpg');
+border: 1px solid #ccc;
+border-radius: 8px;          ← rounded corners
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+opacity: 0.8;
+cursor: pointer;
+text-decoration: none;       ← removes underline from links
+list-style: none;            ← removes bullet points
+overflow: hidden;            ← hides content outside the box
+position: relative;
+position: absolute;
+z-index: 10;                 ← layer order`
+    },
+    {
+      title: 'JavaScript — Making Web Pages Interactive',
+      order_index: 3,
+      duration_minutes: 75,
+      content: `JAVASCRIPT — MAKING WEB PAGES INTERACTIVE
 
-  // Entrepreneurship
-  await addAssignment(db, bizIds[0], courses[2].id, 'Identify a Business Opportunity', 'Find a real problem in your community and propose a business solution.', 'Look around your community and identify a real problem that a business could solve.\n\n1. Describe the problem clearly (who has it, how often, how painful is it?)\n2. Describe your proposed business solution\n3. Who are your target customers? (age, location, income level)\n4. How would you make money? (pricing model)\n5. Run the validation test:\n   - Is this a real problem? (Yes/No + explanation)\n   - Will people pay for it? (Yes/No + explanation)\n   - Is the market big enough? (estimate number of potential customers)\n   - Can you realistically build this? (Yes/No + explanation)\n6. Rate your idea 1-10 and explain your rating\n\nWrite at least 250 words.');
-  await addAssignment(db, bizIds[1], courses[2].id, 'Write a Mini Business Plan', 'Create a one-page business plan for your business idea.', 'Using the business idea from the previous assignment, write a mini business plan with these sections:\n\n1. BUSINESS NAME AND TAGLINE\n2. PROBLEM AND SOLUTION (2-3 sentences each)\n3. TARGET MARKET (describe your ideal customer in detail)\n4. PRODUCT/SERVICE (what exactly are you selling?)\n5. REVENUE MODEL (how will you make money?)\n6. MARKETING STRATEGY (3 specific ways you will attract customers)\n7. STARTUP COSTS (list at least 5 costs with estimated amounts)\n8. YEAR 1 REVENUE GOAL (how much do you want to make in year 1?)\n\nBe specific and realistic. Write at least 300 words total.');
-  await addAssignment(db, bizIds[2], courses[2].id, 'Create a Marketing Plan', 'Develop a 30-day social media marketing plan for your business.', 'Create a 30-day social media marketing plan for your business.\n\n1. Choose 2 social media platforms and explain why they suit your business\n2. Define your target audience on each platform\n3. Create a content calendar for Week 1 (7 days, at least 3 posts per week):\n   - Day, Platform, Content Type, Topic/Caption idea\n4. Write 3 sample social media posts in full (caption + hashtags)\n5. Define 2 key metrics you will track and why\n6. Set a 30-day goal (e.g. 500 followers, 100 website visits)\n\nBe creative and specific to your business.');
+JavaScript (JS) makes web pages dynamic and interactive. While HTML provides structure and CSS provides styling, JavaScript adds behaviour.
 
-  // Python
-  await addAssignment(db, pyIds[0], courses[3].id, 'Python Variables and Data Types', 'Write a Python program using variables and data types.', 'Write a Python program that:\n\n1. Creates variables for: your name (string), age (integer), height in meters (float), and whether you are a student (boolean)\n2. Prints each variable with a descriptive label\n   Example: print("Name:", name)\n3. Performs and prints 3 mathematical calculations using your age and height\n4. Creates a list of 5 of your favourite foods and prints the list\n5. Creates a dictionary with at least 4 facts about yourself and prints each key-value pair\n6. Uses at least 3 string methods on your name variable\n\nPaste your complete Python code and the output below.');
-  await addAssignment(db, pyIds[1], courses[3].id, 'Build a Number Guessing Game', 'Create an interactive number guessing game using Python.', 'Build a number guessing game in Python:\n\n1. The program picks a random number between 1 and 100\n   (use: import random; number = random.randint(1, 100))\n2. The user has 7 attempts to guess the number\n3. After each wrong guess, tell the user if their guess is too HIGH or too LOW\n4. If they guess correctly, congratulate them and show how many attempts it took\n5. If they run out of attempts, reveal the correct number\n6. After the game ends, ask if they want to play again\n\nBonus: Keep track of the best score (fewest guesses) across multiple games.\n\nPaste your complete code and a sample game output below.');
-  await addAssignment(db, pyIds[2], courses[3].id, 'Build a Contact Book App', 'Create a command-line contact book application.', 'Build a contact book application in Python with these features:\n\n1. ADD a contact (name, phone, email)\n2. VIEW all contacts\n3. SEARCH for a contact by name\n4. DELETE a contact\n5. A menu that keeps running until the user chooses to exit\n\nRequirements:\n- Store contacts in a dictionary or list of dictionaries\n- Use functions for each feature\n- Handle the case where a contact is not found\n- Show a numbered menu to the user\n\nExample menu:\n1. Add contact\n2. View all contacts\n3. Search contact\n4. Delete contact\n5. Exit\n\nPaste your complete code and a sample run showing all features.');
+ADDING JAVASCRIPT TO HTML:
+<!-- At the bottom of body — best practice -->
+<script src="script.js"></script>
 
-  // Digital Marketing
-  await addAssignment(db, mktIds[0], courses[4].id, 'Digital Marketing Audit', 'Analyze the digital marketing presence of a local business.', 'Choose a local business in your area (or a small African business online) and audit their digital marketing.\n\n1. Business name and what they sell\n2. WEBSITE: Do they have one? Is it mobile-friendly? What could be improved?\n3. SOCIAL MEDIA: Which platforms are they on? How often do they post? What is their engagement like?\n4. SEO: Search for their business on Google. Do they appear? What keywords could they target?\n5. EMAIL MARKETING: Do they collect emails? Do they send newsletters?\n6. OVERALL SCORE: Rate their digital marketing 1-10\n7. TOP 3 RECOMMENDATIONS: What should they do first to improve?\n\nWrite at least 250 words with specific observations.');
-  await addAssignment(db, mktIds[1], courses[4].id, 'Create a Social Media Content Plan', 'Develop a 2-week social media content plan for a business.', 'Choose a business (real or fictional) and create a 2-week social media content plan.\n\n1. Business description (name, product/service, target audience)\n2. Platform choice: Choose 2 platforms and justify your choice\n3. Content calendar for 2 weeks:\n   - Date | Platform | Content Type | Topic | Caption (brief)\n   - Post at least 3 times per week on each platform\n4. Write 2 complete posts in full detail:\n   - Full caption text\n   - Hashtags (10-15)\n   - Description of the image or video\n5. Define your engagement strategy (how will you respond to comments?)\n\nBe specific and creative.');
-  await addAssignment(db, mktIds[2], courses[4].id, 'SEO Keyword Research', 'Conduct keyword research for a business website.', 'Conduct keyword research for a fictional business: "AfriCraft - handmade African jewellery sold online".\n\n1. List 10 keywords potential customers might search for\n2. Categorize them as: Short-tail (1-2 words) or Long-tail (3+ words)\n3. For each keyword, estimate: High/Medium/Low search volume and competition\n4. Choose your TOP 3 keywords and explain why\n5. Write a sample blog post title and meta description (160 characters max) using your top keyword\n6. Suggest 3 blog post topics that would attract organic traffic\n7. Name 2 free tools you would use for keyword research and explain how\n\nWrite at least 200 words.');
+<!-- Or inline -->
+<script>
+  console.log("Hello from JavaScript!");
+</script>
 
-  // Data Analysis
-  await addAssignment(db, dataIds[0], courses[5].id, 'Data Analysis Case Study', 'Analyze a real-world dataset and draw conclusions.', 'A small shop recorded their daily sales for 2 weeks. Analyze this data:\n\nWeek 1: Mon=150, Tue=200, Wed=180, Thu=220, Fri=350, Sat=420, Sun=300\nWeek 2: Mon=160, Tue=190, Wed=210, Thu=240, Fri=380, Sat=450, Sun=320\n\nAnswer these questions:\n1. What was the total sales for each week?\n2. What was the average daily sales for each week?\n3. Which day had the highest sales overall?\n4. Which day had the lowest sales overall?\n5. What was the percentage increase from Week 1 to Week 2?\n6. What trend do you notice about weekday vs weekend sales?\n7. Based on this data, give 2 business recommendations to the shop owner\n8. What additional data would you want to collect to do a better analysis?\n\nShow all your calculations.');
-  await addAssignment(db, dataIds[1], courses[5].id, 'Build a Sales Dashboard', 'Create a spreadsheet dashboard to track and visualize sales data.', 'Create a Google Sheets or Excel spreadsheet with the following:\n\n1. A data table with at least 20 rows of fictional sales data including:\n   - Date, Product Name, Category, Units Sold, Unit Price, Total Revenue\n2. Use formulas to calculate:\n   - Total revenue per row (=Units Sold * Unit Price)\n   - SUM of total revenue\n   - AVERAGE revenue per sale\n   - MAX and MIN sale values\n   - COUNTIF to count sales per category\n3. Create a Pivot Table summarizing revenue by category\n4. Create 2 charts:\n   - A bar chart showing revenue by product\n   - A line chart showing revenue over time\n5. Add a summary section at the top with key metrics\n\nShare a link to your Google Sheet or describe your spreadsheet in detail.');
-  await addAssignment(db, dataIds[2], courses[5].id, 'Create a Data Story', 'Turn data into a compelling visual story.', 'You are a data analyst presenting findings to a business owner. Create a data story using this scenario:\n\nAn online store wants to understand why sales dropped 30% in March compared to February.\n\nYou have this data:\n- February: 500 orders, avg order value $45, top product: Phone Cases\n- March: 350 orders, avg order value $42, top product: Phone Cases\n- Website traffic: Feb=8000 visits, Mar=7500 visits\n- Conversion rate: Feb=6.25%, Mar=4.67%\n- New customers: Feb=200, Mar=120\n- Returning customers: Feb=300, Mar=230\n\nYour data story must include:\n1. HEADLINE: One sentence summarizing the key finding\n2. CONTEXT: Why does this matter?\n3. ANALYSIS: What does the data show? (use the numbers)\n4. ROOT CAUSE: What likely caused the drop? (give 2-3 hypotheses)\n5. RECOMMENDATIONS: 3 specific actions the business should take\n6. What additional data would help confirm your hypothesis?\n\nWrite at least 300 words.');
+VARIABLES:
+const name = "Amara";     ← cannot be reassigned
+let age = 22;             ← can be reassigned
+var city = "Lusaka";      ← old way, avoid using
 
-  console.log('✅ Seed complete: 5 users, 6 courses, 18 modules, 22 quizzes, 18 assignments, 6 opportunities');
+RULES:
+- Use const by default
+- Use let when the value will change
+- Avoid var
+
+DATA TYPES:
+const text = "Hello";          ← String
+const number = 42;             ← Number
+const price = 19.99;           ← Number (decimal)
+const isLoggedIn = true;       ← Boolean
+const nothing = null;          ← Null
+let notDefined;                ← Undefined
+const colours = ["red","blue","green"];  ← Array
+const person = { name: "Amara", age: 22 }; ← Object
+
+FUNCTIONS:
+// Traditional function
+function greet(name) {
+  return "Hello, " + name + "!";
+}
+
+// Arrow function (modern)
+const greet = (name) => "Hello, " + name + "!";
+
+// Calling a function
+console.log(greet("Kwame")); // Hello, Kwame!
+
+CONDITIONAL STATEMENTS:
+const score = 75;
+
+if (score >= 80) {
+  console.log("Distinction");
+} else if (score >= 60) {
+  console.log("Pass");
+} else {
+  console.log("Fail");
+}
+
+LOOPS:
+// For loop
+for (let i = 0; i < 5; i++) {
+  console.log(i); // 0, 1, 2, 3, 4
+}
+
+// Loop through an array
+const fruits = ["mango", "banana", "guava"];
+fruits.forEach(fruit => {
+  console.log(fruit);
+});
+
+// While loop
+let count = 0;
+while (count < 3) {
+  console.log(count);
+  count++;
+}
+
+DOM MANIPULATION:
+The DOM (Document Object Model) is the browser's representation of your HTML. JavaScript uses it to read and change the page.
+
+// Select elements
+const title = document.querySelector("h1");
+const button = document.getElementById("myBtn");
+const cards = document.querySelectorAll(".card");
+
+// Change content
+title.textContent = "New Title";
+title.innerHTML = "<em>New Title</em>";
+
+// Change styles
+title.style.color = "red";
+title.style.fontSize = "2rem";
+
+// Add/remove CSS classes
+button.classList.add("active");
+button.classList.remove("hidden");
+button.classList.toggle("open");
+
+// Create and add new elements
+const newParagraph = document.createElement("p");
+newParagraph.textContent = "This was added by JavaScript";
+document.body.appendChild(newParagraph);
+
+EVENT LISTENERS:
+Events happen when a user does something — click, type, hover, scroll.
+
+// Click event
+button.addEventListener("click", function() {
+  alert("Button was clicked!");
+});
+
+// Input event (fires as user types)
+const input = document.getElementById("search");
+input.addEventListener("input", function() {
+  console.log("User typed:", input.value);
+});
+
+// Form submission
+const form = document.querySelector("form");
+form.addEventListener("submit", function(event) {
+  event.preventDefault(); // Stops page from reloading
+  const name = document.getElementById("name").value;
+  console.log("Form submitted by:", name);
+});
+
+FETCH API — Getting Data from the Internet:
+async function getUsers() {
+  try {
+    const response = await fetch("https://api.example.com/users");
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error("Failed to fetch:", error);
+  }
+}
+
+getUsers();
+
+PRACTICAL EXAMPLE — Toggle Dark Mode:
+const toggleBtn = document.getElementById("darkToggle");
+
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+
+  if (document.body.classList.contains("dark-mode")) {
+    toggleBtn.textContent = "Light Mode";
+  } else {
+    toggleBtn.textContent = "Dark Mode";
+  }
+});`
+    },
+  ]);
+
+  await addQuizzes(db, [
+    {
+      moduleId: webIds[0],
+      question: 'Which HTML tag is used for the most important heading on a page?',
+      options: ['<heading>', '<h6>', '<h1>', '<head>'],
+      correct: 2,
+      explanation: '<h1> is the most important heading tag. Only one <h1> should be used per page as it tells search engines the main topic.'
+    },
+    {
+      moduleId: webIds[0],
+      question: 'What is the purpose of the alt attribute in an <img> tag?',
+      options: [
+        'Sets the image size',
+        'Provides a description for screen readers and when images fail to load',
+        'Links the image to another page',
+        'Sets the image border'
+      ],
+      correct: 1,
+      explanation: 'The alt attribute provides alternative text for the image, used by screen readers for accessibility and displayed when the image cannot load.'
+    },
+    {
+      moduleId: webIds[1],
+      question: 'In CSS, which selector targets elements with a specific class name?',
+      options: ['#classname', '.classname', 'classname', '*classname'],
+      correct: 1,
+      explanation: 'A class selector starts with a dot (.) followed by the class name. For example, .card targets all elements with class="card".'
+    },
+    {
+      moduleId: webIds[1],
+      question: 'Which CSS property is used to create space inside an element, between its content and border?',
+      options: ['margin', 'spacing', 'padding', 'border-space'],
+      correct: 2,
+      explanation: 'Padding creates space inside the element between the content and the border. Margin creates space outside the element.'
+    },
+    {
+      moduleId: webIds[2],
+      question: 'Which JavaScript keyword declares a variable that cannot be reassigned?',
+      options: ['var', 'let', 'const', 'static'],
+      correct: 2,
+      explanation: 'const declares a constant variable that cannot be reassigned after its initial value is set. Use const by default and let only when the value needs to change.'
+    },
+    {
+      moduleId: webIds[2],
+      question: 'What does event.preventDefault() do in a form submit event listener?',
+      options: [
+        'Deletes the form',
+        'Submits the form automatically',
+        'Stops the page from reloading on form submission',
+        'Prevents the user from typing in the form'
+      ],
+      correct: 2,
+      explanation: 'event.preventDefault() prevents the default browser behaviour — for forms, this stops the page from reloading so JavaScript can handle the submission instead.'
+    },
+  ]);
+
+  await addAssignment(db, webIds[0], courses[1].id,
+    'Build Your Personal Profile Page',
+    'Create a complete HTML page about yourself using proper semantic structure.',
+    `Create an HTML page that serves as your personal profile. Your page must include:
+
+1. Proper HTML5 document structure (DOCTYPE, html, head, body)
+2. A descriptive <title> tag
+3. Semantic tags: <header>, <main>, <footer>
+4. Inside <header>: Your name as an <h1> and a navigation <nav> with at least 3 links
+5. Inside <main>:
+   - An "About Me" <section> with an <h2> and at least one <p>
+   - A "My Skills" <section> with a <ul> listing at least 5 skills
+   - A "My Goals" <section> with an <ol> listing 3 career goals
+   - A simple <table> showing your weekly study schedule (3 days, 2 subjects each)
+6. Inside <footer>: Your email as a mailto link and copyright text
+7. At least one <img> tag with a proper alt attribute
+
+Paste your complete HTML code in the submission box. Make sure it is valid HTML5.`
+  );
+
+  await addAssignment(db, webIds[1], courses[1].id,
+    'Style Your Profile Page with CSS',
+    'Add professional CSS styling to the HTML page from the previous module.',
+    `Add CSS styling to your profile page from Module 1. Create a separate style section or external stylesheet with:
+
+1. BODY STYLING:
+   - A background colour
+   - A readable font family
+   - A max-width of 800px centered on the page
+
+2. HEADER STYLING:
+   - Background colour and text colour that contrast well
+   - Padding around the content
+   - Style the navigation links (remove underlines, add hover colour)
+
+3. SECTION STYLING:
+   - Different background colours for alternating sections
+   - Padding and margin for breathing room
+   - Rounded corners (border-radius) on section boxes
+
+4. TABLE STYLING:
+   - Borders on cells
+   - Header row with different background colour
+   - Alternating row colours
+
+5. FLEXBOX:
+   - Use flexbox in at least ONE section to arrange elements side by side
+
+6. ONE MEDIA QUERY:
+   - On screens smaller than 600px, make any flex items stack vertically
+
+Paste your complete HTML + CSS code below.`
+  );
+
+  await addAssignment(db, webIds[2], courses[1].id,
+    'Add JavaScript Interactivity',
+    'Make your profile page interactive with at least 4 JavaScript features.',
+    `Add JavaScript to your profile page to make it interactive. Implement ALL of the following:
+
+1. DARK MODE TOGGLE:
+   - A button that switches between light and dark mode
+   - The button text should change ("Dark Mode" / "Light Mode")
+
+2. SKILL FILTER:
+   - An input field where the user can type to filter/search your skills list
+   - Skills that do not match should be hidden
+
+3. CONTACT FORM:
+   - A form with: Name, Email, and Message fields
+   - On submit (without reloading the page), show a success message with the user's name
+   - Validate that all fields are filled before submitting
+
+4. DYNAMIC GREETING:
+   - On page load, display a greeting based on the time of day:
+     - 5am-12pm: "Good morning!"
+     - 12pm-5pm: "Good afternoon!"
+     - 5pm-9pm: "Good evening!"
+     - 9pm-5am: "Good night!"
+
+Paste your complete HTML + CSS + JavaScript code below.`
+  );
+
+  // ── COURSE 3: Operating Systems ────────────────────────────────────────────
+  const osIds = await addModules(db, courses[2].id, [
+    {
+      title: 'Introduction to Operating Systems',
+      order_index: 1,
+      duration_minutes: 50,
+      content: `INTRODUCTION TO OPERATING SYSTEMS
+
+WHAT IS AN OPERATING SYSTEM?
+An Operating System (OS) is system software that manages computer hardware and software resources and provides common services for computer programs.
+
+Without an OS, you would need to write code to directly control every piece of hardware every time you wanted to do anything. The OS handles this complexity so that application software and users can work at a higher level.
+
+ROLE OF THE OPERATING SYSTEM:
+The OS sits between the hardware and the user applications:
+
+USER
+  ↓
+APPLICATIONS (Chrome, Word, games)
+  ↓
+OPERATING SYSTEM
+  ↓
+HARDWARE (CPU, RAM, disk, keyboard, screen)
+
+THE 5 MAIN FUNCTIONS OF AN OS:
+
+1. PROCESS MANAGEMENT
+   - Starts, pauses, resumes, and stops programs
+   - Decides which program gets the CPU at any moment
+   - Handles multiple programs running at the same time (multitasking)
+
+2. MEMORY MANAGEMENT
+   - Allocates RAM to programs that need it
+   - Frees memory when programs close
+   - Protects one program from reading another program's memory
+   - Manages virtual memory (using disk space as extra RAM)
+
+3. FILE SYSTEM MANAGEMENT
+   - Organises files in folders/directories
+   - Controls who can read, write, or execute each file
+   - Manages reading and writing to storage devices
+
+4. DEVICE MANAGEMENT
+   - Controls all hardware devices through device drivers
+   - Manages input (keyboard, mouse) and output (screen, printer)
+   - Queues and schedules device access
+
+5. USER INTERFACE
+   - Provides a way for users to interact with the computer
+   - Two types: Command Line Interface (CLI) and Graphical User Interface (GUI)
+
+TYPES OF OPERATING SYSTEMS:
+
+DESKTOP/LAPTOP OS:
+- Windows 10/11 (Microsoft) — Most widely used, commercial
+- macOS (Apple) — Only on Apple hardware, known for design
+- Linux (Ubuntu, Fedora) — Open source, free, highly customizable
+
+MOBILE OS:
+- Android (Google) — Open source, used on most smartphones
+- iOS (Apple) — Only on iPhone, known for security
+
+SERVER OS:
+- Windows Server — Enterprise environments
+- Linux (Red Hat, Debian) — Powers most of the internet's servers
+
+EMBEDDED OS:
+- Used in washing machines, cars, ATMs, routers
+
+BATCH OS vs INTERACTIVE OS:
+- Batch: Jobs queued and run automatically without user interaction (old mainframes)
+- Interactive: User interacts with the system in real time (all modern OS)
+
+COMMAND LINE INTERFACE (CLI):
+A text-based interface where you type commands.
+
+Common Windows CMD commands:
+dir          ← list files in current folder
+cd Documents ← change to Documents folder
+cd ..        ← go up one folder
+mkdir NewFolder ← create a new folder
+del file.txt ← delete a file
+cls          ← clear the screen
+
+Common Linux/Mac Terminal commands:
+ls           ← list files
+cd Documents ← change directory
+cd ..        ← go up one level
+mkdir NewFolder ← make directory
+rm file.txt  ← remove a file
+clear        ← clear the screen
+pwd          ← print current directory path
+
+WHY LEARN ABOUT OPERATING SYSTEMS?
+- Every software developer needs to understand the environment their code runs in
+- Helps you troubleshoot computer problems effectively
+- Required knowledge for networking, cybersecurity, and system administration careers
+- Linux powers over 90% of web servers — essential for backend development`
+    },
+    {
+      title: 'Processes, Memory, and the CPU',
+      order_index: 2,
+      duration_minutes: 60,
+      content: `PROCESSES, MEMORY, AND THE CPU
+
+WHAT IS A PROCESS?
+A process is a program in execution. When you double-click an application, the OS creates a process for it.
+
+PROGRAM vs PROCESS:
+- Program: A static file on disk (e.g. chrome.exe)
+- Process: A running instance of that program in memory
+
+You can open the same program multiple times — each instance is a separate process.
+
+PROCESS STATES:
+A process moves through different states during its life:
+
+NEW → The process is being created
+READY → Waiting for the CPU to be assigned
+RUNNING → Currently executing on the CPU
+WAITING → Paused, waiting for input/output to complete
+TERMINATED → Has finished executing
+
+PROCESS SCHEDULING:
+The CPU can only run ONE process at a time (on a single core). The OS scheduler decides which process runs next.
+
+SCHEDULING ALGORITHMS:
+
+1. FIRST COME FIRST SERVED (FCFS)
+   Processes run in the order they arrive.
+   Simple but can cause long waiting times if a slow process runs first.
+
+2. SHORTEST JOB FIRST (SJF)
+   The process estimated to finish quickest runs first.
+   Reduces average waiting time but requires knowing process duration.
+
+3. ROUND ROBIN
+   Each process gets a fixed time slot (time quantum), then the next process runs.
+   Example: 5ms per process — after 5ms, switch to next regardless of completion.
+   Most common in modern interactive systems — ensures fairness.
+
+4. PRIORITY SCHEDULING
+   Each process is assigned a priority number.
+   Higher priority processes run first.
+   Problem: Low priority processes may starve (never get CPU time).
+
+CONTEXT SWITCHING:
+When the OS switches from one process to another, it saves the current process state and loads the next process's state.
+This is called a context switch.
+It happens very fast (milliseconds) giving the illusion that everything runs simultaneously.
+
+THREADS:
+A thread is the smallest unit of execution within a process.
+One process can have multiple threads running concurrently.
+Example: A browser has separate threads for:
+- Rendering the page
+- Running JavaScript
+- Downloading files
+- Handling user input
+
+MEMORY MANAGEMENT:
+RAM (Random Access Memory) is the working memory — fast but limited.
+
+HOW THE OS MANAGES MEMORY:
+
+1. MEMORY ALLOCATION
+   When a program starts, the OS allocates a block of RAM to it.
+   When it ends, the memory is freed.
+
+2. MEMORY PROTECTION
+   Each process has its own memory space.
+   Process A cannot read or write to Process B's memory.
+   This prevents crashes and security breaches.
+
+3. VIRTUAL MEMORY
+   When RAM is full, the OS uses part of the hard disk as extra memory.
+   This disk space is called the SWAP file (Windows) or SWAP partition (Linux).
+   
+   Virtual Memory = Physical RAM + Swap Space
+   
+   Downside: Disk is much slower than RAM, so heavy virtual memory use slows the computer.
+
+4. PAGING
+   Memory is divided into fixed-size blocks called pages.
+   Programs are loaded in pages rather than all at once.
+   Allows large programs to run even with limited RAM.
+
+MEMORY HIERARCHY (fastest to slowest):
+Registers (inside CPU) → fastest, smallest
+CPU Cache (L1, L2, L3) → very fast, small
+RAM → fast, medium size
+SSD/HDD → slow, large
+Cloud Storage → very slow, huge
+
+THE CPU:
+The Central Processing Unit is the brain of the computer.
+
+CPU COMPONENTS:
+- ALU (Arithmetic Logic Unit): Performs calculations and comparisons
+- Control Unit: Fetches and decodes instructions
+- Registers: Tiny, ultra-fast storage inside the CPU
+- Cache: Small fast memory between CPU and RAM
+
+CPU PERFORMANCE FACTORS:
+- Clock Speed: GHz — how many operations per second (3.5 GHz = 3.5 billion cycles/second)
+- Cores: Number of independent processing units (4-core, 8-core, 16-core)
+- Cache Size: More cache = fewer trips to slow RAM
+- Architecture: 32-bit vs 64-bit (64-bit handles more RAM and larger calculations)`
+    },
+    {
+      title: 'File Systems, Storage, and Security',
+      order_index: 3,
+      duration_minutes: 60,
+      content: `FILE SYSTEMS, STORAGE, AND SECURITY
+
+THE FILE SYSTEM
+A file system is how the operating system organises and stores data on a storage device.
+
+Without a file system, storage would be one long stream of bytes with no structure.
+
+COMMON FILE SYSTEMS:
+
+NTFS (Windows):
+- New Technology File System
+- Used by Windows 7, 8, 10, 11
+- Supports: Large files, permissions, encryption, journaling
+- Maximum file size: 16 TB
+
+FAT32 (Universal):
+- File Allocation Table (32-bit)
+- Works on Windows, Mac, and Linux
+- Used in USB drives and SD cards
+- Limitation: Maximum file size of 4 GB
+
+exFAT (External drives):
+- Extended FAT
+- No 4 GB file size limit
+- Designed for flash storage (USB, SD cards)
+- Compatible with Windows and Mac
+
+ext4 (Linux):
+- Fourth Extended File System
+- Default file system for most Linux distributions
+- Supports very large files and volumes
+
+FILE SYSTEM CONCEPTS:
+
+DIRECTORY STRUCTURE:
+Files are organized in a hierarchical tree structure:
+
+Windows:
+C:\
+├── Windows\
+│   ├── System32\
+├── Users\
+│   ├── Allan\
+│   │   ├── Documents\
+│   │   ├── Downloads\
+│   │   └── Desktop\
+└── Program Files\
+
+Linux:
+/
+├── home/
+│   └── allan/
+├── etc/         ← System configuration files
+├── bin/         ← Essential commands
+├── var/         ← Variable data (logs)
+└── tmp/         ← Temporary files
+
+FILE PATHS:
+Absolute path: Full path from root
+  Windows: C:\Users\Allan\Documents\report.pdf
+  Linux: /home/allan/documents/report.pdf
+
+Relative path: Path from current location
+  If you are in C:\Users\Allan\
+  Relative: Documents\report.pdf
+
+FILE PERMISSIONS:
+Operating systems control who can access files.
+
+LINUX FILE PERMISSIONS:
+Every file has three permission sets: Owner | Group | Others
+Each set has three permissions: Read (r) | Write (w) | Execute (x)
+
+Example: rwxr-xr--
+Owner: rwx (read, write, execute)
+Group: r-x (read, execute — cannot write)
+Others: r-- (read only)
+
+Numeric representation:
+r=4, w=2, x=1
+rwx = 4+2+1 = 7
+rw- = 4+2+0 = 6
+r-- = 4+0+0 = 4
+
+chmod 755 file.sh  ← Set permissions: owner=7(rwx), group=5(r-x), others=5(r-x)
+
+WINDOWS PERMISSIONS:
+Windows uses ACLs (Access Control Lists).
+Permissions: Full Control, Modify, Read & Execute, Read, Write
+
+STORAGE DEVICES:
+
+HDD (Hard Disk Drive):
+- Mechanical, uses spinning magnetic platters
+- Slower (100-150 MB/s)
+- Cheaper per GB
+- Good for mass storage
+
+SSD (Solid State Drive):
+- No moving parts, uses flash memory
+- Fast (500-5000 MB/s)
+- More expensive per GB
+- Better for OS and applications
+
+USB Flash Drive:
+- Portable flash storage
+- Useful for file transfer and backup
+
+CLOUD STORAGE:
+- Files stored on remote servers
+- Accessible from anywhere
+- Examples: Google Drive, OneDrive, Dropbox
+
+OS SECURITY:
+
+USER ACCOUNTS AND AUTHENTICATION:
+- Administrator/Root account: Full system access
+- Standard user: Limited access, cannot install software or change system settings
+- Guest account: Minimal access
+
+PASSWORDS AND AUTHENTICATION:
+- Strong passwords: At least 12 characters, mix of upper/lower/numbers/symbols
+- Multi-factor authentication (MFA): Password + phone code + fingerprint
+
+MALWARE TYPES:
+- Virus: Attaches to files and spreads
+- Worm: Spreads across network without user action
+- Trojan: Disguises as legitimate software
+- Ransomware: Encrypts files and demands payment
+- Spyware: Secretly monitors user activity
+
+OS SECURITY FEATURES:
+- Firewall: Controls network traffic in and out
+- Windows Defender / antivirus: Scans for malware
+- Automatic updates: Patches security vulnerabilities
+- User Account Control (UAC): Prompts for permission before system changes
+- BitLocker / FileVault: Full disk encryption
+
+BEST SECURITY PRACTICES:
+1. Keep the OS updated
+2. Use a standard account for daily use, not administrator
+3. Install software only from trusted sources
+4. Use strong unique passwords
+5. Enable automatic backups
+6. Use a firewall`
+    },
+  ]);
+
+  await addQuizzes(db, [
+    {
+      moduleId: osIds[0],
+      question: 'What is the main role of an Operating System?',
+      options: [
+        'To browse the internet',
+        'To manage hardware and software resources and provide services to programs',
+        'To create documents and spreadsheets',
+        'To connect to a network'
+      ],
+      correct: 1,
+      explanation: 'An Operating System manages computer hardware resources (CPU, memory, storage) and provides services that allow application software and users to interact with the hardware.'
+    },
+    {
+      moduleId: osIds[0],
+      question: 'Which of the following is NOT a function of an Operating System?',
+      options: ['Process Management', 'Memory Management', 'Designing websites', 'File System Management'],
+      correct: 2,
+      explanation: 'Designing websites is done by web developers, not the operating system. The OS functions include process management, memory management, file system management, and device management.'
+    },
+    {
+      moduleId: osIds[1],
+      question: 'In process scheduling, which algorithm gives each process a fixed time slot before switching to the next?',
+      options: ['First Come First Served', 'Shortest Job First', 'Round Robin', 'Priority Scheduling'],
+      correct: 2,
+      explanation: 'Round Robin gives each process a fixed time quantum (e.g. 5ms), then switches to the next process. It is the most common scheduling algorithm in interactive systems because it ensures fairness.'
+    },
+    {
+      moduleId: osIds[1],
+      question: 'What is virtual memory?',
+      options: [
+        'Memory inside the CPU',
+        'A type of RAM',
+        'Disk space used as extra RAM when physical RAM is full',
+        'Memory used only by the operating system'
+      ],
+      correct: 2,
+      explanation: 'Virtual memory uses part of the hard disk as an extension of RAM when physical RAM is full. It is slower than RAM but allows the system to run more programs than the physical RAM would normally support.'
+    },
+    {
+      moduleId: osIds[2],
+      question: 'Which file system is the default for most modern Windows computers?',
+      options: ['FAT32', 'ext4', 'NTFS', 'exFAT'],
+      correct: 2,
+      explanation: 'NTFS (New Technology File System) is the default file system used by Windows 7, 8, 10, and 11. It supports large files, permissions, encryption, and journaling.'
+    },
+    {
+      moduleId: osIds[2],
+      question: 'In Linux file permissions, what does the permission string "rwxr-xr--" mean for the "Others" group?',
+      options: [
+        'Read, write, and execute',
+        'Read and execute only',
+        'Read only',
+        'No permissions'
+      ],
+      correct: 2,
+      explanation: 'In "rwxr-xr--", the last three characters "r--" represent the Others group permissions: read (r), no write (-), no execute (-). This means others can only read the file.'
+    },
+  ]);
+
+  await addAssignment(db, osIds[0], courses[2].id,
+    'Compare Operating Systems',
+    'Research and compare three major operating systems used today.',
+    `Compare the three most widely used desktop operating systems: Windows 11, macOS, and Ubuntu Linux.
+
+For each operating system, research and answer:
+1. DEVELOPER AND COST: Who makes it? Is it free or paid?
+2. MARKET SHARE: Which is most popular and why?
+3. USER INTERFACE: Describe the look and feel
+4. FILE SYSTEM: What file system does it use by default?
+5. SECURITY: What are its main security features?
+6. BEST USE CASE: What type of user is it best suited for?
+
+Then answer these comparison questions:
+7. Which OS would you recommend for a software developer and why?
+8. Which OS would you recommend for a graphic designer and why?
+9. Which OS runs most web servers on the internet and why?
+10. If you could only use one OS, which would you choose and why?
+
+Write at least 300 words total. Use specific facts and examples.`
+  );
+
+  await addAssignment(db, osIds[1], courses[2].id,
+    'Process Scheduling Simulation',
+    'Manually simulate CPU scheduling algorithms and compare their performance.',
+    `You are given 4 processes with the following details:
+
+Process | Arrival Time | Burst Time (CPU needed)
+P1      | 0ms          | 8ms
+P2      | 1ms          | 4ms
+P3      | 2ms          | 9ms
+P4      | 3ms          | 5ms
+
+Simulate each scheduling algorithm:
+
+1. FIRST COME FIRST SERVED (FCFS):
+   - Draw a Gantt chart showing the order processes run
+   - Calculate Completion Time, Turnaround Time, and Waiting Time for each process
+   - Calculate Average Turnaround Time and Average Waiting Time
+
+2. SHORTEST JOB FIRST (SJF) — Non-preemptive:
+   - At each point when CPU is free, pick the process with shortest burst time that has arrived
+   - Draw the Gantt chart
+   - Calculate the same metrics as above
+
+3. ROUND ROBIN (Time Quantum = 3ms):
+   - Each process gets 3ms, then the next in queue runs
+   - Draw the Gantt chart
+   - Calculate the same metrics
+
+4. COMPARISON:
+   - Which algorithm had the lowest Average Waiting Time?
+   - Which algorithm is fairest to all processes?
+   - Which algorithm would you use for an interactive system (like a desktop OS) and why?
+
+Show all your calculations clearly.`
+  );
+
+  await addAssignment(db, osIds[2], courses[2].id,
+    'OS Security Audit',
+    'Perform a security audit of your computer and document your findings.',
+    `Perform a basic security audit of the computer you use most (home, school, or work).
+
+SECTION 1 — SYSTEM INFORMATION:
+1. What operating system and version is installed?
+2. When was the last system update installed?
+3. How many user accounts exist on the computer?
+4. Are any accounts using Administrator/root privileges for daily use?
+
+SECTION 2 — SECURITY ASSESSMENT:
+Rate each item: Good / Needs Improvement / Not Done
+
+5. Operating system is up to date
+6. Antivirus software is installed and updated
+7. Firewall is enabled
+8. Strong passwords are used on all accounts
+9. Automatic screen lock is enabled (locks after inactivity)
+10. Important files are backed up regularly
+
+SECTION 3 — FILE PERMISSIONS:
+11. Choose any folder on your computer. Describe what permissions are set on it and who can access it.
+12. Why is it important to restrict file permissions on a shared computer?
+
+SECTION 4 — IMPROVEMENT PLAN:
+13. List 3 specific security improvements you would make to this computer
+14. For each improvement, explain what risk it reduces
+15. What is the difference between a virus and ransomware? Give a real-world example of each.
+
+Write at least 250 words total with specific observations about the actual computer you are auditing.`
+  );
+
+  console.log('✅ Seed complete: 5 users, 3 courses, 9 modules, 18 quizzes, 9 assignments');
 }
 
 async function seed() {
   console.log('🌱 Seeding database...');
   const db = await getDb();
-  await db.exec('DELETE FROM assignment_submissions; DELETE FROM assignments; DELETE FROM applications; DELETE FROM certificates; DELETE FROM module_progress; DELETE FROM enrollments; DELETE FROM quizzes; DELETE FROM modules; DELETE FROM opportunities; DELETE FROM courses; DELETE FROM notifications; DELETE FROM users;');
+  await db.exec(`
+    DELETE FROM certificate_payments;
+    DELETE FROM assignment_submissions;
+    DELETE FROM assignments;
+    DELETE FROM certificates;
+    DELETE FROM module_progress;
+    DELETE FROM enrollments;
+    DELETE FROM quizzes;
+    DELETE FROM modules;
+    DELETE FROM courses;
+    DELETE FROM notifications;
+    DELETE FROM password_resets;
+    DELETE FROM users;
+  `);
   await seedData(db);
-  console.log('\n📋 Test Accounts:');
+  console.log('\n📋 Demo Accounts:');
   console.log('  Admin:    admin@youthskills.com / password123');
   console.log('  Youth:    amara@example.com / password123');
+  console.log('  Youth 2:  kwame@example.com / password123');
   console.log('  Employer: hr@techafrica.com / password123');
   process.exit(0);
 }

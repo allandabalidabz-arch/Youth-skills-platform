@@ -1,19 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Code2, Palette, TrendingUp, Award, ArrowRight, Star } from 'lucide-react';
+import { Code2, Monitor, Globe, Award, ArrowRight, Star } from 'lucide-react';
 import Logo, { LogoIcon } from '../components/Logo';
 
 const features = [
-  { icon: Code2, title: 'Coding & Tech', desc: 'Web development, Python, data analysis and more', color: 'bg-blue-100 text-blue-600' },
-  { icon: Palette, title: 'Graphic Design', desc: 'Visual design, branding, UI/UX fundamentals', color: 'bg-purple-100 text-purple-600' },
-  { icon: TrendingUp, title: 'Entrepreneurship', desc: 'Business planning, marketing, financial literacy', color: 'bg-green-100 text-green-600' },
+  { icon: Monitor, title: 'System Analysis & Design', desc: 'Learn SDLC, data flow diagrams, entity relationship diagrams, and system design principles', color: 'bg-indigo-100 text-indigo-600' },
+  { icon: Globe, title: 'Web Development', desc: 'Build websites from scratch using HTML, CSS, and JavaScript', color: 'bg-blue-100 text-blue-600' },
+  { icon: Code2, title: 'Operating Systems', desc: 'Understand how operating systems manage processes, memory, files, and security', color: 'bg-slate-100 text-slate-600' },
   { icon: Award, title: 'Certificates', desc: 'Earn verified digital certificates on course completion', color: 'bg-orange-100 text-orange-600' },
 ];
 
 const stats = [
   { value: '500+', label: 'Youth Trained' },
-  { value: '20+', label: 'Course Modules' },
-  { value: '6', label: 'Courses Available' },
+  { value: '9', label: 'Course Modules' },
+  { value: '3', label: 'Courses Available' },
   { value: '95%', label: 'Satisfaction Rate' },
 ];
 
@@ -53,7 +53,7 @@ export default function LandingPage() {
             Learn. Grow. <br /><span className="text-yellow-300">Get Hired.</span>
           </h1>
           <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
-            Access world-class digital skills training, track your progress, earn certificates, and connect directly with employers looking for talent like you.
+            Access digital skills training in System Analysis, Web Development, and Operating Systems. Track your progress, earn certificates, and build a career in technology.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register" className="bg-white text-blue-700 hover:bg-blue-50 font-bold px-8 py-4 rounded-xl transition-all flex items-center gap-2 justify-center text-lg">

@@ -116,7 +116,7 @@ export default function CourseDetailPage() {
   if (loading) return <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" /></div>;
   if (!course) return null;
 
-  const categoryColors = { coding: 'bg-blue-100 text-blue-700', design: 'bg-purple-100 text-purple-700', entrepreneurship: 'bg-green-100 text-green-700', marketing: 'bg-orange-100 text-orange-700', data: 'bg-teal-100 text-teal-700' };
+  const categoryColors = { system: 'bg-indigo-100 text-indigo-700', coding: 'bg-blue-100 text-blue-700' };
 
   return (
     <div className="space-y-6 fade-in max-w-4xl">

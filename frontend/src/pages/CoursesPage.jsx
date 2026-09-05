@@ -4,11 +4,8 @@ import api from '../utils/api';
 import { BookOpen, Clock, Users, Search, Filter, CheckCircle2 } from 'lucide-react';
 
 const categoryColors = {
+  system: 'bg-indigo-100 text-indigo-700',
   coding: 'bg-blue-100 text-blue-700',
-  design: 'bg-purple-100 text-purple-700',
-  entrepreneurship: 'bg-green-100 text-green-700',
-  marketing: 'bg-orange-100 text-orange-700',
-  data: 'bg-teal-100 text-teal-700'
 };
 
 const levelColors = {
@@ -63,11 +60,8 @@ export default function CoursesPage() {
           </div>
           <select className="input sm:w-44" value={category} onChange={e => setCategory(e.target.value)}>
             <option value="">All Categories</option>
+            <option value="system">Systems</option>
             <option value="coding">Coding</option>
-            <option value="design">Design</option>
-            <option value="entrepreneurship">Entrepreneurship</option>
-            <option value="marketing">Marketing</option>
-            <option value="data">Data</option>
           </select>
           <select className="input sm:w-36" value={level} onChange={e => setLevel(e.target.value)}>
             <option value="">All Levels</option>
