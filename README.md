@@ -1,6 +1,6 @@
 # YouthSkills Platform
 
-A web-based system empowering youth through digital skills training, progress tracking, and job/internship opportunity matching.
+A web-based system empowering youth through digital skills training, progress tracking, and employer connections.
 
 ## Features
 
@@ -9,10 +9,7 @@ A web-based system empowering youth through digital skills training, progress tr
 - **Progress Tracking** — Module-by-module progress with visual progress bars
 - **Quizzes** — Interactive quizzes with instant scoring and feedback
 - **Certificates** — Auto-issued digital certificates on course completion with public verification
-- **Opportunity Matching** — Smart skill-based matching for jobs and internships
-- **Applications** — Apply with cover letters; employers manage applicant status
 - **Notifications** — Real-time in-app notifications for key events
-- **Employer Portal** — Post opportunities, view applicants, update application status
 
 ## Tech Stack
 
@@ -77,8 +74,6 @@ npm run dev
 | POST | /api/courses/:id/enroll | Enroll in course |
 | POST | /api/progress/module/:id/complete | Mark module complete |
 | POST | /api/progress/quiz/:id/submit | Submit quiz answers |
-| GET | /api/opportunities | List opportunities (with match scores) |
-| POST | /api/opportunities/:id/apply | Apply for opportunity |
 | GET | /api/certificates/my | My certificates |
 | GET | /api/certificates/verify/:number | Verify certificate (public) |
 | GET | /api/dashboard/youth | Youth dashboard stats |

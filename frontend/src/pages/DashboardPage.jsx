@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
-import { BookOpen, Award, Briefcase, TrendingUp, ArrowRight, CheckCircle2, Clock } from 'lucide-react';
+import { BookOpen, Award, TrendingUp, CheckCircle2, Clock, ArrowRight, Building2 } from 'lucide-react';
 
 const categoryColors = {
   coding: 'bg-blue-100 text-blue-700',
@@ -47,26 +47,25 @@ export default function DashboardPage() {
   );
 
   if (user?.role === 'youth') return <YouthDashboard data={data} user={user} />;
-  if (user?.role === 'employer') return <EmployerDashboardView data={data} />;
+  if (user?.role === 'employer') return <EmployerDashboardView />;
   return <AdminDashboardView data={data} />;
 }
 
 function YouthDashboard({ data, user }) {
   if (!data) return null;
-  const { stats, recentCourses, recentCertificates, recommendedOpportunities } = data;
+  const { stats, recentCourses, recentCertificates } = data;
 
   return (
     <div className="space-y-6 fade-in">
       <div>
         <h1 className="section-title">My Dashboard</h1>
-        <p className="section-subtitle">Track your learning journey and opportunities</p>
+        <p className="section-subtitle">Track your learning journey</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard icon={BookOpen} label="Enrolled Courses" value={stats.enrolledCourses} color="bg-blue-100 text-blue-600" sub={`${stats.completedCourses} completed`} />
         <StatCard icon={Award} label="Certificates" value={stats.certificates} color="bg-yellow-100 text-yellow-600" />
-        <StatCard icon={Briefcase} label="Applications" value={stats.applications} color="bg-green-100 text-green-600" sub={`${stats.acceptedApplications} accepted`} />
         <StatCard icon={TrendingUp} label="Completion Rate" value={stats.enrolledCourses > 0 ? `${Math.round((stats.completedCourses / stats.enrolledCourses) * 100)}%` : '0%'} color="bg-purple-100 text-purple-600" />
       </div>
 
@@ -120,62 +119,20 @@ function YouthDashboard({ data, user }) {
         </div>
       </div>
 
-      {/* Recommended Opportunities */}
-      <div className="card">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-slate-800">Recommended Opportunities</h2>
-          <Link to="/opportunities" className="text-sm text-blue-600 hover:underline flex items-center gap-1">View all <ArrowRight className="w-3 h-3" /></Link>
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {recommendedOpportunities.slice(0, 3).map(o => (
-            <Link key={o.id} to={`/opportunities/${o.id}`} className="p-4 rounded-xl border border-slate-100 hover:border-blue-200 hover:bg-blue-50/50 transition-all">
-              <div className="flex items-start justify-between mb-2">
-                <span className={`badge ${o.type === 'job' ? 'bg-green-100 text-green-700' : o.type === 'internship' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}`}>{o.type}</span>
-                {o.is_remote ? <span className="badge bg-slate-100 text-slate-600">Remote</span> : null}
-              </div>
-              <p className="font-semibold text-slate-800 text-sm">{o.title}</p>
-              <p className="text-xs text-slate-500 mt-1">{o.company} · {o.location}</p>
-            </Link>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
 
-function EmployerDashboardView({ data }) {
-  if (!data) return null;
-  const { stats, recentApplications } = data;
-
+function EmployerDashboardView() {
   return (
     <div className="space-y-6 fade-in">
       <div>
         <h1 className="section-title">Employer Dashboard</h1>
-        <p className="section-subtitle">Manage your opportunities and applicants</p>
+        <p className="section-subtitle">Welcome to the YouthSkills employer portal</p>
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Briefcase} label="Posted Opportunities" value={stats.postedOpportunities} color="bg-blue-100 text-blue-600" />
-        <StatCard icon={TrendingUp} label="Active Listings" value={stats.activeOpportunities} color="bg-green-100 text-green-600" />
-        <StatCard icon={BookOpen} label="Total Applications" value={stats.totalApplications} color="bg-purple-100 text-purple-600" />
-        <StatCard icon={Clock} label="Pending Review" value={stats.pendingApplications} color="bg-orange-100 text-orange-600" />
-      </div>
-      <div className="card">
-        <h2 className="font-bold text-slate-800 mb-4">Recent Applications</h2>
-        {recentApplications.length === 0 ? (
-          <p className="text-slate-400 text-center py-8">No applications yet</p>
-        ) : recentApplications.map(a => (
-          <div key={a.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 mb-1">
-            <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-sm">
-              {a.applicant_name?.charAt(0)}
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-slate-800">{a.applicant_name}</p>
-              <p className="text-xs text-slate-500">{a.opportunity_title}</p>
-            </div>
-            <span className={`badge ${a.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : a.status === 'accepted' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}>{a.status}</span>
-          </div>
-        ))}
-        <Link to="/employer" className="btn-outline w-full mt-3 text-sm">View All Applicants</Link>
+      <div className="card text-center py-16">
+        <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+        <p className="text-slate-500 text-sm">Employer features are coming soon.</p>
       </div>
     </div>
   );
@@ -193,13 +150,9 @@ function AdminDashboardView({ data }) {
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={BookOpen} label="Total Users" value={stats.totalUsers} color="bg-blue-100 text-blue-600" sub={`${stats.youthUsers} youth`} />
-        <StatCard icon={Briefcase} label="Employers" value={stats.employers} color="bg-green-100 text-green-600" />
+        <StatCard icon={Building2} label="Employers" value={stats.employers} color="bg-green-100 text-green-600" />
         <StatCard icon={BookOpen} label="Courses" value={stats.totalCourses} color="bg-purple-100 text-purple-600" sub={`${stats.totalEnrollments} enrollments`} />
         <StatCard icon={Award} label="Certificates Issued" value={stats.totalCertificates} color="bg-yellow-100 text-yellow-600" />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <StatCard icon={Briefcase} label="Opportunities" value={stats.totalOpportunities} color="bg-orange-100 text-orange-600" />
-        <StatCard icon={TrendingUp} label="Applications" value={stats.totalApplications} color="bg-teal-100 text-teal-600" />
       </div>
     </div>
   );

@@ -1,25 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Code2, Palette, TrendingUp, Briefcase, ArrowRight, Star } from 'lucide-react';
+import { Code2, Palette, TrendingUp, Award, ArrowRight, Star } from 'lucide-react';
 import Logo, { LogoIcon } from '../components/Logo';
 
 const features = [
   { icon: Code2, title: 'Coding & Tech', desc: 'Web development, Python, data analysis and more', color: 'bg-blue-100 text-blue-600' },
   { icon: Palette, title: 'Graphic Design', desc: 'Visual design, branding, UI/UX fundamentals', color: 'bg-purple-100 text-purple-600' },
   { icon: TrendingUp, title: 'Entrepreneurship', desc: 'Business planning, marketing, financial literacy', color: 'bg-green-100 text-green-600' },
-  { icon: Briefcase, title: 'Job Matching', desc: 'Connect with employers looking for your skills', color: 'bg-orange-100 text-orange-600' },
+  { icon: Award, title: 'Certificates', desc: 'Earn verified digital certificates on course completion', color: 'bg-orange-100 text-orange-600' },
 ];
 
 const stats = [
   { value: '500+', label: 'Youth Trained' },
   { value: '20+', label: 'Course Modules' },
-  { value: '50+', label: 'Opportunities' },
+  { value: '6', label: 'Courses Available' },
   { value: '95%', label: 'Satisfaction Rate' },
 ];
 
 const testimonials = [
-  { name: 'Amara O.', role: 'Web Developer', text: 'YouthSkills Program gave me the foundation I needed. Within 3 months of completing the web dev course, I landed my first job!', rating: 5 },
-  { name: 'Kwame M.', role: 'Entrepreneur', text: 'The entrepreneurship course helped me launch my startup. The opportunity matching feature connected me with my first investor.', rating: 5 },
+  { name: 'Allan D.', role: 'Web Developer', text: 'YouthSkills Program gave me the foundation I needed. Within 3 months of completing the web dev course, I landed my first job!', rating: 5 },
+  { name: 'Ellen M.', role: 'Entrepreneur', text: 'The entrepreneurship course helped me launch my startup. The matching feature connected me with my first investor.', rating: 5 },
   { name: 'Fatima A.', role: 'Graphic Designer', text: 'I went from zero design knowledge to getting paid freelance projects. The certificate really helped my portfolio.', rating: 5 },
 ];
 
@@ -60,7 +60,7 @@ export default function LandingPage() {
               Start Learning Free <ArrowRight className="w-5 h-5" />
             </Link>
             <Link to="/register?role=employer" className="border-2 border-white/50 hover:border-white text-white font-bold px-8 py-4 rounded-xl transition-all flex items-center gap-2 justify-center text-lg">
-              Post Opportunities
+              Register as Employer
             </Link>
           </div>
         </div>
@@ -110,7 +110,7 @@ export default function LandingPage() {
             {[
               { step: '01', title: 'Register & Enroll', desc: 'Create your free account and enroll in courses that match your interests and career goals.' },
               { step: '02', title: 'Learn & Earn Certificates', desc: 'Complete modules, take quizzes, submit assignments, and earn verified digital certificates.' },
-              { step: '03', title: 'Get Matched & Apply', desc: 'Our smart matching connects you with jobs and internships that fit your skills and certificates.' },
+              { step: '03', title: 'Earn & Share Certificates', desc: 'Download your verified digital certificate and share it with employers to showcase your new skills.' },
             ].map(item => (
               <div key={item.step} className="text-center">
                 <div className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold mx-auto mb-4">{item.step}</div>
