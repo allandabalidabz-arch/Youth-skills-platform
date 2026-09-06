@@ -40,7 +40,6 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium mb-6">
-            <Star className="w-4 h-4 text-yellow-300" />
             Empowering African Youth Through Digital Skills
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
