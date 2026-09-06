@@ -10,13 +10,14 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPw, setShowPw] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const user = await login(form.email, form.password);
+      const user = await login(form.email, form.password, rememberMe);
       toast.success(`Welcome back, ${user.name}!`);
       navigate('/dashboard');
     } catch (err) {
@@ -55,6 +56,20 @@ export default function LoginPage() {
                   {showPw ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={e => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                />
+                <span className="text-sm text-slate-600">Remember me</span>
+              </label>
+              <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline font-medium">
+                Forgot password?
+              </Link>
             </div>
             <button type="submit" disabled={loading} className="btn-primary w-full py-3">
               {loading ? <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" /> : <><LogIn className="w-5 h-5" /> Sign In</>}
