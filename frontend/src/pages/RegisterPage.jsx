@@ -5,6 +5,10 @@ import toast from 'react-hot-toast';
 import { Eye, EyeOff, UserPlus } from 'lucide-react';
 import Logo from '../components/Logo';
 
+// Format validators (mirrors backend)
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isValidPhone = (phone) => /^\+[0-9]{7,15}$/.test(phone);
+
 export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -20,6 +24,12 @@ export default function RegisterPage() {
     e.preventDefault();
     if (form.password !== form.confirmPassword) {
       return toast.error('Passwords do not match.');
+    }
+    if (!isValidEmail(form.email)) {
+      return toast.error('Invalid email format.');
+    }
+    if (form.phone && !isValidPhone(form.phone)) {
+      return toast.error('Invalid phone format. Use international format e.g. +260971234567');
     }
     setLoading(true);
     try {
@@ -52,7 +62,7 @@ export default function RegisterPage() {
           <div className="grid grid-cols-2 gap-3 mb-5">
             {[
               { value: 'youth', label: '🎓 I\'m a Learner', desc: 'Learn skills & find jobs' },
-              { value: 'employer', label: '🏢 I\'m an Employer', desc: 'Post opportunities' }
+              { value: 'employer', label: '🏢 I\'m an Employer', desc: 'Hire talented graduates' }
             ].map(r => (
               <button key={r.value} type="button" onClick={() => setForm(p => ({ ...p, role: r.value }))}
                 className={`p-3 rounded-xl border-2 text-left transition-all ${form.role === r.value ? 'border-blue-600 bg-blue-50' : 'border-slate-200 hover:border-slate-300'}`}>
@@ -69,7 +79,10 @@ export default function RegisterPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
-              <input type="email" className="input" placeholder="you@example.com" value={form.email} onChange={set('email')} required />
+              <input type="email" className="input" placeholder="name@gmail.com" value={form.email} onChange={set('email')} required />
+              {form.email && !isValidEmail(form.email) && (
+                <p className="text-xs text-red-500 mt-1">Enter a valid email e.g. name@gmail.com</p>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -78,7 +91,10 @@ export default function RegisterPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone (optional)</label>
-                <input type="tel" className="input" placeholder="+234..." value={form.phone} onChange={set('phone')} />
+                <input type="tel" className="input" placeholder="+260971234567" value={form.phone} onChange={set('phone')} />
+                {form.phone && !isValidPhone(form.phone) && (
+                  <p className="text-xs text-red-500 mt-1">Use international format e.g. +260971234567</p>
+                )}
               </div>
             </div>
             <div>

@@ -3,6 +3,9 @@ const router = express.Router();
 const { getDb } = require('../database');
 const { authenticate, authorize } = require('../middleware/auth');
 
+const isValidPhone = (phone) => /^\+[0-9]{7,15}$/.test(phone);
+const isValidUrl   = (url)   => /^https?:\/\/.+\..+/.test(url);
+
 router.get('/profile', authenticate, async (req, res) => {
   const db = await getDb();
   const user = await db.get('SELECT id, name, email, role, avatar, bio, location, phone, skills, created_at FROM users WHERE id = ?', req.user.id);
@@ -12,6 +15,12 @@ router.get('/profile', authenticate, async (req, res) => {
 
 router.put('/profile', authenticate, async (req, res) => {
   const { name, bio, location, phone, skills, avatar } = req.body;
+  if (phone && !isValidPhone(phone)) {
+    return res.status(400).json({ success: false, message: 'Invalid phone format. Use international format e.g. +260971234567' });
+  }
+  if (avatar && !isValidUrl(avatar)) {
+    return res.status(400).json({ success: false, message: 'Invalid avatar URL. Must start with http:// or https://' });
+  }
   const db = await getDb();
   await db.run(`UPDATE users SET
     name = COALESCE(?, name), bio = COALESCE(?, bio), location = COALESCE(?, location),

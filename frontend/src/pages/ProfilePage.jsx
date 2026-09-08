@@ -4,6 +4,10 @@ import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { User, MapPin, Phone, Save, Plus, X, Lock } from 'lucide-react';
 
+// Format validators (mirrors backend)
+const isValidPhone = (phone) => /^\+[0-9]{7,15}$/.test(phone);
+const isValidUrl   = (url)   => /^https?:\/\/.+\..+/.test(url);
+
 export default function ProfilePage() {
   const { user, updateUser } = useAuth();
   const [form, setForm] = useState({ name: '', bio: '', location: '', phone: '', avatar: '' });
@@ -24,6 +28,12 @@ export default function ProfilePage() {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    if (form.phone && !isValidPhone(form.phone)) {
+      return toast.error('Invalid phone format. Use international format e.g. +260971234567');
+    }
+    if (form.avatar && !isValidUrl(form.avatar)) {
+      return toast.error('Invalid avatar URL. Must start with http:// or https://');
+    }
     setSaving(true);
     try {
       const res = await api.put('/users/profile', { ...form, skills });
@@ -85,6 +95,9 @@ export default function ProfilePage() {
             <div className="flex-1">
               <label className="block text-sm font-medium text-slate-700 mb-1">Avatar URL</label>
               <input type="url" className="input" placeholder="https://..." value={form.avatar} onChange={e => setForm(p => ({ ...p, avatar: e.target.value }))} />
+              {form.avatar && !isValidUrl(form.avatar) && (
+                <p className="text-xs text-red-500 mt-1">Must be a valid URL starting with https://</p>
+              )}
             </div>
           </div>
 
@@ -109,8 +122,11 @@ export default function ProfilePage() {
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone</label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input type="tel" className="input pl-10" placeholder="+234..." value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} />
+                  <input type="tel" className="input pl-10" placeholder="+260971234567" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} />
                 </div>
+                {form.phone && !isValidPhone(form.phone) && (
+                  <p className="text-xs text-red-500 mt-1">Use international format e.g. +260971234567</p>
+                )}
               </div>
             </div>
           </div>
