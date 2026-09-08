@@ -28,7 +28,7 @@ async function addQuizzes(db, quizzes) {
 
 async function seedData(db) {
   const hashedPw = await bcrypt.hash('password123', 12);
-  const adminId = uuidv4(), youth1Id = uuidv4(), youth2Id = uuidv4(), employer1Id = uuidv4(), employer2Id = uuidv4();
+  const adminId = uuidv4(), youth1Id = uuidv4(), youth2Id = uuidv4(), employer1Id = uuidv4();
 
   const insertUser = async (id, name, email, role, bio, location, skills) => {
     await db.run('INSERT INTO users (id, name, email, password, role, bio, location, skills) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
@@ -38,8 +38,7 @@ async function seedData(db) {
   await insertUser(adminId, 'Admin User', 'admin@youthskills.com', 'admin', 'Platform administrator', 'Lusaka, Zambia', []);
   await insertUser(youth1Id, 'Amara Osei', 'amara@example.com', 'youth', 'Passionate about technology and systems', 'Lusaka, Zambia', ['System Analysis', 'Web Development']);
   await insertUser(youth2Id, 'Kwame Mensah', 'kwame@example.com', 'youth', 'Aspiring software developer', 'Ndola, Zambia', ['HTML', 'CSS', 'JavaScript']);
-  await insertUser(employer1Id, 'TechAfrica Ltd', 'hr@techafrica.com', 'employer', 'Leading tech company in Africa', 'Lusaka, Zambia', []);
-  await insertUser(employer2Id, 'Creative Hub', 'jobs@creativehub.com', 'employer', 'Creative agency for digital content', 'Kitwe, Zambia', []);
+  await insertUser(employer1Id, 'DABZ-youthskillsAcademy', 'dabzyouthskillsacademy@gmail.com', 'employer', 'Leading youth skills training academy in Africa', 'Lusaka, Zambia', []);
 
   const courses = [
     {
@@ -1580,7 +1579,7 @@ SECTION 4 — IMPROVEMENT PLAN:
 Write at least 250 words total with specific observations about the actual computer you are auditing.`
   );
 
-  console.log('✅ Seed complete: 5 users, 3 courses, 9 modules, 18 quizzes, 9 assignments');
+  console.log('✅ Seed complete: 4 users, 3 courses, 9 modules, 18 quizzes, 9 assignments');
 }
 
 async function seed() {
@@ -1605,7 +1604,7 @@ async function seed() {
   console.log('  Admin:    admin@youthskills.com / password123');
   console.log('  Youth:    amara@example.com / password123');
   console.log('  Youth 2:  kwame@example.com / password123');
-  console.log('  Employer: hr@techafrica.com / password123');
+  console.log('  Employer: dabzyouthskillsacademy@gmail.com / password123');
   process.exit(0);
 }
 
