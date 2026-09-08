@@ -18,6 +18,16 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const user = await login(form.email, form.password, rememberMe);
+      // Block admin accounts from using the regular login
+      if (user.role === 'admin') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        toast.error('Admin accounts must sign in via the Admin Portal.');
+        navigate('/admin/login');
+        return;
+      }
       toast.success(`Welcome back, ${user.name}!`);
       navigate('/dashboard');
     } catch (err) {

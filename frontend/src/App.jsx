@@ -16,6 +16,7 @@ import EmployerDashboard from './pages/EmployerDashboard';
 import VerifyCertPage from './pages/VerifyCertPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import AdminLoginPage from './pages/AdminLoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Layout
@@ -44,6 +45,7 @@ function AppRoutes() {
       <Route path="/verify/:certNumber" element={<VerifyCertPage />} />
       <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
       <Route path="/reset-password" element={<PublicRoute><ResetPasswordPage /></PublicRoute>} />
+      <Route path="/admin/login" element={<PublicRoute><AdminLoginPage /></PublicRoute>} />
       <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
