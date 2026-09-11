@@ -19,7 +19,10 @@ export default function RegisterPage() {
     role: params.get('role') || 'youth', location: '', phone: ''
   });
   const [showPw, setShowPw] = useState(false);
+  const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
+
+  const touch = (field) => () => setTouched(p => ({ ...p, [field]: true }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,23 +86,23 @@ export default function RegisterPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
-              <input type="email" className="input" placeholder="name@gmail.com" value={form.email} onChange={set('email')} required />
-              {form.email && !isValidEmail(form.email) && (
+              <input type="email" className="input" placeholder="name@gmail.com" value={form.email} onChange={set('email')} onBlur={touch('email')} required />
+              {touched.email && form.email && !isValidEmail(form.email) && (
                 <p className="text-xs text-red-500 mt-1">Enter a valid email e.g. name@gmail.com</p>
               )}
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Location</label>
-                <input type="text" className="input" placeholder="City, Country" value={form.location} onChange={set('location')} />
-                {form.location && !isValidLocation(form.location) && (
+                <input type="text" className="input" placeholder="City, Country" value={form.location} onChange={set('location')} onBlur={touch('location')} />
+                {touched.location && form.location && !isValidLocation(form.location) && (
                   <p className="text-xs text-red-500 mt-1">Enter a valid location.</p>
                 )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone (optional)</label>
-                <input type="tel" className="input" placeholder="+260" value={form.phone} onChange={set('phone')} />
-                {form.phone && !isValidPhone(form.phone) && (
+                <input type="tel" className="input" placeholder="+260" value={form.phone} onChange={set('phone')} onBlur={touch('phone')} />
+                {touched.phone && form.phone && !isValidPhone(form.phone) && (
                   <p className="text-xs text-red-500 mt-1">Invalid phone number format.</p>
                 )}
               </div>

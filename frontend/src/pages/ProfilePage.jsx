@@ -15,9 +15,12 @@ export default function ProfilePage() {
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState('');
   const [saving, setSaving] = useState(false);
+  const [touched, setTouched] = useState({});
   const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [savingPw, setSavingPw] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+
+  const touch = (field) => () => setTouched(p => ({ ...p, [field]: true }));
 
   useEffect(() => {
     api.get('/users/profile').then(res => {
@@ -98,8 +101,8 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1">
               <label className="block text-sm font-medium text-slate-700 mb-1">Avatar URL</label>
-              <input type="url" className="input" placeholder="https://..." value={form.avatar} onChange={e => setForm(p => ({ ...p, avatar: e.target.value }))} />
-              {form.avatar && !isValidUrl(form.avatar) && (
+              <input type="url" className="input" placeholder="https://..." value={form.avatar} onChange={e => setForm(p => ({ ...p, avatar: e.target.value }))} onBlur={touch('avatar')} />
+              {touched.avatar && form.avatar && !isValidUrl(form.avatar) && (
                 <p className="text-xs text-red-500 mt-1">Must be a valid URL starting with https://</p>
               )}
             </div>
@@ -119,9 +122,9 @@ export default function ProfilePage() {
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Location</label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input type="text" className="input pl-10" placeholder="City, Country" value={form.location} onChange={e => setForm(p => ({ ...p, location: e.target.value }))} />
+                  <input type="text" className="input pl-10" placeholder="City, Country" value={form.location} onChange={e => setForm(p => ({ ...p, location: e.target.value }))} onBlur={touch('location')} />
                 </div>
-                {form.location && !isValidLocation(form.location) && (
+                {touched.location && form.location && !isValidLocation(form.location) && (
                   <p className="text-xs text-red-500 mt-1">Enter a valid location.</p>
                 )}
               </div>
@@ -129,9 +132,9 @@ export default function ProfilePage() {
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone</label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input type="tel" className="input pl-10" placeholder="+260" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} />
+                  <input type="tel" className="input pl-10" placeholder="+260" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} onBlur={touch('phone')} />
                 </div>
-                {form.phone && !isValidPhone(form.phone) && (
+                {touched.phone && form.phone && !isValidPhone(form.phone) && (
                   <p className="text-xs text-red-500 mt-1">Invalid phone number format.</p>
                 )}
               </div>
