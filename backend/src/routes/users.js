@@ -3,7 +3,7 @@ const router = express.Router();
 const { getDb } = require('../database');
 const { authenticate, authorize } = require('../middleware/auth');
 
-const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.replace(/\s/g, ''));
+const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.trim());
 const isValidUrl      = (url)      => /^https?:\/\/.+\..+/.test(url);
 const isValidLocation = (location) => /[a-zA-Z]/.test(location);
 

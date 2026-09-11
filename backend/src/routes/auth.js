@@ -9,7 +9,7 @@ const { authenticate } = require('../middleware/auth');
 
 // Format validators
 const isValidEmail    = (email)    => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.replace(/\s/g, ''));
+const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.trim());
 const isValidUrl      = (url)      => /^https?:\/\/.+\..+/.test(url);
 const isValidLocation = (location) => /[a-zA-Z]/.test(location);
 

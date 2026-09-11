@@ -7,7 +7,7 @@ import Logo from '../components/Logo';
 
 // Format validators (mirrors backend)
 const isValidEmail    = (email)    => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.replace(/\s/g, ''));
+const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.trim());
 const isValidLocation = (location) => /[a-zA-Z]/.test(location);
 
 export default function RegisterPage() {
