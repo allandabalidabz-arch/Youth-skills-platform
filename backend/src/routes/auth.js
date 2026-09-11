@@ -8,9 +8,10 @@ const { getDb } = require('../database');
 const { authenticate } = require('../middleware/auth');
 
 // Format validators
-const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-const isValidPhone = (phone) => /^\+[0-9]{7,15}$/.test(phone);
-const isValidUrl   = (url)   => /^https?:\/\/.+\..+/.test(url);
+const isValidEmail    = (email)    => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.replace(/\s/g, ''));
+const isValidUrl      = (url)      => /^https?:\/\/.+\..+/.test(url);
+const isValidLocation = (location) => /[a-zA-Z]/.test(location);
 
 router.post('/register', async (req, res) => {
   try {
@@ -19,6 +20,7 @@ router.post('/register', async (req, res) => {
     if (!isValidEmail(email)) return res.status(400).json({ success: false, message: 'Invalid email format.' });
     if (password.length < 6) return res.status(400).json({ success: false, message: 'Password must be at least 6 characters.' });
     if (phone && !isValidPhone(phone)) return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
+    if (location && !isValidLocation(location)) return res.status(400).json({ success: false, message: 'Enter a valid location.' });
     if (!['youth', 'employer'].includes(role)) return res.status(400).json({ success: false, message: 'Invalid role.' });
 
     const db = await getDb();

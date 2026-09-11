@@ -6,8 +6,9 @@ import { Eye, EyeOff, UserPlus } from 'lucide-react';
 import Logo from '../components/Logo';
 
 // Format validators (mirrors backend)
-const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-const isValidPhone = (phone) => /^\+[0-9]{7,15}$/.test(phone);
+const isValidEmail    = (email)    => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.replace(/\s/g, ''));
+const isValidLocation = (location) => /[a-zA-Z]/.test(location);
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -30,6 +31,9 @@ export default function RegisterPage() {
     }
     if (form.phone && !isValidPhone(form.phone)) {
       return toast.error('Invalid phone number format.');
+    }
+    if (form.location && !isValidLocation(form.location)) {
+      return toast.error('Enter a valid location.');
     }
     setLoading(true);
     try {
@@ -88,6 +92,9 @@ export default function RegisterPage() {
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Location</label>
                 <input type="text" className="input" placeholder="City, Country" value={form.location} onChange={set('location')} />
+                {form.location && !isValidLocation(form.location) && (
+                  <p className="text-xs text-red-500 mt-1">Enter a valid location.</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone (optional)</label>

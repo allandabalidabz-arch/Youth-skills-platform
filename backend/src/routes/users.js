@@ -3,8 +3,9 @@ const router = express.Router();
 const { getDb } = require('../database');
 const { authenticate, authorize } = require('../middleware/auth');
 
-const isValidPhone = (phone) => /^\+[0-9]{7,15}$/.test(phone);
-const isValidUrl   = (url)   => /^https?:\/\/.+\..+/.test(url);
+const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.replace(/\s/g, ''));
+const isValidUrl      = (url)      => /^https?:\/\/.+\..+/.test(url);
+const isValidLocation = (location) => /[a-zA-Z]/.test(location);
 
 router.get('/profile', authenticate, async (req, res) => {
   const db = await getDb();
@@ -20,6 +21,9 @@ router.put('/profile', authenticate, async (req, res) => {
   }
   if (avatar && !isValidUrl(avatar)) {
     return res.status(400).json({ success: false, message: 'Invalid avatar URL. Must start with http:// or https://' });
+  }
+  if (location && !isValidLocation(location)) {
+    return res.status(400).json({ success: false, message: 'Enter a valid location.' });
   }
   const db = await getDb();
   await db.run(`UPDATE users SET

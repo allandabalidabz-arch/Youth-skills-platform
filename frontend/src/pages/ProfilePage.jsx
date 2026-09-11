@@ -5,8 +5,9 @@ import toast from 'react-hot-toast';
 import { User, MapPin, Phone, Save, Plus, X, Lock } from 'lucide-react';
 
 // Format validators (mirrors backend)
-const isValidPhone = (phone) => /^\+[0-9]{7,15}$/.test(phone);
-const isValidUrl   = (url)   => /^https?:\/\/.+\..+/.test(url);
+const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.replace(/\s/g, ''));
+const isValidUrl      = (url)      => /^https?:\/\/.+\..+/.test(url);
+const isValidLocation = (location) => /[a-zA-Z]/.test(location);
 
 export default function ProfilePage() {
   const { user, updateUser } = useAuth();
@@ -33,6 +34,9 @@ export default function ProfilePage() {
     }
     if (form.avatar && !isValidUrl(form.avatar)) {
       return toast.error('Invalid avatar URL. Must start with http:// or https://');
+    }
+    if (form.location && !isValidLocation(form.location)) {
+      return toast.error('Enter a valid location.');
     }
     setSaving(true);
     try {
@@ -117,6 +121,9 @@ export default function ProfilePage() {
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input type="text" className="input pl-10" placeholder="City, Country" value={form.location} onChange={e => setForm(p => ({ ...p, location: e.target.value }))} />
                 </div>
+                {form.location && !isValidLocation(form.location) && (
+                  <p className="text-xs text-red-500 mt-1">Enter a valid location.</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone</label>
