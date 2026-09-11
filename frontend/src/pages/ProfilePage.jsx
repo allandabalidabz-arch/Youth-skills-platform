@@ -29,7 +29,7 @@ export default function ProfilePage() {
   const handleSave = async (e) => {
     e.preventDefault();
     if (form.phone && !isValidPhone(form.phone)) {
-      return toast.error('Invalid phone format. Use international format e.g. +260971234567');
+      return toast.error('Invalid phone number format.');
     }
     if (form.avatar && !isValidUrl(form.avatar)) {
       return toast.error('Invalid avatar URL. Must start with http:// or https://');
@@ -125,7 +125,7 @@ export default function ProfilePage() {
                   <input type="tel" className="input pl-10" placeholder="+260" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} />
                 </div>
                 {form.phone && !isValidPhone(form.phone) && (
-                  <p className="text-xs text-red-500 mt-1">Use international format e.g. +260971234567</p>
+                  <p className="text-xs text-red-500 mt-1">Invalid phone number format.</p>
                 )}
               </div>
             </div>

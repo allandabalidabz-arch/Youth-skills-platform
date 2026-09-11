@@ -29,7 +29,7 @@ export default function RegisterPage() {
       return toast.error('Invalid email format.');
     }
     if (form.phone && !isValidPhone(form.phone)) {
-      return toast.error('Invalid phone format. Use international format e.g. +260971234567');
+      return toast.error('Invalid phone number format.');
     }
     setLoading(true);
     try {
@@ -93,7 +93,7 @@ export default function RegisterPage() {
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone (optional)</label>
                 <input type="tel" className="input" placeholder="+260" value={form.phone} onChange={set('phone')} />
                 {form.phone && !isValidPhone(form.phone) && (
-                  <p className="text-xs text-red-500 mt-1">Use international format e.g. +260971234567</p>
+                  <p className="text-xs text-red-500 mt-1">Invalid phone number format.</p>
                 )}
               </div>
             </div>

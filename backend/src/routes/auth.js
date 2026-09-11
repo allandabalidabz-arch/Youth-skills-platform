@@ -18,7 +18,7 @@ router.post('/register', async (req, res) => {
     if (!name || !email || !password) return res.status(400).json({ success: false, message: 'Name, email, and password are required.' });
     if (!isValidEmail(email)) return res.status(400).json({ success: false, message: 'Invalid email format.' });
     if (password.length < 6) return res.status(400).json({ success: false, message: 'Password must be at least 6 characters.' });
-    if (phone && !isValidPhone(phone)) return res.status(400).json({ success: false, message: 'Invalid phone format. Use international format e.g. +260971234567' });
+    if (phone && !isValidPhone(phone)) return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
     if (!['youth', 'employer'].includes(role)) return res.status(400).json({ success: false, message: 'Invalid role.' });
 
     const db = await getDb();

@@ -16,7 +16,7 @@ router.get('/profile', authenticate, async (req, res) => {
 router.put('/profile', authenticate, async (req, res) => {
   const { name, bio, location, phone, skills, avatar } = req.body;
   if (phone && !isValidPhone(phone)) {
-    return res.status(400).json({ success: false, message: 'Invalid phone format. Use international format e.g. +260971234567' });
+    return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
   }
   if (avatar && !isValidUrl(avatar)) {
     return res.status(400).json({ success: false, message: 'Invalid avatar URL. Must start with http:// or https://' });
