@@ -91,7 +91,7 @@ export default function RegisterPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone (optional)</label>
-                <input type="tel" className="input" placeholder="+260971234567" value={form.phone} onChange={set('phone')} />
+                <input type="tel" className="input" placeholder="+260" value={form.phone} onChange={set('phone')} />
                 {form.phone && !isValidPhone(form.phone) && (
                   <p className="text-xs text-red-500 mt-1">Use international format e.g. +260971234567</p>
                 )}

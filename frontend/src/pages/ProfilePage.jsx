@@ -122,7 +122,7 @@ export default function ProfilePage() {
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone</label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input type="tel" className="input pl-10" placeholder="+260971234567" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} />
+                  <input type="tel" className="input pl-10" placeholder="+260" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} />
                 </div>
                 {form.phone && !isValidPhone(form.phone) && (
                   <p className="text-xs text-red-500 mt-1">Use international format e.g. +260971234567</p>
