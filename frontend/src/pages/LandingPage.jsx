@@ -43,7 +43,7 @@ export default function LandingPage() {
             Empowering African Youth Through Digital Skills
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-            Learn. Grow. <br /><span className="text-yellow-300">Get Hired.</span>
+            Learn. Grow. <br /><span className="text-yellow-300">Get Certified.</span>
           </h1>
           <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
             Access digital skills training in System Analysis, Web Development, and Operating Systems. Track your progress, earn certificates, and build a career in technology.
@@ -51,9 +51,6 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register" className="bg-white text-blue-700 hover:bg-blue-50 font-bold px-8 py-4 rounded-xl transition-all flex items-center gap-2 justify-center text-lg">
               Start Learning Free <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link to="/register?role=employer" className="border-2 border-white/50 hover:border-white text-white font-bold px-8 py-4 rounded-xl transition-all flex items-center gap-2 justify-center text-lg">
-              Register as Employer
             </Link>
           </div>
         </div>
@@ -102,7 +99,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               { step: '01', title: 'Register & Enroll', desc: 'Create your free account and enroll in courses that match your interests and career goals.' },
-              { step: '02', title: 'Learn & Earn Certificates', desc: 'Complete modules, take quizzes, submit assignments, and earn verified digital certificates.' },
+              { step: '02', title: 'Learn & Complete', desc: 'Study module content, take quizzes, and submit assignments to progress through each course.' },
               { step: '03', title: 'Earn & Share Certificates', desc: 'Download your verified digital certificate and share it with employers to showcase your new skills.' },
             ].map(item => (
               <div key={item.step} className="text-center">
@@ -133,7 +130,7 @@ export default function LandingPage() {
         </div>
         <p>© 2026 YouthSkills Program. Empowering youth through digital education.</p>
         <p className="mt-1">
-          <Link to="/verify/CERT-123" className="hover:text-white transition-colors">Verify Certificate</Link>
+          <Link to="/verify" className="hover:text-white transition-colors">Verify Certificate</Link>
         </p>
         <p className="mt-3">
           <Link to="/admin/login" className="text-slate-600 hover:text-slate-400 text-xs transition-colors">
