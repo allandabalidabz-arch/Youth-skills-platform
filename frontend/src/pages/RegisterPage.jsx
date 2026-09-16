@@ -9,6 +9,7 @@ import Logo from '../components/Logo';
 const isValidEmail    = (email)    => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.trim());
 const isValidLocation = (location) => /[a-zA-Z]/.test(location);
+const isValidName     = (name)     => /^[a-zA-Z\s]+$/.test(name.trim());
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -28,6 +29,9 @@ export default function RegisterPage() {
     e.preventDefault();
     if (form.password !== form.confirmPassword) {
       return toast.error('Passwords do not match.');
+    }
+    if (!isValidName(form.name)) {
+      return toast.error('Name must contain letters only.');
     }
     if (!isValidEmail(form.email)) {
       return toast.error('Invalid email format.');
@@ -82,7 +86,14 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
-              <input type="text" className="input" placeholder="Your full name" value={form.name} onChange={set('name')} required />
+              <input type="text" className="input" placeholder="Your full name"
+                value={form.name}
+                onChange={e => setForm(p => ({ ...p, name: e.target.value.replace(/[^a-zA-Z\s]/g, '') }))}
+                onBlur={touch('name')}
+                required />
+              {touched.name && form.name && !isValidName(form.name) && (
+                <p className="text-xs text-red-500 mt-1">Name must contain letters only.</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>

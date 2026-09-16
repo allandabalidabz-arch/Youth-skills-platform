@@ -12,11 +12,13 @@ const isValidEmail    = (email)    => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.trim());
 const isValidUrl      = (url)      => /^https?:\/\/.+\..+/.test(url);
 const isValidLocation = (location) => /[a-zA-Z]/.test(location);
+const isValidName     = (name)     => /^[a-zA-Z\s]+$/.test(name.trim());
 
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, role = 'youth', location, phone } = req.body;
     if (!name || !email || !password) return res.status(400).json({ success: false, message: 'Name, email, and password are required.' });
+    if (!isValidName(name)) return res.status(400).json({ success: false, message: 'Name must contain letters only.' });
     if (!isValidEmail(email)) return res.status(400).json({ success: false, message: 'Invalid email format.' });
     if (password.length < 6) return res.status(400).json({ success: false, message: 'Password must be at least 6 characters.' });
     if (phone && !isValidPhone(phone)) return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
