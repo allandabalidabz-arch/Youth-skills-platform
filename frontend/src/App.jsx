@@ -40,10 +40,11 @@ function PublicRoute({ children }) {
 function AdminRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return null;
-  // Only redirect away if the logged-in user is already an admin
   if (user && user.role === 'admin') return <Navigate to="/dashboard" replace />;
   return children;
 }
+
+function AppRoutes() {
   return (
     <Routes>
       {/* Public */}
