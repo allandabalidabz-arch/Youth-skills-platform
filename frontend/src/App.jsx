@@ -37,7 +37,13 @@ function PublicRoute({ children }) {
   return children;
 }
 
-function AppRoutes() {
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  // Only redirect away if the logged-in user is already an admin
+  if (user && user.role === 'admin') return <Navigate to="/dashboard" replace />;
+  return children;
+}
   return (
     <Routes>
       {/* Public */}
@@ -45,7 +51,7 @@ function AppRoutes() {
       <Route path="/verify/:certNumber" element={<VerifyCertPage />} />
       <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
       <Route path="/reset-password" element={<PublicRoute><ResetPasswordPage /></PublicRoute>} />
-      <Route path="/admin/login" element={<PublicRoute><AdminLoginPage /></PublicRoute>} />
+      <Route path="/admin/login" element={<AdminRoute><AdminLoginPage /></AdminRoute>} />
       <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
