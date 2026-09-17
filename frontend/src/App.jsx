@@ -33,7 +33,8 @@ function ProtectedRoute({ children, roles }) {
 function PublicRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return null;
-  if (user) return <Navigate to="/dashboard" replace />;
+  // Only redirect non-admin logged-in users — admin may want to access regular login
+  if (user && user.role !== 'admin') return <Navigate to="/dashboard" replace />;
   return children;
 }
 
