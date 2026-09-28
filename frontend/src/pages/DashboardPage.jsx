@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
-import { BookOpen, Award, TrendingUp, CheckCircle2, Clock, ArrowRight, Building2, Users, Search, MapPin, Calendar } from 'lucide-react';
+import { BookOpen, Award, TrendingUp, CheckCircle2, Clock, ArrowRight, Building2, Users, Search, MapPin, Calendar, ChevronDown, ChevronUp, Layers } from 'lucide-react';
 
 const categoryColors = {
   system: 'bg-indigo-100 text-indigo-700',
@@ -139,14 +139,19 @@ function AdminDashboardView({ data }) {
   if (!data) return null;
   const { stats } = data;
 
+  const [activeTab, setActiveTab] = useState('overview');
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
-  const [loadingUsers, setLoadingUsers] = useState(true);
+  const [loadingUsers, setLoadingUsers] = useState(false);
   const [total, setTotal] = useState(0);
+  const [courses, setCourses] = useState([]);
+  const [loadingCourses, setLoadingCourses] = useState(false);
+  const [expandedCourse, setExpandedCourse] = useState(null);
 
   useEffect(() => {
-    fetchUsers('');
-  }, []);
+    if (activeTab === 'youth') fetchUsers('');
+    if (activeTab === 'modules') fetchCourses();
+  }, [activeTab]);
 
   const fetchUsers = async (q) => {
     setLoadingUsers(true);
@@ -156,11 +161,17 @@ function AdminDashboardView({ data }) {
       const res = await api.get(`/users?${params}`);
       setUsers(res.data.users);
       setTotal(res.data.total);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadingUsers(false);
-    }
+    } catch (err) { console.error(err); }
+    finally { setLoadingUsers(false); }
+  };
+
+  const fetchCourses = async () => {
+    setLoadingCourses(true);
+    try {
+      const res = await api.get('/courses?limit=20');
+      setCourses(res.data.courses);
+    } catch (err) { console.error(err); }
+    finally { setLoadingCourses(false); }
   };
 
   const handleSearch = (e) => {
@@ -168,104 +179,220 @@ function AdminDashboardView({ data }) {
     fetchUsers(search);
   };
 
+  const toggleCourse = async (courseId) => {
+    if (expandedCourse === courseId) { setExpandedCourse(null); return; }
+    setExpandedCourse(courseId);
+    // Fetch modules if not already loaded
+    if (!courses.find(c => c.id === courseId)?.modules) {
+      try {
+        const res = await api.get(`/courses/${courseId}`);
+        setCourses(prev => prev.map(c => c.id === courseId ? { ...c, modules: res.data.modules } : c));
+      } catch (err) { console.error(err); }
+    }
+  };
+
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: BookOpen },
+    { id: 'youth', label: 'Registered Youth', icon: Users },
+    { id: 'modules', label: 'Modules', icon: Layers },
+  ];
+
   return (
     <div className="space-y-6 fade-in">
       <div>
         <h1 className="section-title">Admin Dashboard</h1>
-        <p className="section-subtitle">Platform overview and statistics</p>
+        <p className="section-subtitle">Platform overview and management</p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={BookOpen} label="Total Users" value={stats.totalUsers} color="bg-blue-100 text-blue-600" sub={`${stats.youthUsers} youth`} />
-        <StatCard icon={Building2} label="Employers" value={stats.employers} color="bg-green-100 text-green-600" />
-        <StatCard icon={BookOpen} label="Courses" value={stats.totalCourses} color="bg-purple-100 text-purple-600" sub={`${stats.totalEnrollments} enrollments`} />
-        <StatCard icon={Award} label="Certificates Issued" value={stats.totalCertificates} color="bg-yellow-100 text-yellow-600" />
+      {/* Tabs */}
+      <div className="flex gap-1 bg-slate-100 p-1 rounded-xl w-fit">
+        {tabs.map(t => (
+          <button key={t.id} onClick={() => setActiveTab(t.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === t.id ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
+            <t.icon className="w-4 h-4" />
+            {t.label}
+          </button>
+        ))}
       </div>
 
-      {/* Registered Youth */}
-      <div className="card">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-blue-600" />
-            <h2 className="font-bold text-slate-800">Registered Youth</h2>
-            <span className="badge bg-blue-100 text-blue-700">{total}</span>
-          </div>
-          {/* Search */}
-          <form onSubmit={handleSearch} className="flex gap-2">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                type="text"
-                className="input pl-9 py-2 text-sm w-56"
-                placeholder="Search name or email..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-              />
+      {/* ── OVERVIEW TAB ── */}
+      {activeTab === 'overview' && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Clickable stat cards */}
+            <button onClick={() => setActiveTab('youth')} className="card flex items-center gap-4 text-left hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer w-full">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-100 text-blue-600">
+                <Users className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-slate-800">{stats.totalUsers}</p>
+                <p className="text-sm text-slate-500">Total Users</p>
+                <p className="text-xs text-blue-500">{stats.youthUsers} youth →</p>
+              </div>
+            </button>
+
+            <div className="card flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-green-100 text-green-600">
+                <Building2 className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-slate-800">{stats.employers}</p>
+                <p className="text-sm text-slate-500">Employers</p>
+              </div>
             </div>
-            <button type="submit" className="btn-primary py-2 px-4 text-sm">Search</button>
-          </form>
-        </div>
 
-        {loadingUsers ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+            <button onClick={() => setActiveTab('modules')} className="card flex items-center gap-4 text-left hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer w-full">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-purple-100 text-purple-600">
+                <BookOpen className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-slate-800">{stats.totalCourses}</p>
+                <p className="text-sm text-slate-500">Courses</p>
+                <p className="text-xs text-purple-500">{stats.totalEnrollments} enrollments →</p>
+              </div>
+            </button>
+
+            <div className="card flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-yellow-100 text-yellow-600">
+                <Award className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-slate-800">{stats.totalCertificates}</p>
+                <p className="text-sm text-slate-500">Certificates Issued</p>
+              </div>
+            </div>
           </div>
-        ) : users.length === 0 ? (
-          <div className="text-center py-12">
-            <Users className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-            <p className="text-slate-400 text-sm">No youth users found.</p>
+          <p className="text-xs text-slate-400">Click on Total Users or Courses cards to view details.</p>
+        </div>
+      )}
+
+      {/* ── REGISTERED YOUTH TAB ── */}
+      {activeTab === 'youth' && (
+        <div className="card">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-blue-600" />
+              <h2 className="font-bold text-slate-800">Registered Youth</h2>
+              <span className="badge bg-blue-100 text-blue-700">{total}</span>
+            </div>
+            <form onSubmit={handleSearch} className="flex gap-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input type="text" className="input pl-9 py-2 text-sm w-56" placeholder="Search name or email..."
+                  value={search} onChange={e => setSearch(e.target.value)} />
+              </div>
+              <button type="submit" className="btn-primary py-2 px-4 text-sm">Search</button>
+            </form>
           </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-slate-100">
-                  <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">#</th>
-                  <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</th>
-                  <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</th>
-                  <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Location</th>
-                  <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden lg:table-cell">Registered</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
-                {users.map((u, idx) => (
-                  <tr key={u.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="py-3 px-3 text-slate-400">{idx + 1}</td>
-                    <td className="py-3 px-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs flex-shrink-0 overflow-hidden">
-                          {u.avatar
-                            ? <img src={u.avatar} alt="" className="w-full h-full object-cover" />
-                            : u.name.charAt(0).toUpperCase()
-                          }
-                        </div>
-                        <span className="font-medium text-slate-800">{u.name}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-3 text-slate-600">{u.email}</td>
-                    <td className="py-3 px-3 hidden md:table-cell">
-                      {u.location ? (
-                        <span className="flex items-center gap-1 text-slate-500">
-                          <MapPin className="w-3 h-3" />{u.location}
-                        </span>
-                      ) : (
-                        <span className="text-slate-300">—</span>
-                      )}
-                    </td>
-                    <td className="py-3 px-3 hidden lg:table-cell">
-                      <span className="flex items-center gap-1 text-slate-500">
-                        <Calendar className="w-3 h-3" />
-                        {new Date(u.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                      </span>
-                    </td>
+
+          {loadingUsers ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+            </div>
+          ) : users.length === 0 ? (
+            <div className="text-center py-12">
+              <Users className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+              <p className="text-slate-400 text-sm">No youth users found.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-100">
+                    <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">#</th>
+                    <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</th>
+                    <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</th>
+                    <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Location</th>
+                    <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden lg:table-cell">Registered</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {users.map((u, idx) => (
+                    <tr key={u.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-3 px-3 text-slate-400">{idx + 1}</td>
+                      <td className="py-3 px-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs flex-shrink-0 overflow-hidden">
+                            {u.avatar ? <img src={u.avatar} alt="" className="w-full h-full object-cover" /> : u.name.charAt(0).toUpperCase()}
+                          </div>
+                          <span className="font-medium text-slate-800">{u.name}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-3 text-slate-600">{u.email}</td>
+                      <td className="py-3 px-3 hidden md:table-cell">
+                        {u.location
+                          ? <span className="flex items-center gap-1 text-slate-500"><MapPin className="w-3 h-3" />{u.location}</span>
+                          : <span className="text-slate-300">—</span>}
+                      </td>
+                      <td className="py-3 px-3 hidden lg:table-cell">
+                        <span className="flex items-center gap-1 text-slate-500">
+                          <Calendar className="w-3 h-3" />
+                          {new Date(u.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── MODULES TAB ── */}
+      {activeTab === 'modules' && (
+        <div className="space-y-3">
+          <p className="text-sm text-slate-500">Click a course to expand its modules.</p>
+          {loadingCourses ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+            </div>
+          ) : courses.map(course => (
+            <div key={course.id} className="card p-0 overflow-hidden">
+              {/* Course header — clickable */}
+              <button onClick={() => toggleCourse(course.id)}
+                className="w-full flex items-center gap-4 p-4 text-left hover:bg-slate-50 transition-colors">
+                <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0">
+                  {course.thumbnail
+                    ? <img src={course.thumbnail} alt="" className="w-full h-full object-cover" />
+                    : <BookOpen className="w-6 h-6 text-slate-400 m-3" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-slate-800">{course.title}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className={`badge text-xs ${course.category === 'system' ? 'bg-indigo-100 text-indigo-700' : 'bg-blue-100 text-blue-700'}`}>{course.category}</span>
+                    <span className="text-xs text-slate-400">{course.module_count} modules · {course.enrolled_count} enrolled</span>
+                  </div>
+                </div>
+                {expandedCourse === course.id
+                  ? <ChevronUp className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                  : <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />}
+              </button>
+
+              {/* Modules list */}
+              {expandedCourse === course.id && (
+                <div className="border-t border-slate-100">
+                  {!course.modules ? (
+                    <div className="flex items-center justify-center py-6">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" />
+                    </div>
+                  ) : course.modules.map((mod, idx) => (
+                    <div key={mod.id} className="flex items-center gap-3 px-4 py-3 border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-colors">
+                      <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs flex-shrink-0">
+                        {idx + 1}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-800">{mod.title}</p>
+                        <p className="text-xs text-slate-400">{mod.duration_minutes} min · {mod.quizzes?.length || 0} quiz questions</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
