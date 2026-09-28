@@ -50,16 +50,16 @@ export default function Layout() {
     navigate('/');
   };
 
-  const navItems = user?.role === 'youth' || user?.role === 'admin' ? [
+  const navItems = user?.role === 'admin' ? [
+    { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { to: '/profile', icon: User, label: 'Profile' },
+  ] : user?.role === 'youth' ? [
     { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/courses', icon: BookOpen, label: 'Courses' },
-    { to: '/opportunities', icon: Briefcase, label: 'Opportunities' },
     { to: '/certificates', icon: Award, label: 'Certificates' },
     { to: '/profile', icon: User, label: 'Profile' },
   ] : [
     { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-    { to: '/employer', icon: Building2, label: 'My Postings' },
-    { to: '/opportunities', icon: Briefcase, label: 'Browse All' },
     { to: '/profile', icon: User, label: 'Profile' },
   ];
 
@@ -92,15 +92,6 @@ export default function Layout() {
                 {label}
               </NavLink>
             ))}
-            {(user?.role === 'employer' || user?.role === 'admin') && (
-              <NavLink to="/employer/post" onClick={() => setSidebarOpen(false)}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all ${isActive ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'}`
-                }>
-                <Briefcase className="w-5 h-5" />
-                Post Opportunity
-              </NavLink>
-            )}
           </nav>
 
           {/* User */}
