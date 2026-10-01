@@ -22,8 +22,8 @@ export default function Logo({ size = 'md', white = false }) {
     xl: { icon: 80, title: 'text-2xl', sub: 'text-sm' },
   };
   const s = sizes[size] || sizes.md;
-  const textColor = white ? 'text-white' : 'text-slate-800';
-  const subColor = white ? 'text-orange-300' : 'text-orange-500';
+  const textColor = white ? 'text-white' : 'text-slate-800 dark:text-slate-100';
+  const subColor = white ? 'text-orange-300' : 'text-orange-500 dark:text-orange-400';
 
   return (
     <div className="flex items-center gap-2">
