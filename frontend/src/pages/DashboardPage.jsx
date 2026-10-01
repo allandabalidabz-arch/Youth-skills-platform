@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
-import { BookOpen, Award, TrendingUp, CheckCircle2, Clock, ArrowRight, Building2, Users, Search, MapPin, Calendar, ChevronDown, ChevronUp, Layers } from 'lucide-react';
+import { BookOpen, Award, TrendingUp, CheckCircle2, Clock, ArrowRight, Users, Search, MapPin, Calendar, ChevronDown, ChevronUp, Layers } from 'lucide-react';
 
 const categoryColors = {
   system: 'bg-indigo-100 text-indigo-700',
@@ -119,7 +119,6 @@ function EmployerDashboardView() {
         <p className="section-subtitle">Welcome to the YouthSkills employer portal</p>
       </div>
       <div className="card text-center py-16">
-        <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-3" />
         <p className="text-slate-500 dark:text-slate-400 text-sm">Employer features are coming soon.</p>
       </div>
     </div>
@@ -207,7 +206,7 @@ function AdminDashboardView({ data }) {
       {/* OVERVIEW */}
       {activeTab === 'overview' && (
         <div className="space-y-4">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             <button onClick={() => setActiveTab('youth')} className="card flex items-center gap-4 text-left hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer w-full">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-100 text-blue-600"><Users className="w-6 h-6" /></div>
               <div>
@@ -216,13 +215,6 @@ function AdminDashboardView({ data }) {
                 <p className="text-xs text-blue-500">{stats.youthUsers} youth →</p>
               </div>
             </button>
-            <div className="card flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-green-100 text-green-600"><Building2 className="w-6 h-6" /></div>
-              <div>
-                <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{stats.employers}</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Employers</p>
-              </div>
-            </div>
             <button onClick={() => setActiveTab('modules')} className="card flex items-center gap-4 text-left hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer w-full">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-purple-100 text-purple-600"><BookOpen className="w-6 h-6" /></div>
               <div>
