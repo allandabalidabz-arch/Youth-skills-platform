@@ -129,9 +129,6 @@ export default function LandingPage() {
           <Logo size="sm" white />
         </div>
         <p>© 2026 YouthSkills Program. Empowering youth through digital education.</p>
-        <p className="mt-1">
-          <Link to="/verify" className="hover:text-white transition-colors">Verify Certificate</Link>
-        </p>
         <p className="mt-3">
           <Link to="/admin/login" className="text-slate-600 hover:text-slate-400 text-xs transition-colors">
             Admin Portal

@@ -1,15 +1,18 @@
 # YouthSkills Platform
 
-A web-based system empowering youth through digital skills training, progress tracking, and employer connections.
+A web-based system empowering youth through digital skills training, progress tracking, and certificate issuance.
 
 ## Features
 
-- **User Registration & Auth** — Youth, Employer, and Admin roles with JWT authentication
-- **Course Modules** — Coding, Graphic Design, Entrepreneurship, Marketing, Data Analysis
+- **User Registration & Auth** — Youth registration with JWT authentication
+- **Course Modules** — System Analysis & Design, Web Development, Operating Systems
 - **Progress Tracking** — Module-by-module progress with visual progress bars
-- **Quizzes** — Interactive quizzes with instant scoring and feedback
+- **Quizzes** — Interactive quizzes with instant scoring and feedback (60% pass mark)
+- **Assignments** — Submit and receive graded feedback on assignments
 - **Certificates** — Auto-issued digital certificates on course completion with public verification
 - **Notifications** — Real-time in-app notifications for key events
+- **Dark Mode** — Full light/dark mode toggle with localStorage persistence
+- **Admin Portal** — Separate admin login, user management, and module overview
 
 ## Tech Stack
 
@@ -17,9 +20,10 @@ A web-based system empowering youth through digital skills training, progress tr
 |-------|-----------|
 | Frontend | React 18, Vite, Tailwind CSS, React Router v6 |
 | Backend | Node.js, Express.js |
-| Database | SQLite (via better-sqlite3) |
+| Database | SQLite (via sqlite + sqlite3) |
 | Auth | JWT + bcryptjs |
 | Icons | Lucide React |
+| PDF | jsPDF |
 
 ## Quick Start
 
@@ -29,46 +33,60 @@ cd youth-skills-platform/backend
 npm install
 ```
 
-### 2. Seed the Database
-```bash
-npm run seed
-```
-
-### 3. Start the Backend
+### 2. Start the Backend
 ```bash
 npm run dev
 # API runs on http://localhost:5000
+# Database auto-seeds on first run
 ```
 
-### 4. Install Frontend Dependencies (new terminal)
+### 3. Install Frontend Dependencies (new terminal)
 ```bash
 cd youth-skills-platform/frontend
 npm install
 ```
 
-### 5. Start the Frontend
+### 4. Start the Frontend
 ```bash
 npm run dev
 # App runs on http://localhost:3000
 ```
 
-## Demo Accounts
+## Accounts
 
 | Role | Email | Password |
 |------|-------|----------|
-| Youth | amara@example.com | password123 |
-| Youth | kwame@example.com | password123 |
-| Employer | hr@techafrica.com | password123 |
-| Employer | jobs@creativehub.com | password123 |
-| Admin | admin@youthskills.com | password123 |
+| Admin | admin@youthskills.com | Allan7034 |
+| Employer | dabzyouthskillsacademy@gmail.com | password123 |
+
+> Youth accounts are created by registering on the platform.
+
+## Admin Portal
+
+Access the admin portal at:
+```
+http://localhost:3000/admin/login
+```
+
+## Courses
+
+| Course | Category |
+|--------|----------|
+| System Analysis and Design | Systems |
+| Web Development | Coding |
+| Operating Systems | Systems |
+
+Each course has 3 modules, quizzes (60% pass mark), and assignments.
 
 ## API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | /api/auth/register | Register new user |
+| POST | /api/auth/register | Register new user (youth only) |
 | POST | /api/auth/login | Login |
 | GET | /api/auth/me | Get current user |
+| POST | /api/auth/forgot-password | Request password reset |
+| POST | /api/auth/reset-password | Reset password with token |
 | GET | /api/courses | List courses |
 | GET | /api/courses/:id | Course details + modules |
 | POST | /api/courses/:id/enroll | Enroll in course |
@@ -77,7 +95,7 @@ npm run dev
 | GET | /api/certificates/my | My certificates |
 | GET | /api/certificates/verify/:number | Verify certificate (public) |
 | GET | /api/dashboard/youth | Youth dashboard stats |
-| GET | /api/dashboard/employer | Employer dashboard stats |
+| GET | /api/dashboard/admin | Admin dashboard stats |
 
 ## Certificate Verification
 

@@ -66,15 +66,8 @@ export default function RegisterPage() {
         </div>
 
         <div className="card shadow-lg">
-          <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6">Get Started</h1>
-
-          {/* Role — youth only, no employer option */}
-          <div className="mb-5">
-            <div className="p-3 rounded-xl border-2 border-blue-600 bg-blue-50 dark:bg-blue-900/30 text-left">
-              <div className="font-semibold text-sm text-slate-800 dark:text-slate-100">🎓 I'm a Learner</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Learn digital skills and earn certificates</div>
-            </div>
-          </div>
+          <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-1">Get Started</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Create your free learner account</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

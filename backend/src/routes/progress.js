@@ -13,6 +13,17 @@ router.post('/module/:moduleId/complete', authenticate, authorize('youth'), asyn
   const enrollment = await db.get('SELECT id FROM enrollments WHERE user_id = ? AND course_id = ?', [req.user.id, module.course_id]);
   if (!enrollment) return res.status(403).json({ success: false, message: 'Not enrolled in this course.' });
 
+  // If the module has quizzes, enforce that a passing quiz score was submitted
+  const quizCount = await db.get('SELECT COUNT(*) as count FROM quizzes WHERE module_id = ?', req.params.moduleId);
+  if (quizCount.count > 0) {
+    if (quiz_score === undefined || quiz_score === null) {
+      return res.status(400).json({ success: false, message: 'You must complete and pass the quiz before marking this module complete.' });
+    }
+    if (quiz_score < 60) {
+      return res.status(400).json({ success: false, message: `Quiz score of ${quiz_score}% is below the passing mark of 60%. Please retry the quiz.` });
+    }
+  }
+
   const existing = await db.get('SELECT id FROM module_progress WHERE user_id = ? AND module_id = ?', [req.user.id, req.params.moduleId]);
   if (existing) {
     await db.run('UPDATE module_progress SET completed = 1, quiz_score = ?, completed_at = CURRENT_TIMESTAMP WHERE user_id = ? AND module_id = ?',
