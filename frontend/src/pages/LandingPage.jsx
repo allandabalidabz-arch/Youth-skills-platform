@@ -19,13 +19,13 @@ const stats = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-700">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/"><Logo size="sm" /></Link>
           <div className="flex items-center gap-3">
-            <Link to="/login" className="text-slate-600 hover:text-slate-800 font-medium text-sm px-4 py-2">Sign In</Link>
+            <Link to="/login" className="text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white font-medium text-sm px-4 py-2">Sign In</Link>
             <Link to="/register" className="btn-primary text-sm py-2 px-5">Get Started Free</Link>
           </div>
         </div>
@@ -69,11 +69,11 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-slate-900">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-slate-800 mb-3">Everything You Need to Succeed</h2>
-            <p className="text-slate-500 text-lg">From beginner to job-ready in one platform</p>
+            <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">Everything You Need to Succeed</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-lg">From beginner to job-ready in one platform</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map(f => (
@@ -81,8 +81,8 @@ export default function LandingPage() {
                 <div className={`w-14 h-14 rounded-2xl ${f.color} flex items-center justify-center mx-auto mb-4`}>
                   <f.icon className="w-7 h-7" />
                 </div>
-                <h3 className="font-bold text-slate-800 mb-2">{f.title}</h3>
-                <p className="text-slate-500 text-sm">{f.desc}</p>
+                <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-2">{f.title}</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -90,11 +90,11 @@ export default function LandingPage() {
       </section>
 
       {/* How it works */}
-      <section className="py-20 bg-slate-50">
+      <section className="py-20 bg-slate-50 dark:bg-slate-800">
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-slate-800 mb-3">How It Works</h2>
-            <p className="text-slate-500">Three simple steps to your digital career</p>
+            <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">How It Works</h2>
+            <p className="text-slate-500 dark:text-slate-400">Three simple steps to your digital career</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {[
@@ -104,8 +104,8 @@ export default function LandingPage() {
             ].map(item => (
               <div key={item.step} className="text-center">
                 <div className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold mx-auto mb-4">{item.step}</div>
-                <h3 className="font-bold text-slate-800 mb-2 text-lg">{item.title}</h3>
-                <p className="text-slate-500 text-sm">{item.desc}</p>
+                <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-2 text-lg">{item.title}</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -124,7 +124,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-800 text-slate-400 py-8 text-center text-sm">
+      <footer className="bg-slate-800 dark:bg-slate-950 text-slate-400 py-8 text-center text-sm">
         <div className="flex items-center justify-center mb-3">
           <Logo size="sm" white />
         </div>

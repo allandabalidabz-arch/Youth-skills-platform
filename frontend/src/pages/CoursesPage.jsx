@@ -78,23 +78,22 @@ export default function CoursesPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="card animate-pulse">
-              <div className="h-40 bg-slate-200 rounded-xl mb-4" />
-              <div className="h-4 bg-slate-200 rounded w-3/4 mb-2" />
-              <div className="h-3 bg-slate-200 rounded w-1/2" />
+              <div className="h-40 bg-slate-200 dark:bg-slate-700 rounded-xl mb-4" />
+              <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4 mb-2" />
+              <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2" />
             </div>
           ))}
         </div>
       ) : courses.length === 0 ? (
         <div className="text-center py-16">
           <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-500">No courses found. Try adjusting your filters.</p>
+          <p className="text-slate-500 dark:text-slate-400">No courses found. Try adjusting your filters.</p>
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {courses.map(course => (
             <Link key={course.id} to={`/courses/${course.id}`} className="card hover:shadow-md transition-all hover:-translate-y-0.5 group p-0 overflow-hidden">
-              {/* Thumbnail */}
-              <div className="h-44 bg-slate-100 overflow-hidden relative">
+              <div className="h-44 bg-slate-100 dark:bg-slate-700 overflow-hidden relative">
                 {course.thumbnail ? (
                   <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 ) : (
@@ -108,20 +107,19 @@ export default function CoursesPage() {
                   </div>
                 )}
               </div>
-
               <div className="p-5">
                 <div className="flex items-center gap-2 mb-2">
                   <span className={`badge ${categoryColors[course.category] || 'bg-slate-100 text-slate-600'}`}>{course.category}</span>
                   <span className={`badge ${levelColors[course.level] || 'bg-slate-100 text-slate-600'}`}>{course.level}</span>
                 </div>
-                <h3 className="font-bold text-slate-800 mb-1 line-clamp-2 group-hover:text-blue-600 transition-colors">{course.title}</h3>
-                <p className="text-slate-500 text-sm line-clamp-2 mb-3">{course.description}</p>
-                <div className="flex items-center justify-between text-xs text-slate-400">
+                <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-1 line-clamp-2 group-hover:text-blue-600 transition-colors">{course.title}</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 mb-3">{course.description}</p>
+                <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500">
                   <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {course.duration_hours}h</span>
                   <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" /> {course.enrolled_count} enrolled</span>
                   <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" /> {course.module_count} modules</span>
                 </div>
-                <p className="text-xs text-slate-400 mt-2">By {course.instructor_name}</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">By {course.instructor_name}</p>
               </div>
             </Link>
           ))}

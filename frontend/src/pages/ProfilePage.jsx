@@ -32,25 +32,16 @@ export default function ProfilePage() {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (form.phone && !isValidPhone(form.phone)) {
-      return toast.error('Invalid phone number format.');
-    }
-    if (form.avatar && !isValidUrl(form.avatar)) {
-      return toast.error('Invalid avatar URL. Must start with http:// or https://');
-    }
-    if (form.location && !isValidLocation(form.location)) {
-      return toast.error('Enter a valid location.');
-    }
+    if (form.phone && !isValidPhone(form.phone)) return toast.error('Invalid phone number format.');
+    if (form.avatar && !isValidUrl(form.avatar)) return toast.error('Invalid avatar URL. Must start with http:// or https://');
+    if (form.location && !isValidLocation(form.location)) return toast.error('Enter a valid location.');
     setSaving(true);
     try {
       const res = await api.put('/users/profile', { ...form, skills });
       updateUser(res.data.user);
       toast.success('Profile updated!');
-    } catch {
-      toast.error('Failed to update profile');
-    } finally {
-      setSaving(false);
-    }
+    } catch { toast.error('Failed to update profile'); }
+    finally { setSaving(false); }
   };
 
   const handleChangePw = async (e) => {
@@ -63,16 +54,13 @@ export default function ProfilePage() {
       setPwForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to change password');
-    } finally {
-      setSavingPw(false);
-    }
+    } finally { setSavingPw(false); }
   };
 
   const addSkill = () => {
     const s = newSkill.trim();
     if (s && !skills.includes(s)) { setSkills(p => [...p, s]); setNewSkill(''); }
   };
-
   const removeSkill = (s) => setSkills(p => p.filter(x => x !== s));
 
   return (
@@ -83,10 +71,12 @@ export default function ProfilePage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-slate-100 p-1 rounded-xl w-fit">
+      <div className="flex gap-1 bg-slate-100 dark:bg-slate-700 p-1 rounded-xl w-fit">
         {[{ id: 'profile', label: 'Profile' }, { id: 'security', label: 'Security' }].map(t => (
           <button key={t.id} onClick={() => setActiveTab(t.id)}
-            className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === t.id ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
+            className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === t.id
+              ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-sm'
+              : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}>
             {t.label}
           </button>
         ))}
@@ -96,12 +86,13 @@ export default function ProfilePage() {
         <form onSubmit={handleSave} className="space-y-5">
           {/* Avatar */}
           <div className="card flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-2xl overflow-hidden flex-shrink-0">
+            <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-700 dark:text-blue-300 font-bold text-2xl overflow-hidden flex-shrink-0">
               {form.avatar ? <img src={form.avatar} alt="" className="w-full h-full object-cover" /> : user?.name?.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-medium text-slate-700 mb-1">Avatar URL</label>
-              <input type="url" className="input" placeholder="https://..." value={form.avatar} onChange={e => setForm(p => ({ ...p, avatar: e.target.value }))} onBlur={touch('avatar')} />
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Avatar URL</label>
+              <input type="url" className="input" placeholder="https://..." value={form.avatar}
+                onChange={e => setForm(p => ({ ...p, avatar: e.target.value }))} onBlur={touch('avatar')} />
               {touched.avatar && form.avatar && !isValidUrl(form.avatar) && (
                 <p className="text-xs text-red-500 mt-1">Must be a valid URL starting with https://</p>
               )}
@@ -110,26 +101,27 @@ export default function ProfilePage() {
 
           <div className="card space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Full Name</label>
               <input type="text" className="input" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Bio</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Bio</label>
               <textarea className="input h-24 resize-none" placeholder="Tell us about yourself..." value={form.bio} onChange={e => setForm(p => ({ ...p, bio: e.target.value }))} />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Location</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Location</label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input type="text" className="input pl-10" placeholder="City, Country" value={form.location} onChange={e => setForm(p => ({ ...p, location: e.target.value }))} onBlur={touch('location')} />
+                  <input type="text" className="input pl-10" placeholder="City, Country" value={form.location}
+                    onChange={e => setForm(p => ({ ...p, location: e.target.value }))} onBlur={touch('location')} />
                 </div>
                 {touched.location && form.location && !isValidLocation(form.location) && (
                   <p className="text-xs text-red-500 mt-1">Enter a valid location.</p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Phone</label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input type="tel" className="input pl-10" placeholder="+260" value={form.phone}
@@ -145,7 +137,7 @@ export default function ProfilePage() {
 
           {/* Skills */}
           <div className="card">
-            <h3 className="font-semibold text-slate-800 mb-3">Skills</h3>
+            <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-3">Skills</h3>
             <div className="flex flex-wrap gap-2 mb-3">
               {skills.map(s => (
                 <span key={s} className="badge bg-blue-100 text-blue-700 flex items-center gap-1 pr-1">
@@ -170,17 +162,17 @@ export default function ProfilePage() {
 
       {activeTab === 'security' && (
         <form onSubmit={handleChangePw} className="card space-y-4">
-          <h3 className="font-semibold text-slate-800 flex items-center gap-2"><Lock className="w-4 h-4" /> Change Password</h3>
+          <h3 className="font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2"><Lock className="w-4 h-4" /> Change Password</h3>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Current Password</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Current Password</label>
             <input type="password" className="input" value={pwForm.currentPassword} onChange={e => setPwForm(p => ({ ...p, currentPassword: e.target.value }))} required />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">New Password</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">New Password</label>
             <input type="password" className="input" value={pwForm.newPassword} onChange={e => setPwForm(p => ({ ...p, newPassword: e.target.value }))} required minLength={6} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Confirm New Password</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Confirm New Password</label>
             <input type="password" className="input" value={pwForm.confirmPassword} onChange={e => setPwForm(p => ({ ...p, confirmPassword: e.target.value }))} required />
           </div>
           <button type="submit" disabled={savingPw} className="btn-primary w-full py-3">

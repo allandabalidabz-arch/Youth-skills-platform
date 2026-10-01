@@ -24,74 +24,46 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-
-        {/* Logo */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2">
-            <Logo size="lg" />
-          </Link>
-          <p className="text-slate-500 mt-2">Reset your password</p>
+          <Link to="/" className="inline-flex items-center gap-2"><Logo size="lg" /></Link>
+          <p className="text-slate-500 dark:text-slate-400 mt-2">Reset your password</p>
         </div>
-
         <div className="card shadow-lg">
           {!submitted ? (
             <>
-              <h1 className="text-xl font-bold text-slate-800 mb-2">Forgot Password</h1>
-              <p className="text-sm text-slate-500 mb-6">
-                Enter your registered email address and we will send you a password reset link.
-              </p>
-
+              <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Forgot Password</h1>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Enter your registered email address and we will send you a password reset link.</p>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Email Address
-                  </label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Email Address</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input
-                      type="email"
-                      className="input pl-10"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                      required
-                    />
+                    <input type="email" className="input pl-10" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
                   </div>
                 </div>
-
                 <button type="submit" disabled={loading} className="btn-primary w-full py-3">
-                  {loading
-                    ? <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-                    : <><Send className="w-4 h-4" /> Send Reset Link</>
-                  }
+                  {loading ? <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" /> : <><Send className="w-4 h-4" /> Send Reset Link</>}
                 </button>
               </form>
             </>
           ) : (
-            /* Success state */
             <div className="text-center py-4">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Mail className="w-8 h-8 text-green-600" />
               </div>
-              <h2 className="text-xl font-bold text-slate-800 mb-2">Check your notifications</h2>
-              <p className="text-sm text-slate-500 mb-2">
-                If <span className="font-semibold text-slate-700">{email}</span> is registered,
-                a password reset link has been sent.
+              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Check your notifications</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+                If <span className="font-semibold text-slate-700 dark:text-slate-300">{email}</span> is registered, a password reset link has been sent.
               </p>
-              <p className="text-xs text-slate-400 mb-6">
-                Check your in-app notifications after logging in, or use the link shown in the server console during development.
-              </p>
-              <Link to="/login" className="btn-primary w-full py-3">
-                Back to Login
-              </Link>
+              <p className="text-xs text-slate-400 mb-6">Check your in-app notifications after logging in, or use the link shown in the server console during development.</p>
+              <Link to="/login" className="btn-primary w-full py-3">Back to Login</Link>
             </div>
           )}
-
           {!submitted && (
             <div className="mt-5 text-center">
-              <Link to="/login" className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1 justify-center">
+              <Link to="/login" className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-1 justify-center">
                 <ArrowLeft className="w-3.5 h-3.5" /> Back to Login
               </Link>
             </div>

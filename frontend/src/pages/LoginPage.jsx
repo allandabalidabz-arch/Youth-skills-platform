@@ -38,27 +38,27 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2">
             <Logo size="lg" />
           </Link>
-          <p className="text-slate-500 mt-2">Sign in to your YouthSkills Program account</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-2">Sign in to your YouthSkills Program account</p>
         </div>
 
         <div className="card shadow-lg">
-          <h1 className="text-xl font-bold text-slate-800 mb-6">Welcome Back</h1>
+          <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6">Welcome Back</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Email Address</label>
               <input type="email" className="input" placeholder="you@example.com" value={form.email}
                 onChange={e => setForm(p => ({ ...p, email: e.target.value }))} required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Password</label>
               <div className="relative">
                 <input type={showPw ? 'text' : 'password'} className="input pr-12" placeholder="••••••••" value={form.password}
                   onChange={e => setForm(p => ({ ...p, password: e.target.value }))} required />
@@ -75,7 +75,7 @@ export default function LoginPage() {
                   onChange={e => setRememberMe(e.target.checked)}
                   className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                 />
-                <span className="text-sm text-slate-600">Remember me</span>
+                <span className="text-sm text-slate-600 dark:text-slate-300">Remember me</span>
               </label>
               <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline font-medium">
                 Forgot password?
@@ -86,7 +86,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="text-center text-sm text-slate-500 mt-4">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-4">
             Don't have an account? <Link to="/register" className="text-blue-600 font-semibold hover:underline">Create one free</Link>
           </p>
         </div>

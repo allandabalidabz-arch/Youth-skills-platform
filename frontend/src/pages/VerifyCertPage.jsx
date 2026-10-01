@@ -14,13 +14,13 @@ export default function VerifyCertPage() {
   }, [certNumber]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex justify-center">
             <Logo size="lg" />
           </Link>
-          <p className="text-slate-500 mt-2 text-sm">Certificate Verification</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">Certificate Verification</p>
         </div>
 
         <div className="card shadow-lg text-center">
@@ -30,7 +30,7 @@ export default function VerifyCertPage() {
             <div>
               <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
               <h2 className="text-xl font-bold text-green-700 mb-1">Certificate Valid ✓</h2>
-              <p className="text-slate-500 text-sm mb-6">This certificate is authentic and was issued by YouthSkills Platform.</p>
+              <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">This certificate is authentic and was issued by YouthSkills Platform.</p>
 
               <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl p-6 text-white mb-6">
                 <Award className="w-10 h-10 mx-auto mb-3 opacity-80" />
@@ -41,25 +41,25 @@ export default function VerifyCertPage() {
               </div>
 
               <div className="text-left space-y-2 text-sm">
-                <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-500">Certificate #</span>
-                  <span className="font-mono font-bold text-slate-700">{result.certificate.certificate_number}</span>
+                <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
+                  <span className="text-slate-500 dark:text-slate-400">Certificate #</span>
+                  <span className="font-mono font-bold text-slate-700 dark:text-slate-200">{result.certificate.certificate_number}</span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-500">Category</span>
-                  <span className="font-medium capitalize">{result.certificate.category}</span>
+                <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
+                  <span className="text-slate-500 dark:text-slate-400">Category</span>
+                  <span className="font-medium capitalize dark:text-slate-200">{result.certificate.category}</span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-500">Level</span>
-                  <span className="font-medium capitalize">{result.certificate.level}</span>
+                <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
+                  <span className="text-slate-500 dark:text-slate-400">Level</span>
+                  <span className="font-medium capitalize dark:text-slate-200">{result.certificate.level}</span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-500">Instructor</span>
-                  <span className="font-medium">{result.certificate.instructor_name}</span>
+                <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
+                  <span className="text-slate-500 dark:text-slate-400">Instructor</span>
+                  <span className="font-medium dark:text-slate-200">{result.certificate.instructor_name}</span>
                 </div>
                 <div className="flex justify-between py-2">
-                  <span className="text-slate-500">Issued On</span>
-                  <span className="font-medium">{new Date(result.certificate.issued_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span className="text-slate-500 dark:text-slate-400">Issued On</span>
+                  <span className="font-medium dark:text-slate-200">{new Date(result.certificate.issued_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 </div>
               </div>
             </div>
@@ -67,7 +67,7 @@ export default function VerifyCertPage() {
             <div className="py-8">
               <XCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
               <h2 className="text-xl font-bold text-red-600 mb-2">Certificate Not Found</h2>
-              <p className="text-slate-500 text-sm">The certificate number <span className="font-mono font-bold">{certNumber}</span> could not be verified. It may be invalid or does not exist.</p>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">The certificate number <span className="font-mono font-bold">{certNumber}</span> could not be verified. It may be invalid or does not exist.</p>
             </div>
           )}
 

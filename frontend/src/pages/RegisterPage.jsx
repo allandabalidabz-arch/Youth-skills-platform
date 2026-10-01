@@ -57,17 +57,17 @@ export default function RegisterPage() {
   const set = (field) => (e) => setForm(p => ({ ...p, [field]: e.target.value }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2">
             <Logo size="lg" />
           </Link>
-          <p className="text-slate-500 mt-2">Join the YouthSkills Program for free</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-2">Join the YouthSkills Program for free</p>
         </div>
 
         <div className="card shadow-lg">
-          <h1 className="text-xl font-bold text-slate-800 mb-6">Get Started</h1>
+          <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6">Get Started</h1>
 
           {/* Role selector */}
           <div className="grid grid-cols-2 gap-3 mb-5">
@@ -76,27 +76,26 @@ export default function RegisterPage() {
               { value: 'employer', label: '🏢 I\'m an Employer', desc: 'Hire talented graduates' }
             ].map(r => (
               <button key={r.value} type="button" onClick={() => setForm(p => ({ ...p, role: r.value }))}
-                className={`p-3 rounded-xl border-2 text-left transition-all ${form.role === r.value ? 'border-blue-600 bg-blue-50' : 'border-slate-200 hover:border-slate-300'}`}>
-                <div className="font-semibold text-sm text-slate-800">{r.label}</div>
-                <div className="text-xs text-slate-500 mt-0.5">{r.desc}</div>
+                className={`p-3 rounded-xl border-2 text-left transition-all ${form.role === r.value ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
+                <div className="font-semibold text-sm text-slate-800 dark:text-slate-100">{r.label}</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{r.desc}</div>
               </button>
             ))}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Full Name</label>
               <input type="text" className="input" placeholder="Your full name"
                 value={form.name}
                 onChange={e => setForm(p => ({ ...p, name: e.target.value.replace(/[^a-zA-Z\s]/g, '') }))}
-                onBlur={touch('name')}
-                required />
+                onBlur={touch('name')} required />
               {touched.name && form.name && !isValidName(form.name) && (
                 <p className="text-xs text-red-500 mt-1">Name must contain letters only.</p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Email Address</label>
               <input type="email" className="input" placeholder="name@gmail.com" value={form.email} onChange={set('email')} onBlur={touch('email')} required />
               {touched.email && form.email && !isValidEmail(form.email) && (
                 <p className="text-xs text-red-500 mt-1">Enter a valid email e.g. name@gmail.com</p>
@@ -104,14 +103,14 @@ export default function RegisterPage() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Location</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Location</label>
                 <input type="text" className="input" placeholder="City, Country" value={form.location} onChange={set('location')} onBlur={touch('location')} />
                 {touched.location && form.location && !isValidLocation(form.location) && (
                   <p className="text-xs text-red-500 mt-1">Enter a valid location.</p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone (optional)</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Phone (optional)</label>
                 <input type="tel" className="input" placeholder="+260" value={form.phone}
                   onChange={e => setForm(p => ({ ...p, phone: e.target.value.replace(/[^0-9+]/g, '') }))}
                   onBlur={touch('phone')} />
@@ -121,7 +120,7 @@ export default function RegisterPage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Password</label>
               <div className="relative">
                 <input type={showPw ? 'text' : 'password'} className="input pr-12" placeholder="Min. 6 characters" value={form.password} onChange={set('password')} required minLength={6} />
                 <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
@@ -130,7 +129,7 @@ export default function RegisterPage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Confirm Password</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Confirm Password</label>
               <input type="password" className="input" placeholder="Repeat password" value={form.confirmPassword} onChange={set('confirmPassword')} required />
             </div>
             <button type="submit" disabled={loading} className="btn-primary w-full py-3">
@@ -138,7 +137,7 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <p className="text-center text-sm text-slate-500 mt-4">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-4">
             Already have an account? <Link to="/login" className="text-blue-600 font-semibold hover:underline">Sign in</Link>
           </p>
         </div>

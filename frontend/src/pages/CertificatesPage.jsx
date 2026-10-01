@@ -266,20 +266,19 @@ export default function CertificatesPage() {
       {certificates.length === 0 ? (
         <div className="card text-center py-16">
           <Award className="w-16 h-16 text-slate-200 mx-auto mb-4" />
-          <h3 className="font-bold text-slate-700 text-lg mb-2">No Certificates Yet</h3>
+          <h3 className="font-bold text-slate-700 dark:text-slate-300 text-lg mb-2">No Certificates Yet</h3>
           <p className="text-slate-400 mb-6">Complete a course to earn your first certificate!</p>
           <a href="/courses" className="btn-primary inline-flex">Browse Courses</a>
         </div>
       ) : (
         <div className="grid md:grid-cols-2 gap-6">
           {certificates.map(cert => (
-            <div key={cert.id} className="rounded-2xl overflow-hidden shadow-md border border-slate-100">
-              {/* Certificate card visual */}
+            <div key={cert.id} className="rounded-2xl overflow-hidden shadow-md border border-slate-100 dark:border-slate-700">
+              {/* Certificate card visual — gradient stays colorful in both modes */}
               <div className={`bg-gradient-to-br ${categoryColors[cert.category] || 'from-blue-500 to-blue-700'} p-8 text-white text-center relative`}>
                 <div className="absolute top-4 right-4 opacity-20">
                   <Award className="w-16 h-16" />
                 </div>
-                {/* Logo */}
                 <div className="flex justify-center mb-3">
                   <div className="bg-white rounded-xl p-2 w-16 h-16 flex items-center justify-center shadow-md">
                     <img src="/logo.png" alt="YouthSkills Program" className="w-12 h-12 object-contain" />
@@ -296,34 +295,29 @@ export default function CertificatesPage() {
               </div>
 
               {/* Certificate details */}
-              <div className="bg-white p-4">
+              <div className="bg-white dark:bg-slate-800 p-4">
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <p className="text-xs text-slate-400">Certificate Number</p>
-                    <p className="font-mono text-sm font-bold text-slate-700">{cert.certificate_number}</p>
+                    <p className="font-mono text-sm font-bold text-slate-700 dark:text-slate-200">{cert.certificate_number}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-slate-400">Level</p>
-                    <p className="text-sm font-semibold text-slate-700 capitalize">{cert.level}</p>
+                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 capitalize">{cert.level}</p>
                   </div>
                 </div>
                 <p className="text-xs text-slate-400 mb-3">Instructor: {cert.instructor_name}</p>
                 <div className="grid grid-cols-3 gap-2">
-                  {/* Payment gate for PDF download */}
                   {isUnlocked(cert.id) ? (
-                    <button onClick={() => handleDownload(cert)} disabled={downloading === cert.id}
-                      className="btn-primary text-sm py-2">
-                      {downloading === cert.id
-                        ? <Loader2 className="w-4 h-4 animate-spin" />
-                        : <><Download className="w-4 h-4" /> PDF</>}
+                    <button onClick={() => handleDownload(cert)} disabled={downloading === cert.id} className="btn-primary text-sm py-2">
+                      {downloading === cert.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Download className="w-4 h-4" /> PDF</>}
                     </button>
                   ) : isPending(cert.id) ? (
-                    <div className="flex items-center gap-1 text-yellow-600 text-xs font-medium col-span-1 bg-yellow-50 rounded-xl px-2 py-2 justify-center">
+                    <div className="flex items-center gap-1 text-yellow-600 text-xs font-medium col-span-1 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl px-2 py-2 justify-center">
                       <Clock className="w-4 h-4" /> Pending
                     </div>
                   ) : (
-                    <button onClick={() => setShowPayForm(p => ({ ...p, [cert.id]: !p[cert.id] }))}
-                      className="btn-secondary text-sm py-2 col-span-1">
+                    <button onClick={() => setShowPayForm(p => ({ ...p, [cert.id]: !p[cert.id] }))} className="btn-secondary text-sm py-2 col-span-1">
                       <Lock className="w-4 h-4" /> 2,000 ZMW
                     </button>
                   )}
@@ -337,31 +331,20 @@ export default function CertificatesPage() {
 
                 {/* Payment form */}
                 {showPayForm[cert.id] && !isUnlocked(cert.id) && (
-                  <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
-                    <p className="text-sm font-bold text-slate-800 mb-1">💳 Pay 2,000 ZMW to Download</p>
-                    <p className="text-xs text-slate-500 mb-3">
+                  <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl">
+                    <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">💳 Pay 2,000 ZMW to Download</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
                       Send 2,000 ZMW via mobile money or bank transfer, then enter your payment reference number below.
                     </p>
                     {isRejected(cert.id) && (
-                      <p className="text-xs text-red-600 bg-red-50 rounded-lg p-2 mb-3">
+                      <p className="text-xs text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg p-2 mb-3">
                         ❌ Previous proof was rejected. Please resubmit with a valid reference.
                       </p>
                     )}
-                    <input
-                      type="text"
-                      className="input text-sm mb-2"
-                      placeholder="Enter payment reference number..."
-                      value={proofText[cert.id] || ''}
-                      onChange={e => setProofText(p => ({ ...p, [cert.id]: e.target.value }))}
-                    />
-                    <button
-                      onClick={() => handleSubmitProof(cert.id)}
-                      disabled={submitting === cert.id}
-                      className="btn-primary text-sm py-2 w-full"
-                    >
-                      {submitting === cert.id
-                        ? <Loader2 className="w-4 h-4 animate-spin" />
-                        : <><Send className="w-4 h-4" /> Submit Payment Proof</>}
+                    <input type="text" className="input text-sm mb-2" placeholder="Enter payment reference number..."
+                      value={proofText[cert.id] || ''} onChange={e => setProofText(p => ({ ...p, [cert.id]: e.target.value }))} />
+                    <button onClick={() => handleSubmitProof(cert.id)} disabled={submitting === cert.id} className="btn-primary text-sm py-2 w-full">
+                      {submitting === cert.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Send className="w-4 h-4" /> Submit Payment Proof</>}
                     </button>
                   </div>
                 )}
