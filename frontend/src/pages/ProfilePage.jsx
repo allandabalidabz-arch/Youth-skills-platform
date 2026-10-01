@@ -38,7 +38,9 @@ export default function ProfilePage() {
     setSaving(true);
     try {
       const res = await api.put('/users/profile', { ...form, skills });
-      updateUser(res.data.user);
+      // Re-fetch from /auth/me to ensure sidebar and topbar reflect latest name
+      const meRes = await api.get('/auth/me');
+      updateUser({ ...meRes.data.user, skills: meRes.data.user.skills || [] });
       toast.success('Profile updated!');
     } catch { toast.error('Failed to update profile'); }
     finally { setSaving(false); }
