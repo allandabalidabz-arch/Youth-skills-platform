@@ -96,6 +96,11 @@ export default function AdminLoginPage() {
             </div>
 
             {/* Submit */}
+            <div className="flex items-center justify-between">
+              <Link to="/forgot-password" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
+                Forgot password?
+              </Link>
+            </div>
             <button
               type="submit"
               disabled={loading}
