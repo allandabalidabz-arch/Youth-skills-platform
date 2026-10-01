@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { Eye, EyeOff, UserPlus } from 'lucide-react';
@@ -14,10 +14,9 @@ const isValidName     = (name)     => /^[a-zA-Z\s]+$/.test(name.trim());
 export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const [params] = useSearchParams();
   const [form, setForm] = useState({
     name: '', email: '', password: '', confirmPassword: '',
-    role: params.get('role') || 'youth', location: '', phone: ''
+    role: 'youth', location: '', phone: ''
   });
   const [showPw, setShowPw] = useState(false);
   const [touched, setTouched] = useState({});
@@ -69,18 +68,12 @@ export default function RegisterPage() {
         <div className="card shadow-lg">
           <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6">Get Started</h1>
 
-          {/* Role selector */}
-          <div className="grid grid-cols-2 gap-3 mb-5">
-            {[
-              { value: 'youth', label: '🎓 I\'m a Learner', desc: 'Learn skills & find jobs' },
-              { value: 'employer', label: '🏢 I\'m an Employer', desc: 'Hire talented graduates' }
-            ].map(r => (
-              <button key={r.value} type="button" onClick={() => setForm(p => ({ ...p, role: r.value }))}
-                className={`p-3 rounded-xl border-2 text-left transition-all ${form.role === r.value ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
-                <div className="font-semibold text-sm text-slate-800 dark:text-slate-100">{r.label}</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{r.desc}</div>
-              </button>
-            ))}
+          {/* Role — youth only, no employer option */}
+          <div className="mb-5">
+            <div className="p-3 rounded-xl border-2 border-blue-600 bg-blue-50 dark:bg-blue-900/30 text-left">
+              <div className="font-semibold text-sm text-slate-800 dark:text-slate-100">🎓 I'm a Learner</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Learn digital skills and earn certificates</div>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
