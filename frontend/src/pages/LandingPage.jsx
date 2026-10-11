@@ -100,7 +100,7 @@ export default function LandingPage() {
             {[
               { step: '01', title: 'Register & Enroll', desc: 'Create your free account and enroll in courses that match your interests and career goals.' },
               { step: '02', title: 'Learn & Complete', desc: 'Study module content, take quizzes, and submit assignments to progress through each course.' },
-              { step: '03', title: 'Earn & Share Certificates', desc: 'Download your verified digital certificate and share it with employers to showcase your new skills.' },
+              { step: '03', title: 'Earn & Share Certificates', desc: 'Download your verified digital certificate and share it to showcase your new skills.' },
             ].map(item => (
               <div key={item.step} className="text-center">
                 <div className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold mx-auto mb-4">{item.step}</div>

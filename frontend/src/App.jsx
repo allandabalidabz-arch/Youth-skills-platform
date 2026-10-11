@@ -9,10 +9,8 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import CoursesPage from './pages/CoursesPage';
 import CourseDetailPage from './pages/CourseDetailPage';
-// Opportunities feature removed
 import CertificatesPage from './pages/CertificatesPage';
 import ProfilePage from './pages/ProfilePage';
-import EmployerDashboard from './pages/EmployerDashboard';
 import VerifyCertPage from './pages/VerifyCertPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
@@ -62,13 +60,8 @@ function AppRoutes() {
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="courses" element={<CoursesPage />} />
         <Route path="courses/:id" element={<CourseDetailPage />} />
-        {/* Opportunities routes removed */}
         <Route path="certificates" element={<ProtectedRoute roles={['youth', 'admin']}><CertificatesPage /></ProtectedRoute>} />
         <Route path="profile" element={<ProfilePage />} />
-
-        {/* Employer routes */}
-        <Route path="employer" element={<ProtectedRoute roles={['employer', 'admin']}><EmployerDashboard /></ProtectedRoute>} />
-        {/* Employer post opportunity route removed */}
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

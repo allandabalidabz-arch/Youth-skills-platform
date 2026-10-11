@@ -30,9 +30,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const endpoint = user?.role === 'youth' ? '/dashboard/youth'
-      : user?.role === 'employer' ? '/dashboard/employer'
-      : '/dashboard/admin';
+    const endpoint = user?.role === 'youth' ? '/dashboard/youth' : '/dashboard/admin';
     api.get(endpoint).then(res => setData(res.data)).catch(console.error).finally(() => setLoading(false));
   }, [user]);
 
@@ -43,7 +41,6 @@ export default function DashboardPage() {
   );
 
   if (user?.role === 'youth') return <YouthDashboard data={data} user={user} />;
-  if (user?.role === 'employer') return <EmployerDashboardView />;
   return <AdminDashboardView data={data} />;
 }
 
@@ -106,20 +103,6 @@ function YouthDashboard({ data, user }) {
             </div>
           ))}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function EmployerDashboardView() {
-  return (
-    <div className="space-y-6 fade-in">
-      <div>
-        <h1 className="section-title">Employer Dashboard</h1>
-        <p className="section-subtitle">Welcome to the YouthSkills employer portal</p>
-      </div>
-      <div className="card text-center py-16">
-        <p className="text-slate-500 dark:text-slate-400 text-sm">Employer features are coming soon.</p>
       </div>
     </div>
   );

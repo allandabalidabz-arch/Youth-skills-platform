@@ -105,37 +105,6 @@ async function initializeDatabase(db) {
       FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
     );
 
-    CREATE TABLE IF NOT EXISTS opportunities (
-      id TEXT PRIMARY KEY,
-      employer_id TEXT NOT NULL,
-      title TEXT NOT NULL,
-      company TEXT NOT NULL,
-      description TEXT NOT NULL,
-      type TEXT NOT NULL,
-      location TEXT NOT NULL,
-      is_remote INTEGER DEFAULT 0,
-      salary_range TEXT,
-      required_skills TEXT DEFAULT '[]',
-      required_courses TEXT DEFAULT '[]',
-      deadline TEXT,
-      is_active INTEGER DEFAULT 1,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (employer_id) REFERENCES users(id) ON DELETE CASCADE
-    );
-
-    CREATE TABLE IF NOT EXISTS applications (
-      id TEXT PRIMARY KEY,
-      user_id TEXT NOT NULL,
-      opportunity_id TEXT NOT NULL,
-      cover_letter TEXT,
-      status TEXT DEFAULT 'pending',
-      applied_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      UNIQUE(user_id, opportunity_id),
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-      FOREIGN KEY (opportunity_id) REFERENCES opportunities(id) ON DELETE CASCADE
-    );
-
     CREATE TABLE IF NOT EXISTS notifications (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
@@ -192,6 +161,16 @@ async function initializeDatabase(db) {
       UNIQUE(user_id, certificate_id),
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
       FOREIGN KEY (certificate_id) REFERENCES certificates(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS password_resets (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      token TEXT NOT NULL,
+      expires_at DATETIME NOT NULL,
+      used INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
   `);
   console.log('✅ Database initialized');

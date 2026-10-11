@@ -29,7 +29,7 @@ async function addQuizzes(db, quizzes) {
 async function seedData(db) {
   const hashedPw = await bcrypt.hash('password123', 12);
   const adminPw = await bcrypt.hash('Allan7034', 12);
-  const adminId = uuidv4(), employer1Id = uuidv4();
+  const adminId = uuidv4();
 
   const insertUser = async (id, name, email, role, bio, location, skills) => {
     await db.run('INSERT INTO users (id, name, email, password, role, bio, location, skills) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
@@ -37,7 +37,6 @@ async function seedData(db) {
   };
 
   await insertUser(adminId, 'Admin User', 'admin@youthskills.com', 'admin', 'Platform administrator', 'Lusaka, Zambia', []);
-  await insertUser(employer1Id, 'DABZ-youthskillsAcademy', 'dabzyouthskillsacademy@gmail.com', 'employer', 'Leading youth skills training academy in Africa', 'Lusaka, Zambia', []);
 
   const courses = [
     {
@@ -1578,7 +1577,7 @@ SECTION 4 — IMPROVEMENT PLAN:
 Write at least 250 words total with specific observations about the actual computer you are auditing.`
   );
 
-  console.log('✅ Seed complete: 2 users, 3 courses, 9 modules, 18 quizzes, 9 assignments');
+  console.log('✅ Seed complete: 1 user, 3 courses, 9 modules, 18 quizzes, 9 assignments');
 }
 
 async function seed() {
@@ -1601,7 +1600,7 @@ async function seed() {
   await seedData(db);
   console.log('\n📋 Accounts:');
   console.log('  Admin:    admin@youthskills.com / Allan7034');
-  console.log('  Employer: dabzyouthskillsacademy@gmail.com / password123');
+  console.log('  Youth:    Register on the platform');
   process.exit(0);
 }
 

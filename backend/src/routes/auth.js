@@ -23,7 +23,7 @@ router.post('/register', async (req, res) => {
     if (password.length < 6) return res.status(400).json({ success: false, message: 'Password must be at least 6 characters.' });
     if (phone && !isValidPhone(phone)) return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
     if (location && !isValidLocation(location)) return res.status(400).json({ success: false, message: 'Enter a valid location.' });
-    if (!['youth', 'employer'].includes(role)) return res.status(400).json({ success: false, message: 'Invalid role.' });
+    if (!['youth'].includes(role)) return res.status(400).json({ success: false, message: 'Invalid role.' });
 
     const db = await getDb();
     const existing = await db.get('SELECT id FROM users WHERE email = ?', email.toLowerCase());
@@ -35,7 +35,7 @@ router.post('/register', async (req, res) => {
       [id, name, email.toLowerCase(), hashedPassword, role, location || null, phone || null]);
 
     await db.run('INSERT INTO notifications (id, user_id, title, message, type) VALUES (?, ?, ?, ?, ?)',
-      [uuidv4(), id, 'Welcome to YouthSkills! 🎉', `Hi ${name}! Your account is ready. Start exploring courses and connect with employers.`, 'success']);
+      [uuidv4(), id, 'Welcome to YouthSkills! 🎉', `Hi ${name}! Your account is ready. Start exploring courses and earning certificates.`, 'success']);
 
     const token = jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
     res.status(201).json({ success: true, message: 'Account created successfully.', token, user: { id, name, email: email.toLowerCase(), role } });

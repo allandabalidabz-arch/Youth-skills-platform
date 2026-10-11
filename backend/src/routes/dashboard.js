@@ -27,16 +27,11 @@ router.get('/youth', authenticate, authorize('youth'), async (req, res) => {
   });
 });
 
-router.get('/employer', authenticate, authorize('employer', 'admin'), async (req, res) => {
-  res.json({ success: true, stats: {} });
-});
-
 router.get('/admin', authenticate, authorize('admin'), async (req, res) => {
   const db = await getDb();
-  const [totalUsers, youthUsers, employers, totalCourses, totalEnrollments, totalCerts] = await Promise.all([
+  const [totalUsers, youthUsers, totalCourses, totalEnrollments, totalCerts] = await Promise.all([
     db.get('SELECT COUNT(*) as count FROM users'),
     db.get("SELECT COUNT(*) as count FROM users WHERE role = 'youth'"),
-    db.get("SELECT COUNT(*) as count FROM users WHERE role = 'employer'"),
     db.get('SELECT COUNT(*) as count FROM courses'),
     db.get('SELECT COUNT(*) as count FROM enrollments'),
     db.get('SELECT COUNT(*) as count FROM certificates'),
@@ -46,7 +41,7 @@ router.get('/admin', authenticate, authorize('admin'), async (req, res) => {
 
   res.json({
     success: true,
-    stats: { totalUsers: totalUsers.count, youthUsers: youthUsers.count, employers: employers.count, totalCourses: totalCourses.count, totalEnrollments: totalEnrollments.count, totalCertificates: totalCerts.count },
+    stats: { totalUsers: totalUsers.count, youthUsers: youthUsers.count, totalCourses: totalCourses.count, totalEnrollments: totalEnrollments.count, totalCertificates: totalCerts.count },
     categoryStats
   });
 });
