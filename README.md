@@ -57,7 +57,6 @@ npm run dev
 | Role | Email | Password |
 |------|-------|----------|
 | Admin | admin@youthskills.com | Allan7034 |
-| Employer | dabzyouthskillsacademy@gmail.com | password123 |
 
 > Youth accounts are created by registering on the platform.
 

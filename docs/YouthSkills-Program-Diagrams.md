@@ -68,7 +68,7 @@ flowchart LR
     Admin --> AdminAPI
 ```
 
-> The administrator use case includes API capabilities that are not all accessible through the current dashboard UI. The `employer` role is omitted because its UI is a placeholder and it has no active course or employment workflow.
+> The administrator use case includes API capabilities that are not all accessible through the current dashboard UI. The system provides no employer, opportunity or recruitment role or workflow.
 
 ## Figure 3.3: Level 0 data-flow diagram
 

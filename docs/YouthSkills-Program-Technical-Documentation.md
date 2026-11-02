@@ -11,7 +11,7 @@
 
 YouthSkills Program is a React single-page application backed by a Node.js/Express API and SQLite database. It supports user accounts, digital-skills courses and modules, quizzes, text assignments, enrolments, progress tracking, certificate records and verification, notifications, and selected administration functions. Certificate payment is recorded as manually submitted proof; no payment gateway is integrated. Password reset does not use an email provider in the inspected implementation.
 
-The current codebase does not provide opportunity, job, employer recruitment, mentor or trainer workflows. The employer UI is a placeholder, and employer dashboard statistics are empty.
+The current codebase does not provide opportunity, job, employer recruitment, mentor or trainer workflows. No employer role, employer UI or employer dashboard is provided.
 
 ## 2. Technology Stack
 
@@ -282,7 +282,7 @@ Base URL in local development: `http://localhost:5000`. Frontend development nor
 
 | Method | Path | Access | Purpose |
 |---|---|---|---|
-| POST | `/api/auth/register` | Public | Create account; backend permits `youth` or `employer` role |
+| POST | `/api/auth/register` | Public | Create account; `youth` role only |
 | POST | `/api/auth/login` | Public | Verify password and issue JWT |
 | GET | `/api/auth/me` | Authenticated | Return current user |
 | PUT | `/api/auth/change-password` | Authenticated | Verify current password and change it |
@@ -340,7 +340,6 @@ Base URL in local development: `http://localhost:5000`. Frontend development nor
 | PUT | `/api/notifications/:id/read` | Authenticated | Mark own notification read |
 | GET | `/api/dashboard/youth` | Youth | Return course and certificate summary |
 | GET | `/api/dashboard/admin` | Admin | Return aggregate users, courses, enrolments and certificates |
-| GET | `/api/dashboard/employer` | Employer/admin | Currently returns empty statistics |
 | GET | `/api/health` | Public | Return API health message and timestamp |
 
 No employment/opportunity endpoint is part of the current application.

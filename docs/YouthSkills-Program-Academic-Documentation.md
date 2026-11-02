@@ -286,7 +286,7 @@ Moodle is an open-source LMS with a broader ecosystem of course delivery, activi
 | Quizzes and assessment | Commonly available, often configurable | Multiple-choice quiz submission and scoring present; server-side integrity is limited |
 | Assignments | Commonly available | Text submission and admin grading API present; file upload not identified |
 | Progress reporting | Commonly available | Module completion and course percentage present |
-| Roles | Often learner, instructor and administrator roles | `youth`, `employer` and `admin` are in data flows; no trainer role; employer functions absent |
+| Roles | Often learner, instructor and administrator roles | `youth` and `admin` roles only; no trainer or employer role |
 | Certificates | Often supported through core or extensions | Certificate record, browser-generated PDF and public verification present |
 | Payments | May be available through plugins/integrations | Manual proof recording and admin status API only; no payment provider integration |
 | Administration | Often extensive | Summary dashboard, youth list and module view; several operations are API-only |
@@ -321,7 +321,7 @@ The following requirements are derived from present source behaviour, not from a
 
 | ID | Functional requirement | Implementation status |
 |---|---|---|
-| FR-01 | The system shall allow a user to register with name, email and password. | Implemented for youth-facing registration; backend additionally accepts employer role. |
+| FR-01 | The system shall allow a user to register with name, email and password. | Implemented for youth-facing registration only. |
 | FR-02 | The system shall allow registered users to sign in and access protected routes. | Implemented using JWT middleware. |
 | FR-03 | The system shall allow an authenticated user to view and update supported profile fields. | Implemented. |
 | FR-04 | The system shall display published courses and support category, level and text search. | Implemented. |
@@ -335,7 +335,7 @@ The following requirements are derived from present source behaviour, not from a
 | FR-12 | The system shall provide a public certificate lookup by certificate number. | Implemented. |
 | FR-13 | The system shall allow a youth to submit certificate-payment proof and an administrator to approve or reject it. | API and learner submission UI implemented; no admin review UI identified; no gateway. |
 | FR-14 | The system shall list notifications for the authenticated user and allow them to be marked read. | Implemented. |
-| FR-15 | The system shall provide youth and administrator summary dashboards. | Implemented; employer dashboard data is empty. |
+| FR-15 | The system shall provide youth and administrator summary dashboards. | Implemented. |
 | FR-16 | The system shall support password change and token-based password reset. | Implemented; reset delivery is development-oriented and not email-based. |
 
 ## 3.5 Non-Functional Requirements
@@ -360,7 +360,6 @@ The table distinguishes observable design choices from qualities not proven by t
 |---|---|
 | Youth | Register, authenticate, manage profile, view courses/modules, enrol, submit quizzes and assignments, view progress and certificates, submit certificate-payment proof, and read notifications. |
 | Administrator | Protected access to aggregate dashboard, youth listing, course/module/quiz creation endpoints, assignment submission and grading endpoints, user listing, and payment review endpoints. Some operations lack UI screens. |
-| Employer | Backend registration accepts the role and a dashboard route exists, but the dashboard endpoint returns empty statistics and the interface says employer tools are unavailable. It is not an operational learning instructor role. |
 | Trainer/instructor | No trainer account role was found. Course records contain instructor name and biography fields; these are course metadata, not evidence of trainer accounts. |
 | Public visitor | Can view the landing page and use the public certificate-verification API/page. Protected course API routes require authentication. |
 
@@ -376,7 +375,7 @@ The Vite development server proxies API requests to Express. In a deployment, th
 
 ## 3.8 Use Case Diagram
 
-See Figure 3.2 in `docs/YouthSkills-Program-Diagrams.md`. It includes youth, administrator and public certificate verification use cases that are visible in the implementation. Employer is not shown as a functional actor because its interface is a placeholder.
+See Figure 3.2 in `docs/YouthSkills-Program-Diagrams.md`. It includes youth, administrator and public certificate verification use cases that are visible in the implementation. Employer is not a role in the system and is therefore not shown as a functional actor.
 
 ## 3.9 Use Case Descriptions
 
@@ -540,7 +539,7 @@ No payment gateway, transaction validation service or actual money transfer code
 
 ## 4.14 Administrator Functionality
 
-The dashboard requests aggregate user, course, enrolment and certificate statistics. It can list and search youth accounts and load course modules. The database route layer additionally exposes course/module/quiz creation, assignment grading and payment decision endpoints. The dashboard does not expose all these endpoints as UI operations. The employer dashboard is a placeholder, and the employer API statistics are empty.
+The dashboard requests aggregate user, course, enrolment and certificate statistics. It can list and search youth accounts and load course modules. The database route layer additionally exposes course/module/quiz creation, assignment grading and payment decision endpoints. The dashboard does not expose all these endpoints as UI operations.
 
 ## 4.15 API Implementation
 
@@ -578,7 +577,6 @@ The dashboard requests aggregate user, course, enrolment and certificate statist
 | GET/PUT | `/api/notifications`, `/read-all`, `/:id/read` | Authenticated | Read and mark notifications |
 | GET | `/api/dashboard/youth` | Youth | Learner summary |
 | GET | `/api/dashboard/admin` | Admin | Administrator summary |
-| GET | `/api/dashboard/employer` | Employer/admin | Empty statistics response |
 | GET | `/api/health` | Public | Health check |
 
 ## 4.16 Security Measures
@@ -591,7 +589,7 @@ Registration validates required fields and selected formats. Profile, assignment
 
 ## 4.18 Challenges Encountered During Development
 
-The source code and project files do not document the developer's actual challenges or decisions. Therefore, no historical challenge is claimed here. The static review identifies technical issues that may be discussed if they match the developer's own records: quiz answer disclosure and client-supplied score; absent email delivery; missing admin screens for grading/payment review; incomplete employer placeholder; and the need to test role boundaries.
+The source code and project files do not document the developer's actual challenges or decisions. Therefore, no historical challenge is claimed here. The static review identifies technical issues that may be discussed if they match the developer's own records: quiz answer disclosure and client-supplied score; absent email delivery; missing admin screens for grading/payment review; and the need to test role boundaries.
 
 ## 4.19 Chapter Summary
 

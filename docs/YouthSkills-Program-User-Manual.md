@@ -80,7 +80,7 @@ Start the backend and frontend in separate terminals using the commands above. K
 4. Confirm the password if requested.
 5. Submit the form and wait for the success message and dashboard.
 
-The registration page is designed for youth/learner registration. Although the backend accepts the `employer` role in the registration endpoint, no role selection is offered in the learner registration page. Employer features are unavailable in the current application.
+The registration page is designed for youth/learner registration. The backend accepts the `youth` role only; employer and recruitment features are not part of the application.
 
 ### 5.2 Sign in
 
@@ -214,7 +214,6 @@ Select **Sign Out** in the navigation. This removes the application token and sa
 | Quiz completion behaves unexpectedly | The quiz implementation has known integrity limitations. Do not use it for a formal examination. |
 | Certificate cannot be downloaded | The UI requires an approved payment record. The application does not process actual payments; contact the project owner rather than submitting sensitive details. |
 | Forgot-password link is not received | Email delivery is not implemented. In local development, the reset link is logged by the backend. |
-| Dashboard has no employer tools | Employer functions are unavailable in the current version. |
 | Missing or incorrect profile information | Update the profile and save. If an API error occurs, sign in again and report the issue to the administrator. |
 
 ## 10. Known Limitations
