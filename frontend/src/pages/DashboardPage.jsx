@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
-import { BookOpen, Award, TrendingUp, CheckCircle2, Clock, ArrowRight, Users, Search, MapPin, Calendar, ChevronDown, ChevronUp, Layers } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { BookOpen, Award, TrendingUp, CheckCircle2, Clock, ArrowRight, Users, Search, MapPin, Calendar, ChevronDown, ChevronUp, Layers, FileText, CreditCard, Star, XCircle, CheckCircle, AlertCircle } from 'lucide-react';
 
 const categoryColors = {
   system: 'bg-indigo-100 text-indigo-700',
@@ -121,9 +122,24 @@ function AdminDashboardView({ data }) {
   const [loadingCourses, setLoadingCourses] = useState(false);
   const [expandedCourse, setExpandedCourse] = useState(null);
 
+  // Assignments state
+  const [submissions, setSubmissions] = useState([]);
+  const [loadingSubmissions, setLoadingSubmissions] = useState(false);
+  const [gradingId, setGradingId] = useState(null);
+  const [gradeInputs, setGradeInputs] = useState({});
+  const [expandedSubmission, setExpandedSubmission] = useState(null);
+
+  // Payments state
+  const [payments, setPayments] = useState([]);
+  const [loadingPayments, setLoadingPayments] = useState(false);
+  const [processingPayment, setProcessingPayment] = useState(null);
+  const [rejectReason, setRejectReason] = useState({});
+
   useEffect(() => {
     if (activeTab === 'youth') fetchUsers('');
     if (activeTab === 'modules') fetchCourses();
+    if (activeTab === 'assignments') fetchSubmissions();
+    if (activeTab === 'payments') fetchPayments();
   }, [activeTab]);
 
   const fetchUsers = async (q) => {
@@ -147,6 +163,74 @@ function AdminDashboardView({ data }) {
     finally { setLoadingCourses(false); }
   };
 
+  const fetchSubmissions = async () => {
+    setLoadingSubmissions(true);
+    try {
+      const coursesRes = await api.get('/courses?limit=20');
+      const allSubs = [];
+      for (const course of coursesRes.data.courses) {
+        const res = await api.get(`/assignments/course/${course.id}/submissions`);
+        allSubs.push(...res.data.submissions);
+      }
+      allSubs.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+      setSubmissions(allSubs);
+    } catch (err) { console.error(err); }
+    finally { setLoadingSubmissions(false); }
+  };
+
+  const fetchPayments = async () => {
+    setLoadingPayments(true);
+    try {
+      const res = await api.get('/payments/all');
+      setPayments(res.data.payments);
+    } catch (err) { console.error(err); }
+    finally { setLoadingPayments(false); }
+  };
+
+  const handleGrade = async (submissionId) => {
+    const { grade, feedback } = gradeInputs[submissionId] || {};
+    if (grade === undefined || grade === '') return toast.error('Enter a grade between 0 and 100.');
+    const g = parseInt(grade);
+    if (isNaN(g) || g < 0 || g > 100) return toast.error('Grade must be between 0 and 100.');
+    setGradingId(submissionId);
+    try {
+      await api.put(`/assignments/submission/${submissionId}/grade`, { grade: g, feedback: feedback || '' });
+      toast.success('Assignment graded successfully!');
+      setExpandedSubmission(null);
+      fetchSubmissions();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Grading failed.');
+    } finally {
+      setGradingId(null);
+    }
+  };
+
+  const handleApprovePayment = async (paymentId) => {
+    setProcessingPayment(paymentId);
+    try {
+      await api.put(`/payments/${paymentId}/approve`);
+      toast.success('Payment approved — certificate unlocked!');
+      fetchPayments();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Approval failed.');
+    } finally {
+      setProcessingPayment(null);
+    }
+  };
+
+  const handleRejectPayment = async (paymentId) => {
+    setProcessingPayment(paymentId);
+    try {
+      await api.put(`/payments/${paymentId}/reject`, { reason: rejectReason[paymentId] || '' });
+      toast.success('Payment rejected.');
+      fetchPayments();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Rejection failed.');
+    } finally {
+      setProcessingPayment(null);
+    }
+  };
+
   const handleSearch = (e) => { e.preventDefault(); fetchUsers(search); };
 
   const toggleCourse = async (courseId) => {
@@ -164,6 +248,8 @@ function AdminDashboardView({ data }) {
     { id: 'overview', label: 'Overview', icon: BookOpen },
     { id: 'youth', label: 'Registered Youth', icon: Users },
     { id: 'modules', label: 'Modules', icon: Layers },
+    { id: 'assignments', label: 'Assignments', icon: FileText },
+    { id: 'payments', label: 'Payments', icon: CreditCard },
   ];
 
   return (
@@ -325,6 +411,164 @@ function AdminDashboardView({ data }) {
                   ))}
                 </div>
               )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ASSIGNMENTS */}
+      {activeTab === 'assignments' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FileText className="w-5 h-5 text-blue-600" />
+              <h2 className="font-bold text-slate-800 dark:text-slate-100">Assignment Submissions</h2>
+              <span className="badge bg-blue-100 text-blue-700">{submissions.length}</span>
+            </div>
+            <button onClick={fetchSubmissions} className="btn-secondary text-sm py-2">Refresh</button>
+          </div>
+          {loadingSubmissions ? (
+            <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" /></div>
+          ) : submissions.length === 0 ? (
+            <div className="card text-center py-12">
+              <FileText className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+              <p className="text-slate-400 text-sm">No submissions yet.</p>
+            </div>
+          ) : submissions.map(sub => (
+            <div key={sub.id} className="card p-0 overflow-hidden">
+              <div className="flex items-center gap-4 p-4">
+                <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-700 dark:text-blue-300 font-bold text-sm flex-shrink-0">
+                  {sub.student_name?.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-0.5">
+                    <p className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{sub.student_name}</p>
+                    <span className="text-slate-400 text-xs">{sub.student_email}</span>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                    <span className="font-medium">{sub.assignment_title}</span> · {sub.module_title}
+                  </p>
+                  <p className="text-xs text-slate-400 mt-0.5">Submitted: {new Date(sub.submitted_at).toLocaleString()}</p>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {sub.status === 'graded' ? (
+                    <span className={`badge text-xs ${sub.grade >= 60 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                      {sub.grade}/100
+                    </span>
+                  ) : (
+                    <span className="badge bg-yellow-100 text-yellow-700 text-xs">Pending</span>
+                  )}
+                  <button
+                    onClick={() => setExpandedSubmission(expandedSubmission === sub.id ? null : sub.id)}
+                    className="btn-secondary text-xs py-1.5 px-3">
+                    {expandedSubmission === sub.id ? 'Close' : sub.status === 'graded' ? 'View' : 'Grade'}
+                  </button>
+                </div>
+              </div>
+
+              {expandedSubmission === sub.id && (
+                <div className="border-t border-slate-100 dark:border-slate-700 p-4 space-y-4">
+                  <div>
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-2">Student's Submission</p>
+                    <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 max-h-64 overflow-y-auto">
+                      <pre className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-sans leading-relaxed">{sub.submission_text}</pre>
+                    </div>
+                  </div>
+                  {sub.status === 'graded' && sub.feedback && (
+                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-3">
+                      <p className="text-xs font-semibold text-green-700 dark:text-green-400 mb-1">Your Feedback</p>
+                      <p className="text-sm text-green-700 dark:text-green-300">{sub.feedback}</p>
+                    </div>
+                  )}
+                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl p-4">
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3">
+                      {sub.status === 'graded' ? 'Update Grade' : 'Grade this Submission'}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <label className="text-sm font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">Grade (0–100):</label>
+                      <input type="number" min="0" max="100" className="input w-24 text-sm py-2"
+                        placeholder={sub.grade ?? '0'} defaultValue={sub.grade ?? ''}
+                        onChange={e => setGradeInputs(p => ({ ...p, [sub.id]: { ...p[sub.id], grade: e.target.value } }))} />
+                    </div>
+                    <div className="mt-3">
+                      <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Feedback (optional):</label>
+                      <textarea className="input mt-1 h-24 resize-none text-sm"
+                        placeholder="Write feedback for the student..."
+                        defaultValue={sub.feedback ?? ''}
+                        onChange={e => setGradeInputs(p => ({ ...p, [sub.id]: { ...p[sub.id], feedback: e.target.value } }))} />
+                    </div>
+                    <button onClick={() => handleGrade(sub.id)} disabled={gradingId === sub.id} className="btn-primary text-sm py-2 mt-3">
+                      {gradingId === sub.id
+                        ? <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                        : <><Star className="w-4 h-4" /> {sub.status === 'graded' ? 'Update Grade' : 'Submit Grade'}</>}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* PAYMENTS */}
+      {activeTab === 'payments' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CreditCard className="w-5 h-5 text-blue-600" />
+              <h2 className="font-bold text-slate-800 dark:text-slate-100">Certificate Payments</h2>
+              <span className="badge bg-yellow-100 text-yellow-700">
+                {payments.filter(p => p.status === 'pending').length} pending
+              </span>
+            </div>
+            <button onClick={fetchPayments} className="btn-secondary text-sm py-2">Refresh</button>
+          </div>
+          {loadingPayments ? (
+            <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" /></div>
+          ) : payments.length === 0 ? (
+            <div className="card text-center py-12">
+              <CreditCard className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+              <p className="text-slate-400 text-sm">No payment submissions yet.</p>
+            </div>
+          ) : payments.map(pay => (
+            <div key={pay.id} className={`card border-l-4 ${pay.status === 'approved' ? 'border-green-500' : pay.status === 'rejected' ? 'border-red-400' : 'border-yellow-400'}`}>
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-1">
+                    <p className="font-semibold text-slate-800 dark:text-slate-100">{pay.user_name}</p>
+                    <span className="text-slate-400 text-xs">{pay.user_email}</span>
+                    {pay.status === 'approved' && <span className="badge bg-green-100 text-green-700 text-xs"><CheckCircle className="w-3 h-3 inline mr-1" />Approved</span>}
+                    {pay.status === 'rejected' && <span className="badge bg-red-100 text-red-700 text-xs"><XCircle className="w-3 h-3 inline mr-1" />Rejected</span>}
+                    {pay.status === 'pending' && <span className="badge bg-yellow-100 text-yellow-700 text-xs"><AlertCircle className="w-3 h-3 inline mr-1" />Pending</span>}
+                  </div>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-1"><span className="font-medium">Course:</span> {pay.course_title}</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-1"><span className="font-medium">Cert No:</span> <span className="font-mono text-xs">{pay.certificate_number}</span></p>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-1"><span className="font-medium">Amount:</span> {pay.amount?.toLocaleString()} {pay.currency}</p>
+                  <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-3 mt-2">
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1">Payment Proof / Reference</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-300 font-mono">{pay.proof_text}</p>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-2">Submitted: {new Date(pay.submitted_at).toLocaleString()}</p>
+                  {pay.approved_at && <p className="text-xs text-green-600 mt-0.5">Approved: {new Date(pay.approved_at).toLocaleString()}</p>}
+                </div>
+                {pay.status === 'pending' && (
+                  <div className="flex flex-col gap-2 min-w-[180px]">
+                    <button onClick={() => handleApprovePayment(pay.id)} disabled={processingPayment === pay.id}
+                      className="btn-primary text-sm py-2 bg-green-600 hover:bg-green-700">
+                      {processingPayment === pay.id
+                        ? <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                        : <><CheckCircle className="w-4 h-4" /> Approve</>}
+                    </button>
+                    <input type="text" className="input text-xs py-2" placeholder="Reject reason (optional)..."
+                      value={rejectReason[pay.id] || ''}
+                      onChange={e => setRejectReason(p => ({ ...p, [pay.id]: e.target.value }))} />
+                    <button onClick={() => handleRejectPayment(pay.id)} disabled={processingPayment === pay.id}
+                      className="btn-secondary text-sm py-2 border-red-200 text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20">
+                      <XCircle className="w-4 h-4" /> Reject
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>
