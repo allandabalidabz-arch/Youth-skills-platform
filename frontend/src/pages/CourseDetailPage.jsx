@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import {
   BookOpen, Clock, CheckCircle2, ChevronDown, ChevronUp,
-  Play, Award, Users, ArrowLeft, Lock, FileText, Send, RotateCcw
+  Play, Award, Users, ArrowLeft, Lock, FileText, Send
 } from 'lucide-react';
 
 export default function CourseDetailPage() {
@@ -261,19 +261,28 @@ export default function CourseDetailPage() {
 
                             {enrollment && user?.role === 'youth' && assignments[module.id].submission?.status !== 'graded' && (
                               <div>
-                                <textarea
-                                  className="input h-36 resize-none text-sm"
-                                  placeholder="Write your assignment submission here... (minimum 20 characters)"
-                                  value={submissionText[module.id] || assignments[module.id].submission?.submission_text || ''}
-                                  onChange={e => setSubmissionText(p => ({ ...p, [module.id]: e.target.value }))}
-                                />
-                                <button
-                                  onClick={() => handleSubmitAssignment(assignments[module.id].assignment.id, module.id)}
-                                  disabled={submittingAssignment}
-                                  className="btn-primary text-sm py-2 mt-2"
-                                >
-                                  {assignments[module.id].submission ? <><RotateCcw className="w-4 h-4" /> Resubmit</> : <><Send className="w-4 h-4" /> Submit Assignment</>}
-                                </button>
+                                {assignments[module.id].submission?.status === 'submitted' ? (
+                                  <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4">
+                                    <p className="text-sm font-semibold text-yellow-800 dark:text-yellow-400 mb-1">⏳ Awaiting Grading</p>
+                                    <p className="text-sm text-yellow-700 dark:text-yellow-300">Your assignment has been submitted and is waiting for the instructor to grade it.</p>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <textarea
+                                      className="input h-36 resize-none text-sm"
+                                      placeholder="Write your assignment submission here... (minimum 20 characters)"
+                                      value={submissionText[module.id] || ''}
+                                      onChange={e => setSubmissionText(p => ({ ...p, [module.id]: e.target.value }))}
+                                    />
+                                    <button
+                                      onClick={() => handleSubmitAssignment(assignments[module.id].assignment.id, module.id)}
+                                      disabled={submittingAssignment}
+                                      className="btn-primary text-sm py-2 mt-2"
+                                    >
+                                      <Send className="w-4 h-4" /> Submit Assignment
+                                    </button>
+                                  </>
+                                )}
                               </div>
                             )}
                           </div>
