@@ -395,25 +395,11 @@ A formal System Design Document includes:
       explanation: 'SDLC stands for System Development Life Cycle — the structured process used to plan, create, test, and deploy an information system.'
     },
     {
-      moduleId: sadIds[0],
-      question: 'Which requirements gathering technique involves watching users perform their actual work?',
-      options: ['Interviews', 'Questionnaires', 'Observation', 'Document Analysis'],
-      correct: 2,
-      explanation: 'Observation involves watching users doing their real work, which reveals actual workflows that may differ from what people describe in interviews.'
-    },
-    {
       moduleId: sadIds[1],
       question: 'In a Data Flow Diagram, what does an arrow represent?',
       options: ['A process', 'A data store', 'The movement of data', 'An external entity'],
       correct: 2,
       explanation: 'Arrows in a DFD represent data flows — they show data moving between processes, entities, and data stores.'
-    },
-    {
-      moduleId: sadIds[1],
-      question: 'What is a Context Diagram also known as?',
-      options: ['Level 1 DFD', 'Level 2 DFD', 'Level 0 DFD', 'Physical DFD'],
-      correct: 2,
-      explanation: 'A Context Diagram is a Level 0 DFD — it shows the entire system as one process and only depicts external entities and boundary data flows.'
     },
     {
       moduleId: sadIds[2],
@@ -427,86 +413,32 @@ A formal System Design Document includes:
       correct: 1,
       explanation: 'A one-to-many relationship means one instance of an entity (e.g. one Teacher) is associated with many instances of another entity (e.g. many Students).'
     },
-    {
-      moduleId: sadIds[2],
-      question: 'What is the purpose of normalization in database design?',
-      options: [
-        'To make the database run faster',
-        'To add more tables to the database',
-        'To reduce data redundancy and improve data integrity',
-        'To increase the number of relationships'
-      ],
-      correct: 2,
-      explanation: 'Normalization organizes a database to reduce redundancy (repeated data) and ensure data integrity, making the database easier to maintain.'
-    },
   ]);
 
-  await addAssignment(db, sadIds[0], courses[0].id,
-    'Identify System Requirements',
-    'Analyse a real-world scenario and document functional and non-functional requirements.',
-    `A local school wants to replace its paper-based student records system with a computerised system. Students currently register manually, results are written in books, and timetables are printed on paper.
-
-Your task:
-1. Identify and describe the PROBLEM with the current system (at least 3 problems)
-2. Write 6 FUNCTIONAL REQUIREMENTS for the new system (what it must do)
-   Format: "The system shall..."
-3. Write 4 NON-FUNCTIONAL REQUIREMENTS (performance, security, reliability)
-   Format: "The system shall..."
-4. Identify 3 STAKEHOLDERS who would be interviewed during requirements gathering and explain what information you would get from each
-5. Which requirements gathering technique would you use for this project and why? (Choose 2 techniques and justify)
-
-Write at least 250 words total.`
-  );
-
-  await addAssignment(db, sadIds[1], courses[0].id,
-    'Draw a Context Diagram',
-    'Create a context diagram (Level 0 DFD) for a library management system.',
-    `Design a Context Diagram (Level 0 DFD) for a LIBRARY MANAGEMENT SYSTEM.
-
-The system must handle:
-- Members borrowing and returning books
-- Librarians adding new books and managing members
-- Sending overdue notices to members
-- Suppliers delivering new book stock
-
-Your submission must include:
-1. LIST all External Entities and explain the role of each
-2. LIST all Data Flows entering the system (from external entities)
-3. LIST all Data Flows leaving the system (to external entities)
-4. DESCRIBE the system boundary — what is inside and outside the system
-5. DRAW or DESCRIBE your Context Diagram clearly:
-   - Name each external entity
-   - Label every data flow with what data is moving
-   - The system appears as ONE process in the centre
-6. Explain why a Context Diagram is drawn before a Level 1 DFD
-
-Note: If you have access to draw.io, Lucidchart, or paper, draw the actual diagram and describe it in words below.`
-  );
-
   await addAssignment(db, sadIds[2], courses[0].id,
-    'Design an ERD for a Hospital System',
-    'Create an Entity Relationship Diagram for a hospital patient management system.',
-    `Design an ERD for a HOSPITAL PATIENT MANAGEMENT SYSTEM.
+    'System Analysis and Design — Final Assignment',
+    'Apply SDLC, DFD, and ERD skills to design a complete information system.',
+    `A local hospital wants to replace its paper-based patient management system with a computerised system. Patients currently register manually, doctor appointments are written in books, and medical records are stored in physical files.
 
-The system needs to manage:
-- Patients who are admitted to the hospital
-- Doctors who treat patients
-- Wards where patients stay
-- Treatments and prescriptions given to patients
-- Medical records for each patient visit
+PART 1 — SYSTEM ANALYSIS (Module 1 topics):
+1. Identify 3 problems with the current paper-based system
+2. Write 4 FUNCTIONAL REQUIREMENTS for the new system (format: "The system shall...")
+3. Write 3 NON-FUNCTIONAL REQUIREMENTS (performance, security, availability)
+4. Name 2 requirements gathering techniques you would use and explain why
 
-Your submission must include:
-1. LIST at least 5 ENTITIES with their attributes
-   For each entity, underline or mark the Primary Key
-2. IDENTIFY all RELATIONSHIPS between entities
-   Name each relationship with a verb
-3. STATE the CARDINALITY of each relationship (1:1, 1:N, or M:N)
-   Explain your reasoning for each
-4. IDENTIFY any Many-to-Many relationships and explain what junction table would resolve them
-5. DRAW or DESCRIBE your complete ERD
-6. Write the database table definition (columns and data types) for any ONE entity
+PART 2 — DATA FLOW DIAGRAM (Module 2 topics):
+5. List all External Entities for the hospital system and their roles
+6. List all data flows entering and leaving the system
+7. Describe or draw a Context Diagram (Level 0 DFD) for the system
+8. Explain the difference between a Context Diagram and a Level 1 DFD
 
-Show clear reasoning for your design choices.`
+PART 3 — ENTITY RELATIONSHIP DIAGRAM (Module 3 topics):
+9. Identify at least 4 entities needed for the hospital system with their key attributes and primary keys
+10. Identify the relationships between those entities and their cardinality (1:1, 1:N, M:N)
+11. Identify any Many-to-Many relationships and name the junction table that would resolve each
+12. Write the SQL table definition (CREATE TABLE) for any ONE entity
+
+Write at least 350 words total. Show clear reasoning for all design decisions.`
   );
 
   // ── COURSE 2: Web Development ──────────────────────────────────────────────
@@ -937,30 +869,11 @@ toggleBtn.addEventListener("click", () => {
       explanation: '<h1> is the most important heading tag. Only one <h1> should be used per page as it tells search engines the main topic.'
     },
     {
-      moduleId: webIds[0],
-      question: 'What is the purpose of the alt attribute in an <img> tag?',
-      options: [
-        'Sets the image size',
-        'Provides a description for screen readers and when images fail to load',
-        'Links the image to another page',
-        'Sets the image border'
-      ],
-      correct: 1,
-      explanation: 'The alt attribute provides alternative text for the image, used by screen readers for accessibility and displayed when the image cannot load.'
-    },
-    {
       moduleId: webIds[1],
       question: 'In CSS, which selector targets elements with a specific class name?',
       options: ['#classname', '.classname', 'classname', '*classname'],
       correct: 1,
       explanation: 'A class selector starts with a dot (.) followed by the class name. For example, .card targets all elements with class="card".'
-    },
-    {
-      moduleId: webIds[1],
-      question: 'Which CSS property is used to create space inside an element, between its content and border?',
-      options: ['margin', 'spacing', 'padding', 'border-space'],
-      correct: 2,
-      explanation: 'Padding creates space inside the element between the content and the border. Margin creates space outside the element.'
     },
     {
       moduleId: webIds[2],
@@ -969,100 +882,39 @@ toggleBtn.addEventListener("click", () => {
       correct: 2,
       explanation: 'const declares a constant variable that cannot be reassigned after its initial value is set. Use const by default and let only when the value needs to change.'
     },
-    {
-      moduleId: webIds[2],
-      question: 'What does event.preventDefault() do in a form submit event listener?',
-      options: [
-        'Deletes the form',
-        'Submits the form automatically',
-        'Stops the page from reloading on form submission',
-        'Prevents the user from typing in the form'
-      ],
-      correct: 2,
-      explanation: 'event.preventDefault() prevents the default browser behaviour — for forms, this stops the page from reloading so JavaScript can handle the submission instead.'
-    },
   ]);
 
-  await addAssignment(db, webIds[0], courses[1].id,
-    'Build Your Personal Profile Page',
-    'Create a complete HTML page about yourself using proper semantic structure.',
-    `Create an HTML page that serves as your personal profile. Your page must include:
-
-1. Proper HTML5 document structure (DOCTYPE, html, head, body)
-2. A descriptive <title> tag
-3. Semantic tags: <header>, <main>, <footer>
-4. Inside <header>: Your name as an <h1> and a navigation <nav> with at least 3 links
-5. Inside <main>:
-   - An "About Me" <section> with an <h2> and at least one <p>
-   - A "My Skills" <section> with a <ul> listing at least 5 skills
-   - A "My Goals" <section> with an <ol> listing 3 career goals
-   - A simple <table> showing your weekly study schedule (3 days, 2 subjects each)
-6. Inside <footer>: Your email as a mailto link and copyright text
-7. At least one <img> tag with a proper alt attribute
-
-Paste your complete HTML code in the submission box. Make sure it is valid HTML5.`
-  );
-
-  await addAssignment(db, webIds[1], courses[1].id,
-    'Style Your Profile Page with CSS',
-    'Add professional CSS styling to the HTML page from the previous module.',
-    `Add CSS styling to your profile page from Module 1. Create a separate style section or external stylesheet with:
-
-1. BODY STYLING:
-   - A background colour
-   - A readable font family
-   - A max-width of 800px centered on the page
-
-2. HEADER STYLING:
-   - Background colour and text colour that contrast well
-   - Padding around the content
-   - Style the navigation links (remove underlines, add hover colour)
-
-3. SECTION STYLING:
-   - Different background colours for alternating sections
-   - Padding and margin for breathing room
-   - Rounded corners (border-radius) on section boxes
-
-4. TABLE STYLING:
-   - Borders on cells
-   - Header row with different background colour
-   - Alternating row colours
-
-5. FLEXBOX:
-   - Use flexbox in at least ONE section to arrange elements side by side
-
-6. ONE MEDIA QUERY:
-   - On screens smaller than 600px, make any flex items stack vertically
-
-Paste your complete HTML + CSS code below.`
-  );
-
   await addAssignment(db, webIds[2], courses[1].id,
-    'Add JavaScript Interactivity',
-    'Make your profile page interactive with at least 4 JavaScript features.',
-    `Add JavaScript to your profile page to make it interactive. Implement ALL of the following:
+    'Web Development — Final Project',
+    'Build a fully styled and interactive personal profile page using HTML, CSS, and JavaScript.',
+    `Build a complete personal profile page that demonstrates all three modules. Your page must include:
 
-1. DARK MODE TOGGLE:
-   - A button that switches between light and dark mode
-   - The button text should change ("Dark Mode" / "Light Mode")
+PART 1 — HTML STRUCTURE (Module 1):
+1. Proper HTML5 document structure (DOCTYPE, html, head, body)
+2. Semantic tags: <header>, <nav>, <main>, <section>, <footer>
+3. Your name as an <h1>, at least 2 <h2> section headings
+4. A navigation <nav> with 3 links
+5. An "About Me" section with a paragraph
+6. A "My Skills" section with a <ul> of at least 5 skills
+7. A "Study Schedule" <table> showing 3 days and 2 subjects per day
+8. An <img> tag with a proper alt attribute
+9. Your email as a mailto link in the footer
 
-2. SKILL FILTER:
-   - An input field where the user can type to filter/search your skills list
-   - Skills that do not match should be hidden
+PART 2 — CSS STYLING (Module 2):
+10. A background colour and readable font for the body
+11. Max-width of 800px centered on the page
+12. Styled header with background colour and padding
+13. Navigation links with no underline and a hover colour change
+14. At least one section using flexbox to arrange content side by side
+15. Rounded corners (border-radius) on at least one element
+16. One media query: on screens under 600px, flex items stack vertically
 
-3. CONTACT FORM:
-   - A form with: Name, Email, and Message fields
-   - On submit (without reloading the page), show a success message with the user's name
-   - Validate that all fields are filled before submitting
+PART 3 — JAVASCRIPT INTERACTIVITY (Module 3):
+17. A dark/light mode toggle button that changes the page theme
+18. A contact form with Name, Email, and Message fields — on submit, show a personalised success message without reloading the page
+19. A dynamic greeting that shows "Good morning / afternoon / evening / night" based on the current time
 
-4. DYNAMIC GREETING:
-   - On page load, display a greeting based on the time of day:
-     - 5am-12pm: "Good morning!"
-     - 12pm-5pm: "Good afternoon!"
-     - 5pm-9pm: "Good evening!"
-     - 9pm-5am: "Good night!"
-
-Paste your complete HTML + CSS + JavaScript code below.`
+Paste your complete HTML + CSS + JavaScript code below. Make sure all three parts are present and working.`
   );
 
   // ── COURSE 3: Operating Systems ────────────────────────────────────────────
@@ -1440,30 +1292,11 @@ BEST SECURITY PRACTICES:
       explanation: 'An Operating System manages computer hardware resources (CPU, memory, storage) and provides services that allow application software and users to interact with the hardware.'
     },
     {
-      moduleId: osIds[0],
-      question: 'Which of the following is NOT a function of an Operating System?',
-      options: ['Process Management', 'Memory Management', 'Designing websites', 'File System Management'],
-      correct: 2,
-      explanation: 'Designing websites is done by web developers, not the operating system. The OS functions include process management, memory management, file system management, and device management.'
-    },
-    {
       moduleId: osIds[1],
       question: 'In process scheduling, which algorithm gives each process a fixed time slot before switching to the next?',
       options: ['First Come First Served', 'Shortest Job First', 'Round Robin', 'Priority Scheduling'],
       correct: 2,
       explanation: 'Round Robin gives each process a fixed time quantum (e.g. 5ms), then switches to the next process. It is the most common scheduling algorithm in interactive systems because it ensures fairness.'
-    },
-    {
-      moduleId: osIds[1],
-      question: 'What is virtual memory?',
-      options: [
-        'Memory inside the CPU',
-        'A type of RAM',
-        'Disk space used as extra RAM when physical RAM is full',
-        'Memory used only by the operating system'
-      ],
-      correct: 2,
-      explanation: 'Virtual memory uses part of the hard disk as an extension of RAM when physical RAM is full. It is slower than RAM but allows the system to run more programs than the physical RAM would normally support.'
     },
     {
       moduleId: osIds[2],
@@ -1472,112 +1305,41 @@ BEST SECURITY PRACTICES:
       correct: 2,
       explanation: 'NTFS (New Technology File System) is the default file system used by Windows 7, 8, 10, and 11. It supports large files, permissions, encryption, and journaling.'
     },
-    {
-      moduleId: osIds[2],
-      question: 'In Linux file permissions, what does the permission string "rwxr-xr--" mean for the "Others" group?',
-      options: [
-        'Read, write, and execute',
-        'Read and execute only',
-        'Read only',
-        'No permissions'
-      ],
-      correct: 2,
-      explanation: 'In "rwxr-xr--", the last three characters "r--" represent the Others group permissions: read (r), no write (-), no execute (-). This means others can only read the file.'
-    },
   ]);
 
-  await addAssignment(db, osIds[0], courses[2].id,
-    'Compare Operating Systems',
-    'Research and compare three major operating systems used today.',
-    `Compare the three most widely used desktop operating systems: Windows 11, macOS, and Ubuntu Linux.
-
-For each operating system, research and answer:
-1. DEVELOPER AND COST: Who makes it? Is it free or paid?
-2. MARKET SHARE: Which is most popular and why?
-3. USER INTERFACE: Describe the look and feel
-4. FILE SYSTEM: What file system does it use by default?
-5. SECURITY: What are its main security features?
-6. BEST USE CASE: What type of user is it best suited for?
-
-Then answer these comparison questions:
-7. Which OS would you recommend for a software developer and why?
-8. Which OS would you recommend for a graphic designer and why?
-9. Which OS runs most web servers on the internet and why?
-10. If you could only use one OS, which would you choose and why?
-
-Write at least 300 words total. Use specific facts and examples.`
-  );
-
-  await addAssignment(db, osIds[1], courses[2].id,
-    'Process Scheduling Simulation',
-    'Manually simulate CPU scheduling algorithms and compare their performance.',
-    `You are given 4 processes with the following details:
-
-Process | Arrival Time | Burst Time (CPU needed)
-P1      | 0ms          | 8ms
-P2      | 1ms          | 4ms
-P3      | 2ms          | 9ms
-P4      | 3ms          | 5ms
-
-Simulate each scheduling algorithm:
-
-1. FIRST COME FIRST SERVED (FCFS):
-   - Draw a Gantt chart showing the order processes run
-   - Calculate Completion Time, Turnaround Time, and Waiting Time for each process
-   - Calculate Average Turnaround Time and Average Waiting Time
-
-2. SHORTEST JOB FIRST (SJF) — Non-preemptive:
-   - At each point when CPU is free, pick the process with shortest burst time that has arrived
-   - Draw the Gantt chart
-   - Calculate the same metrics as above
-
-3. ROUND ROBIN (Time Quantum = 3ms):
-   - Each process gets 3ms, then the next in queue runs
-   - Draw the Gantt chart
-   - Calculate the same metrics
-
-4. COMPARISON:
-   - Which algorithm had the lowest Average Waiting Time?
-   - Which algorithm is fairest to all processes?
-   - Which algorithm would you use for an interactive system (like a desktop OS) and why?
-
-Show all your calculations clearly.`
-  );
-
   await addAssignment(db, osIds[2], courses[2].id,
-    'OS Security Audit',
-    'Perform a security audit of your computer and document your findings.',
-    `Perform a basic security audit of the computer you use most (home, school, or work).
+    'Operating Systems — Final Assignment',
+    'Demonstrate your understanding of OS concepts, process scheduling, file systems, and security.',
+    `This assignment covers all three modules of the Operating Systems course.
 
-SECTION 1 — SYSTEM INFORMATION:
-1. What operating system and version is installed?
-2. When was the last system update installed?
-3. How many user accounts exist on the computer?
-4. Are any accounts using Administrator/root privileges for daily use?
+PART 1 — OS FUNDAMENTALS (Module 1):
+1. List and briefly explain the 5 main functions of an Operating System
+2. Compare TWO of the following OS: Windows 11, macOS, Ubuntu Linux
+   For each: who makes it, is it free, and what is its best use case?
+3. Write two CLI commands for Windows CMD and their Linux/Mac equivalents, and explain what each does
 
-SECTION 2 — SECURITY ASSESSMENT:
-Rate each item: Good / Needs Improvement / Not Done
+PART 2 — PROCESSES AND MEMORY (Module 2):
+4. List the 5 process states and describe what happens in each state
+5. You are given 3 processes:
+   - P1: Arrival=0ms, Burst=6ms
+   - P2: Arrival=2ms, Burst=4ms
+   - P3: Arrival=4ms, Burst=2ms
+   Simulate Round Robin scheduling with a time quantum of 2ms:
+   - Draw a Gantt chart showing the order processes run
+   - Calculate the Waiting Time for each process
+6. Explain the difference between RAM and Virtual Memory, and when the OS uses virtual memory
 
-5. Operating system is up to date
-6. Antivirus software is installed and updated
-7. Firewall is enabled
-8. Strong passwords are used on all accounts
-9. Automatic screen lock is enabled (locks after inactivity)
-10. Important files are backed up regularly
+PART 3 — FILE SYSTEMS AND SECURITY (Module 3):
+7. Name THREE different file systems and state which operating system uses each one
+8. Explain what a file path is. Give one example of an absolute path and one relative path (use Windows or Linux format)
+9. In Linux, a file has permissions "rw-r--r--". Explain what this means for the Owner, Group, and Others
+10. List 4 types of malware and briefly describe how each one works
+11. Name 3 OS security features built into modern operating systems and explain what each one protects against
 
-SECTION 3 — FILE PERMISSIONS:
-11. Choose any folder on your computer. Describe what permissions are set on it and who can access it.
-12. Why is it important to restrict file permissions on a shared computer?
-
-SECTION 4 — IMPROVEMENT PLAN:
-13. List 3 specific security improvements you would make to this computer
-14. For each improvement, explain what risk it reduces
-15. What is the difference between a virus and ransomware? Give a real-world example of each.
-
-Write at least 250 words total with specific observations about the actual computer you are auditing.`
+Write at least 350 words total. Show all calculations for the scheduling question.`
   );
 
-  console.log('✅ Seed complete: 1 user, 3 courses, 9 modules, 18 quizzes, 9 assignments');
+  console.log('✅ Seed complete: 1 user, 3 courses, 9 modules, 9 quizzes, 3 assignments');
 }
 
 async function seed() {
