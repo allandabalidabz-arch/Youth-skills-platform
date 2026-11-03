@@ -18,10 +18,9 @@ const categoryBg = {
 function generatePDF(cert, userName, userNRC, logoBase64) {
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
   const W = 297, H = 210;
-  const hex = categoryBg[cert.category] || '#2563eb';
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
+
+  // Fixed light green color for all certificates
+  const r = 22, g = 163, b = 74; // #16a34a — green-600
 
   // Background
   doc.setFillColor(248, 250, 252);
@@ -48,13 +47,7 @@ function generatePDF(cert, userName, userNRC, logoBase64) {
   doc.setDrawColor(200, 200, 200);
   doc.rect(17, 25, W - 34, H - 50);
 
-  // Logo in top bar (left & right)
-  if (logoBase64) {
-    doc.addImage(logoBase64, 'PNG', 16, 2, 14, 14);
-    doc.addImage(logoBase64, 'PNG', W - 30, 2, 14, 14);
-  }
-
-  // Org name in top bar
+  // Org name in top bar — no corner logos
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
@@ -73,7 +66,7 @@ function generatePDF(cert, userName, userNRC, logoBase64) {
   doc.setLineWidth(0.5);
   doc.line(80, 42, W - 80, 42);
 
-  // Logo centered
+  // Logo centered below the decorative line — only here
   if (logoBase64) {
     doc.addImage(logoBase64, 'PNG', W / 2 - 10, 44, 20, 20);
   }
