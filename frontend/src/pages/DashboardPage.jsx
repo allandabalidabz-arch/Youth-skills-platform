@@ -29,15 +29,33 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const fetchDashboard = () => {
+    setLoading(true);
+    setError(null);
     const endpoint = user?.role === 'youth' ? '/dashboard/youth' : '/dashboard/admin';
-    api.get(endpoint).then(res => setData(res.data)).catch(console.error).finally(() => setLoading(false));
-  }, [user]);
+    api.get(endpoint)
+      .then(res => setData(res.data))
+      .catch(err => {
+        console.error('Dashboard fetch error:', err);
+        setError(err.response?.data?.message || 'Failed to load dashboard. Please try again.');
+      })
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => { fetchDashboard(); }, [user]);
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
       <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+    </div>
+  );
+
+  if (error) return (
+    <div className="flex flex-col items-center justify-center h-64 gap-4">
+      <p className="text-red-500 font-medium">{error}</p>
+      <button onClick={fetchDashboard} className="btn-primary text-sm py-2 px-6">Try Again</button>
     </div>
   );
 
@@ -46,8 +64,9 @@ export default function DashboardPage() {
 }
 
 function YouthDashboard({ data, user }) {
-  if (!data) return null;
-  const { stats, recentCourses, recentCertificates } = data;
+  const stats = data?.stats || { enrolledCourses: 0, completedCourses: 0, certificates: 0 };
+  const recentCourses = data?.recentCourses || [];
+  const recentCertificates = data?.recentCertificates || [];
   return (
     <div className="space-y-6 fade-in">
       <div>
@@ -110,8 +129,7 @@ function YouthDashboard({ data, user }) {
 }
 
 function AdminDashboardView({ data }) {
-  if (!data) return null;
-  const { stats } = data;
+  const stats = data?.stats || { totalUsers: 0, youthUsers: 0, totalCourses: 0, totalEnrollments: 0, totalCertificates: 0 };
 
   const [activeTab, setActiveTab] = useState('overview');
   const [users, setUsers] = useState([]);
