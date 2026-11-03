@@ -36,7 +36,7 @@ async function seedData(db) {
       [id, name, email, id === adminId ? adminPw : hashedPw, role, bio, location, JSON.stringify(skills)]);
   };
 
-  await insertUser(adminId, 'Admin User', 'admin@youthskills.com', 'admin', 'Platform administrator', 'Lusaka, Zambia', []);
+  await insertUser(adminId, 'Allan Dabali', 'admin@youthskills.com', 'admin', 'Platform administrator', 'Lusaka, Zambia', []);
 
   const courses = [
     {
