@@ -87,19 +87,31 @@ function YouthDashboard({ data, user }) {
           {recentCourses.length === 0 ? (
             <div className="text-center py-8">
               <BookOpen className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-              <p className="text-slate-400 text-sm">No courses yet</p>
+              <p className="text-slate-400 text-sm mb-1">No courses yet</p>
+              <p className="text-slate-400 text-xs mb-3">Start learning today — browse available courses and enroll for free.</p>
               <Link to="/courses" className="btn-primary mt-3 text-sm py-2">Browse Courses</Link>
             </div>
           ) : recentCourses.map(c => (
-            <Link key={c.course_id} to={`/courses/${c.course_id}`} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors mb-1">
-              <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-700 overflow-hidden flex-shrink-0">
-                {c.thumbnail ? <img src={c.thumbnail} alt="" className="w-full h-full object-cover" /> : <BookOpen className="w-5 h-5 text-slate-400 m-2.5" />}
+            <Link key={c.course_id} to={`/courses/${c.course_id}`} className="flex flex-col p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors mb-1">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-700 overflow-hidden flex-shrink-0">
+                  {c.thumbnail ? <img src={c.thumbnail} alt="" className="w-full h-full object-cover" /> : <BookOpen className="w-5 h-5 text-slate-400 m-2.5" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-800 dark:text-slate-100 truncate">{c.title}</p>
+                  <span className={`badge text-xs ${categoryColors[c.category] || 'bg-slate-100 text-slate-600'}`}>{c.category}</span>
+                </div>
+                {c.completed_at ? <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" /> : <Clock className="w-5 h-5 text-slate-300 flex-shrink-0" />}
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-slate-800 dark:text-slate-100 truncate">{c.title}</p>
-                <span className={`badge text-xs ${categoryColors[c.category] || 'bg-slate-100 text-slate-600'}`}>{c.category}</span>
+              <div className="mt-2 ml-13">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-slate-400">{c.completedModules}/{c.totalModules} modules</span>
+                  <span className="text-xs font-semibold text-blue-600">{c.progress}%</span>
+                </div>
+                <div className="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div className={`h-full rounded-full transition-all ${c.progress === 100 ? 'bg-green-500' : 'bg-blue-500'}`} style={{ width: `${c.progress}%` }} />
+                </div>
               </div>
-              {c.completed_at ? <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" /> : <Clock className="w-5 h-5 text-slate-300 flex-shrink-0" />}
             </Link>
           ))}
         </div>
@@ -265,6 +277,7 @@ function AdminDashboardView({ data }) {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BookOpen },
     { id: 'youth', label: 'Registered Youth', icon: Users },
+    { id: 'completions', label: 'Completions', icon: Award },
     { id: 'modules', label: 'Modules', icon: Layers },
     { id: 'assignments', label: 'Assignments', icon: FileText },
     { id: 'payments', label: 'Payments', icon: CreditCard },
@@ -310,15 +323,31 @@ function AdminDashboardView({ data }) {
                 <p className="text-xs text-purple-500">{stats.totalEnrollments} enrollments →</p>
               </div>
             </button>
-            <div className="card flex items-center gap-4">
+            <button onClick={() => setActiveTab('completions')} className="card flex items-center gap-4 text-left hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer w-full">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-yellow-100 text-yellow-600"><Award className="w-6 h-6" /></div>
               <div>
                 <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{stats.totalCertificates}</p>
                 <p className="text-sm text-slate-500 dark:text-slate-400">Certificates Issued</p>
+                <p className="text-xs text-yellow-600">View completions →</p>
               </div>
-            </div>
+            </button>
+            <button onClick={() => setActiveTab('assignments')} className="card flex items-center gap-4 text-left hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer w-full">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-orange-100 text-orange-600"><FileText className="w-6 h-6" /></div>
+              <div>
+                <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{stats.pendingAssignments ?? 0}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Pending Assignments</p>
+                <p className="text-xs text-orange-500">Grade now →</p>
+              </div>
+            </button>
+            <button onClick={() => setActiveTab('payments')} className="card flex items-center gap-4 text-left hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer w-full">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-green-100 text-green-600"><CreditCard className="w-6 h-6" /></div>
+              <div>
+                <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{stats.pendingPayments ?? 0}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Pending Payments</p>
+                <p className="text-xs text-green-500">Review now →</p>
+              </div>
+            </button>
           </div>
-          <p className="text-xs text-slate-400 dark:text-slate-500">Click on Total Users or Courses cards to view details.</p>
         </div>
       )}
 
@@ -398,9 +427,69 @@ function AdminDashboardView({ data }) {
         </div>
       )}
 
+      {/* COMPLETIONS */}
+      {activeTab === 'completions' && (
+        <div className="card">
+          <div className="flex items-center gap-2 mb-4">
+            <Award className="w-5 h-5 text-yellow-500" />
+            <h2 className="font-bold text-slate-800 dark:text-slate-100">Course Completions</h2>
+            <span className="badge bg-yellow-100 text-yellow-700">{(data?.recentCompletions || []).length}</span>
+          </div>
+          {(data?.recentCompletions || []).length === 0 ? (
+            <div className="text-center py-12">
+              <Award className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+              <p className="text-slate-400 text-sm">No completions yet.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-100 dark:border-slate-700">
+                    <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">#</th>
+                    <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Student</th>
+                    <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Course</th>
+                    <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden md:table-cell">Certificate No.</th>
+                    <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden lg:table-cell">Completed</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50 dark:divide-slate-700">
+                  {(data?.recentCompletions || []).map((c, idx) => (
+                    <tr key={c.certificate_number} className="hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                      <td className="py-3 px-3 text-slate-400">{idx + 1}</td>
+                      <td className="py-3 px-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-yellow-100 dark:bg-yellow-900/40 flex items-center justify-center text-yellow-700 dark:text-yellow-300 font-bold text-xs flex-shrink-0">
+                            {c.student_name?.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="font-medium text-slate-800 dark:text-slate-100">{c.student_name}</p>
+                            <p className="text-xs text-slate-400">{c.student_email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <span className="font-medium text-slate-700 dark:text-slate-200">{c.course_title}</span>
+                      </td>
+                      <td className="py-3 px-3 hidden md:table-cell">
+                        <span className="font-mono text-xs text-slate-500 dark:text-slate-400">{c.certificate_number}</span>
+                      </td>
+                      <td className="py-3 px-3 hidden lg:table-cell">
+                        <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                          <Calendar className="w-3 h-3" />
+                          {new Date(c.issued_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* MODULES */}
-      {activeTab === 'modules' && (
-        <div className="space-y-3">
+      {activeTab === 'modules' && (        <div className="space-y-3">
           <p className="text-sm text-slate-500 dark:text-slate-400">Click a course to expand its modules.</p>
           {loadingCourses ? (
             <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" /></div>

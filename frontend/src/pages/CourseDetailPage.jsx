@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import {
   BookOpen, Clock, CheckCircle2, ChevronDown, ChevronUp,
-  Play, Award, Users, ArrowLeft, Lock, FileText, Send
+  Play, Award, Users, ArrowLeft, Lock, FileText, Send, ArrowRight
 } from 'lucide-react';
 
 export default function CourseDetailPage() {
@@ -85,11 +85,20 @@ export default function CourseDetailPage() {
     setCompleting(true);
     try {
       const res = await api.post(`/progress/module/${moduleId}/complete`, { quiz_score: score });
-      toast.success(res.data.certificateIssued ? '🏆 Certificate earned!' : 'Module completed!');
-      fetchCourse();
-      setQuizMode(false);
-      setQuizResult(null);
-      setQuizAnswers({});
+      if (res.data.certificateIssued) {
+        toast.success('🏆 Certificate earned! Redirecting to your certificates...', { duration: 4000 });
+        fetchCourse();
+        setQuizMode(false);
+        setQuizResult(null);
+        setQuizAnswers({});
+        setTimeout(() => navigate('/certificates'), 2500);
+      } else {
+        toast.success('Module completed!');
+        fetchCourse();
+        setQuizMode(false);
+        setQuizResult(null);
+        setQuizAnswers({});
+      }
     } catch (err) {
       toast.error('Failed to mark complete');
     } finally {
@@ -164,8 +173,13 @@ export default function CourseDetailPage() {
             </div>
             <p className="text-xs text-slate-400 mt-1">{completedCount} of {modules.length} modules completed</p>
             {enrollment.completed_at && (
-              <div className="flex items-center gap-2 mt-2 text-green-600 font-medium text-sm">
-                <Award className="w-4 h-4" /> Course completed! Certificate issued.
+              <div className="flex items-center justify-between mt-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl px-4 py-3">
+                <div className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                  <Award className="w-4 h-4" /> Course completed! Certificate issued.
+                </div>
+                <Link to="/certificates" className="flex items-center gap-1 text-sm font-semibold text-green-700 dark:text-green-400 hover:underline">
+                  View Certificate <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
             )}
           </div>

@@ -15,7 +15,7 @@ const categoryBg = {
   coding: '#2563eb',
 };
 
-function generatePDF(cert, userName, logoBase64) {
+function generatePDF(cert, userName, userNRC, logoBase64) {
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
   const W = 297, H = 210;
   const hex = categoryBg[cert.category] || '#2563eb';
@@ -102,6 +102,14 @@ function generatePDF(cert, userName, logoBase64) {
   doc.setFont('helvetica', 'italic');
   doc.text('has successfully completed the course', W / 2, 101, { align: 'center' });
 
+  // NRC below name
+  if (userNRC) {
+    doc.setTextColor(120, 120, 120);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`NRC: ${userNRC}`, W / 2, 96, { align: 'center' });
+  }
+
   // Course title
   doc.setTextColor(r, g, b);
   doc.setFontSize(20);
@@ -179,9 +187,12 @@ export default function CertificatesPage() {
   const [proofText, setProofText] = useState({});
   const [submitting, setSubmitting] = useState(null);
   const [showPayForm, setShowPayForm] = useState({});
+  const [userNRC, setUserNRC] = useState('');
 
   useEffect(() => {
     fetchData();
+    // Fetch user NRC for certificate PDF
+    api.get('/users/profile').then(res => setUserNRC(res.data.user?.nrc || '')).catch(() => {});
   }, []);
 
   const fetchData = async () => {
@@ -241,7 +252,7 @@ export default function CertificatesPage() {
           reader.readAsDataURL(blob);
         });
       } catch {}
-      generatePDF(cert, user?.name || 'Graduate', logoBase64);
+      generatePDF(cert, user?.name || 'Graduate', userNRC, logoBase64);
       toast.success('Certificate downloaded!');
     } catch {
       toast.error('Download failed. Please try again.');

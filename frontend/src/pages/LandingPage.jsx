@@ -128,7 +128,7 @@ export default function LandingPage() {
         <div className="flex items-center justify-center mb-3">
           <Logo size="sm" white />
         </div>
-        <p>© 2026 YouthSkills Program. Empowering youth through digital education.</p>
+        <p>© {new Date().getFullYear()} YouthSkills Program. Empowering youth through digital education.</p>
         <p className="mt-3">
           <Link to="/admin/login" className="text-slate-600 hover:text-slate-400 text-xs transition-colors">
             Admin Portal
