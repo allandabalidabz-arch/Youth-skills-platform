@@ -12,6 +12,12 @@ async function getDb() {
   await db.exec('PRAGMA journal_mode = WAL');
   await db.exec('PRAGMA foreign_keys = ON');
   await initializeDatabase(db);
+  // Migration: add nrc column if it doesn't exist yet
+  const cols = await db.all("PRAGMA table_info(users)");
+  if (!cols.find(c => c.name === 'nrc')) {
+    await db.exec("ALTER TABLE users ADD COLUMN nrc TEXT");
+    console.log('✅ Migrated: added nrc column to users');
+  }
   return db;
 }
 
@@ -27,6 +33,7 @@ async function initializeDatabase(db) {
       bio TEXT,
       location TEXT,
       phone TEXT,
+      nrc TEXT,
       skills TEXT DEFAULT '[]',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP

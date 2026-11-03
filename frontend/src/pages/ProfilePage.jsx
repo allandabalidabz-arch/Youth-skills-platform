@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { User, MapPin, Phone, Save, Plus, X, Lock } from 'lucide-react';
+import { User, MapPin, Phone, Save, Plus, X, Lock, CreditCard } from 'lucide-react';
 
 // Format validators (mirrors backend)
 const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.trim());
 const isValidUrl      = (url)      => /^https?:\/\/.+\..+/.test(url);
 const isValidLocation = (location) => /[a-zA-Z]/.test(location);
+const isValidNRC      = (nrc)      => /^[0-9]{6}\/[0-9]{2}\/[0-9]$/.test(nrc.trim());
 
 export default function ProfilePage() {
   const { user, updateUser } = useAuth();
-  const [form, setForm] = useState({ name: '', bio: '', location: '', phone: '', avatar: '' });
+  const [form, setForm] = useState({ name: '', bio: '', location: '', phone: '', nrc: '', avatar: '' });
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState('');
   const [saving, setSaving] = useState(false);
@@ -25,7 +26,7 @@ export default function ProfilePage() {
   useEffect(() => {
     api.get('/users/profile').then(res => {
       const u = res.data.user;
-      setForm({ name: u.name || '', bio: u.bio || '', location: u.location || '', phone: u.phone || '', avatar: u.avatar || '' });
+      setForm({ name: u.name || '', bio: u.bio || '', location: u.location || '', phone: u.phone || '', nrc: u.nrc || '', avatar: u.avatar || '' });
       setSkills(u.skills || []);
     });
   }, []);
@@ -35,6 +36,7 @@ export default function ProfilePage() {
     if (form.phone && !isValidPhone(form.phone)) return toast.error('Invalid phone number format.');
     if (form.avatar && !isValidUrl(form.avatar)) return toast.error('Invalid avatar URL. Must start with http:// or https://');
     if (form.location && !isValidLocation(form.location)) return toast.error('Enter a valid location.');
+    if (form.nrc && !isValidNRC(form.nrc)) return toast.error('Invalid NRC format. Use: 123456/78/9');
     setSaving(true);
     try {
       const res = await api.put('/users/profile', { ...form, skills });
@@ -134,6 +136,17 @@ export default function ProfilePage() {
                   <p className="text-xs text-red-500 mt-1">Invalid phone number format.</p>
                 )}
               </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">NRC Number</label>
+              <div className="relative">
+                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input type="text" className="input pl-10" placeholder="123456/78/9" value={form.nrc}
+                  onChange={e => setForm(p => ({ ...p, nrc: e.target.value }))} onBlur={touch('nrc')} />
+              </div>
+              {touched.nrc && form.nrc && !isValidNRC(form.nrc) && (
+                <p className="text-xs text-red-500 mt-1">Invalid NRC format. Use: 123456/78/9</p>
+              )}
             </div>
           </div>
 

@@ -12,13 +12,18 @@ const isValidEmail    = (email)    => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.trim());
 const isValidLocation = (location) => /[a-zA-Z]/.test(location);
 const isValidName     = (name)     => /^[a-zA-Z\s]+$/.test(name.trim());
+const isValidNRC      = (nrc)      => /^[0-9]{6}\/[0-9]{2}\/[0-9]$/.test(nrc.trim());
 
 // ── POST /api/auth/register ────────────────────────────────────────────────
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, role = 'youth', location, phone } = req.body;
+    const { name, email, password, role = 'youth', location, phone, nrc } = req.body;
     if (!name || !email || !password)
       return res.status(400).json({ success: false, message: 'Name, email, and password are required.' });
+    if (!nrc || !nrc.trim())
+      return res.status(400).json({ success: false, message: 'NRC number is required.' });
+    if (!isValidNRC(nrc))
+      return res.status(400).json({ success: false, message: 'Invalid NRC format. Use format: 123456/78/9' });
     if (!isValidName(name))
       return res.status(400).json({ success: false, message: 'Name must contain letters only.' });
     if (!isValidEmail(email))
@@ -37,11 +42,15 @@ router.post('/register', async (req, res) => {
     if (existing)
       return res.status(409).json({ success: false, message: 'Email already registered.' });
 
+    const existingNRC = await db.get('SELECT id FROM users WHERE nrc = ?', nrc.trim());
+    if (existingNRC)
+      return res.status(409).json({ success: false, message: 'NRC number already registered.' });
+
     const hashedPassword = await bcrypt.hash(password, 12);
     const id = uuidv4();
     await db.run(
-      'INSERT INTO users (id, name, email, password, role, location, phone) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [id, name, email.toLowerCase(), hashedPassword, role, location || null, phone || null]
+      'INSERT INTO users (id, name, email, password, role, location, phone, nrc) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [id, name, email.toLowerCase(), hashedPassword, role, location || null, phone || null, nrc.trim()]
     );
 
     await db.run(

@@ -355,6 +355,7 @@ function AdminDashboardView({ data }) {
                     <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">#</th>
                     <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Name</th>
                     <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Email</th>
+                    <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden md:table-cell">NRC</th>
                     <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden md:table-cell">Location</th>
                     <th className="text-left py-3 px-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden lg:table-cell">Registered</th>
                   </tr>
@@ -372,6 +373,11 @@ function AdminDashboardView({ data }) {
                         </div>
                       </td>
                       <td className="py-3 px-3 text-slate-600 dark:text-slate-300">{u.email}</td>
+                      <td className="py-3 px-3 hidden md:table-cell">
+                        {u.nrc
+                          ? <span className="font-mono text-xs text-slate-600 dark:text-slate-300">{u.nrc}</span>
+                          : <span className="text-slate-300 dark:text-slate-600">—</span>}
+                      </td>
                       <td className="py-3 px-3 hidden md:table-cell">
                         {u.location
                           ? <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400"><MapPin className="w-3 h-3" />{u.location}</span>

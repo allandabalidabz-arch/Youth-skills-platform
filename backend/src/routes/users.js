@@ -6,16 +6,17 @@ const { authenticate, authorize } = require('../middleware/auth');
 const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.trim());
 const isValidUrl      = (url)      => /^https?:\/\/.+\..+/.test(url);
 const isValidLocation = (location) => /[a-zA-Z]/.test(location);
+const isValidNRC      = (nrc)      => /^[0-9]{6}\/[0-9]{2}\/[0-9]$/.test(nrc.trim());
 
 router.get('/profile', authenticate, async (req, res) => {
   const db = await getDb();
-  const user = await db.get('SELECT id, name, email, role, avatar, bio, location, phone, skills, created_at FROM users WHERE id = ?', req.user.id);
+  const user = await db.get('SELECT id, name, email, role, avatar, bio, location, phone, nrc, skills, created_at FROM users WHERE id = ?', req.user.id);
   if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
   res.json({ success: true, user: { ...user, skills: JSON.parse(user.skills || '[]') } });
 });
 
 router.put('/profile', authenticate, async (req, res) => {
-  const { name, bio, location, phone, skills, avatar } = req.body;
+  const { name, bio, location, phone, nrc, skills, avatar } = req.body;
   if (phone && !isValidPhone(phone)) {
     return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
   }
@@ -25,13 +26,16 @@ router.put('/profile', authenticate, async (req, res) => {
   if (location && !isValidLocation(location)) {
     return res.status(400).json({ success: false, message: 'Enter a valid location.' });
   }
+  if (nrc && !isValidNRC(nrc)) {
+    return res.status(400).json({ success: false, message: 'Invalid NRC format. Use format: 123456/78/9' });
+  }
   const db = await getDb();
   await db.run(`UPDATE users SET
     name = COALESCE(?, name), bio = COALESCE(?, bio), location = COALESCE(?, location),
-    phone = COALESCE(?, phone), skills = COALESCE(?, skills), avatar = COALESCE(?, avatar),
-    updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
-    [name, bio, location, phone, skills ? JSON.stringify(skills) : null, avatar, req.user.id]);
-  const updated = await db.get('SELECT id, name, email, role, avatar, bio, location, phone, skills FROM users WHERE id = ?', req.user.id);
+    phone = COALESCE(?, phone), nrc = COALESCE(?, nrc), skills = COALESCE(?, skills),
+    avatar = COALESCE(?, avatar), updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+    [name, bio, location, phone, nrc, skills ? JSON.stringify(skills) : null, avatar, req.user.id]);
+  const updated = await db.get('SELECT id, name, email, role, avatar, bio, location, phone, nrc, skills FROM users WHERE id = ?', req.user.id);
   res.json({ success: true, message: 'Profile updated.', user: { ...updated, skills: JSON.parse(updated.skills || '[]') } });
 });
 
@@ -48,7 +52,7 @@ router.get('/', authenticate, authorize('admin'), async (req, res) => {
   const { role, search, page = 1, limit = 20 } = req.query;
   const offset = (page - 1) * limit;
   const db = await getDb();
-  let query = 'SELECT id, name, email, role, avatar, location, created_at FROM users WHERE 1=1';
+  let query = 'SELECT id, name, email, role, avatar, location, nrc, created_at FROM users WHERE 1=1';
   const params = [];
   if (role) { query += ' AND role = ?'; params.push(role); }
   if (search) { query += ' AND (name LIKE ? OR email LIKE ?)'; params.push(`%${search}%`, `%${search}%`); }

@@ -10,13 +10,14 @@ const isValidEmail    = (email)    => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.trim());
 const isValidLocation = (location) => /[a-zA-Z]/.test(location);
 const isValidName     = (name)     => /^[a-zA-Z\s]+$/.test(name.trim());
+const isValidNRC      = (nrc)      => /^[0-9]{6}\/[0-9]{2}\/[0-9]$/.test(nrc.trim());
 
 export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({
     name: '', email: '', password: '', confirmPassword: '',
-    role: 'youth', location: '', phone: ''
+    role: 'youth', location: '', phone: '', nrc: ''
   });
   const [showPw, setShowPw] = useState(false);
   const [touched, setTouched] = useState({});
@@ -26,21 +27,13 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.password !== form.confirmPassword) {
-      return toast.error('Passwords do not match.');
-    }
-    if (!isValidName(form.name)) {
-      return toast.error('Name must contain letters only.');
-    }
-    if (!isValidEmail(form.email)) {
-      return toast.error('Invalid email format.');
-    }
-    if (form.phone && !isValidPhone(form.phone)) {
-      return toast.error('Invalid phone number format.');
-    }
-    if (form.location && !isValidLocation(form.location)) {
-      return toast.error('Enter a valid location.');
-    }
+    if (!form.nrc.trim()) return toast.error('NRC number is required.');
+    if (!isValidNRC(form.nrc)) return toast.error('Invalid NRC format. Use: 123456/78/9');
+    if (form.password !== form.confirmPassword) return toast.error('Passwords do not match.');
+    if (!isValidName(form.name)) return toast.error('Name must contain letters only.');
+    if (!isValidEmail(form.email)) return toast.error('Invalid email format.');
+    if (form.phone && !isValidPhone(form.phone)) return toast.error('Invalid phone number format.');
+    if (form.location && !isValidLocation(form.location)) return toast.error('Enter a valid location.');
     setLoading(true);
     try {
       const user = await register(form);
@@ -78,6 +71,19 @@ export default function RegisterPage() {
                 onBlur={touch('name')} required />
               {touched.name && form.name && !isValidName(form.name) && (
                 <p className="text-xs text-red-500 mt-1">Name must contain letters only.</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">NRC Number <span className="text-red-500">*</span></label>
+              <input type="text" className="input" placeholder="123456/78/9"
+                value={form.nrc}
+                onChange={e => setForm(p => ({ ...p, nrc: e.target.value }))}
+                onBlur={touch('nrc')} required />
+              {touched.nrc && form.nrc && !isValidNRC(form.nrc) && (
+                <p className="text-xs text-red-500 mt-1">Invalid NRC format. Use: 123456/78/9</p>
+              )}
+              {touched.nrc && !form.nrc && (
+                <p className="text-xs text-red-500 mt-1">NRC number is required.</p>
               )}
             </div>
             <div>
