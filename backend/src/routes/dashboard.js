@@ -3,7 +3,10 @@ const router = express.Router();
 const { getDb } = require('../database');
 const { authenticate, authorize } = require('../middleware/auth');
 
-router.get('/youth', authenticate, authorize('youth'), async (req, res) => {
+router.get('/youth', authenticate, async (req, res) => {
+  if (!['youth', 'admin'].includes(req.user.role)) {
+    return res.status(403).json({ success: false, message: 'Access forbidden.' });
+  }
   const db = await getDb();
   const userId = req.user.id;
 
