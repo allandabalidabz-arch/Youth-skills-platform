@@ -333,15 +333,20 @@ export default function CertificatesPage() {
                 {showPayForm[cert.id] && !isUnlocked(cert.id) && (
                   <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl">
                     <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">💳 Pay 2,000 ZMW to Download</p>
+                    <div className="bg-white dark:bg-slate-700 border border-yellow-300 dark:border-yellow-700 rounded-lg p-3 mb-3">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Send 2,000 ZMW via mobile money to:</p>
+                      <p className="text-lg font-extrabold text-blue-600 dark:text-blue-400 tracking-widest">0970 342 178</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Allan Dabali &mdash; YouthSkills Program</p>
+                    </div>
                     <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
-                      Send 2,000 ZMW via mobile money or bank transfer, then enter your payment reference number below.
+                      After sending, enter the transaction reference number below and submit for approval.
                     </p>
                     {isRejected(cert.id) && (
                       <p className="text-xs text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg p-2 mb-3">
                         ❌ Previous proof was rejected. Please resubmit with a valid reference.
                       </p>
                     )}
-                    <input type="text" className="input text-sm mb-2" placeholder="Enter payment reference number..."
+                    <input type="text" className="input text-sm mb-2" placeholder="Enter transaction reference number..."
                       value={proofText[cert.id] || ''} onChange={e => setProofText(p => ({ ...p, [cert.id]: e.target.value }))} />
                     <button onClick={() => handleSubmitProof(cert.id)} disabled={submitting === cert.id} className="btn-primary text-sm py-2 w-full">
                       {submitting === cert.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Send className="w-4 h-4" /> Submit Payment Proof</>}
