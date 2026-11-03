@@ -31,6 +31,7 @@ export default function RegisterPage() {
     if (!isValidNRC(form.nrc)) return toast.error('Invalid NRC format. Use: 123456/78/9');
     if (form.password !== form.confirmPassword) return toast.error('Passwords do not match.');
     if (!isValidName(form.name)) return toast.error('Name must contain letters only.');
+    if (!form.email.trim()) return toast.error('Email address is required.');
     if (!isValidEmail(form.email)) return toast.error('Invalid email format.');
     if (form.phone && !isValidPhone(form.phone)) return toast.error('Invalid phone number format.');
     if (form.location && !isValidLocation(form.location)) return toast.error('Enter a valid location.');
@@ -87,8 +88,11 @@ export default function RegisterPage() {
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Email Address</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Email Address <span className="text-red-500">*</span></label>
               <input type="email" className="input" placeholder="name@gmail.com" value={form.email} onChange={set('email')} onBlur={touch('email')} required />
+              {touched.email && !form.email && (
+                <p className="text-xs text-red-500 mt-1">Email address is required.</p>
+              )}
               {touched.email && form.email && !isValidEmail(form.email) && (
                 <p className="text-xs text-red-500 mt-1">Enter a valid email e.g. name@gmail.com</p>
               )}
