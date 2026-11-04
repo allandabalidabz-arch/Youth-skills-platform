@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouthSkills Program — Final Year Project Report</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 12pt;
+    line-height: 1.8;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 25mm 25mm 20mm 30mm;
+  }
+
+  @media print {
+    .page { margin: 0; padding: 25mm 25mm 20mm 30mm; }
+    .no-break { page-break-inside: avoid; }
+    h1, h2, h3 { page-break-after: avoid; }
+    .page-break { page-break-before: always; }
+  }
+
+  /* Cover page */
+  .cover {
+    text-align: center;
+    padding-top: 30mm;
+  }
+  .cover .institution { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 6pt; }
+  .cover .school { font-size: 13pt; font-weight: bold; text-transform: uppercase; margin-bottom: 4pt; }
+  .cover .section { font-size: 12pt; font-weight: bold; text-transform: uppercase; margin-bottom: 4pt; }
+  .cover .programme { font-size: 12pt; font-weight: bold; text-transform: uppercase; margin-bottom: 30pt; }
+  .cover .title { font-size: 15pt; font-weight: bold; text-transform: uppercase; margin-bottom: 30pt; line-height: 1.5; }
+  .cover .subtitle { font-size: 12pt; font-style: italic; margin-bottom: 40pt; }
+  .cover .details-table { margin: 0 auto; border-collapse: collapse; text-align: left; }
+  .cover .details-table td { padding: 4pt 10pt; font-size: 12pt; }
+  .cover .details-table td:first-child { font-weight: bold; }
+  .cover .location { margin-top: 40pt; font-size: 12pt; }
+
+  /* Headings */
+  h1 { font-size: 14pt; font-weight: bold; text-transform: uppercase; text-align: center; margin: 20pt 0 12pt 0; }
+  h2 { font-size: 13pt; font-weight: bold; text-transform: uppercase; margin: 18pt 0 8pt 0; }
+  h3 { font-size: 12pt; font-weight: bold; margin: 14pt 0 6pt 0; }
+  h4 { font-size: 12pt; font-weight: bold; font-style: italic; margin: 10pt 0 4pt 0; }
+
+  /* Chapter heading */
+  .chapter-heading {
+    font-size: 14pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0 0 20pt 0;
+    padding-bottom: 6pt;
+    border-bottom: 2px solid #000;
+  }
+
+  p { margin-bottom: 10pt; text-align: justify; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 12pt 0; font-size: 11pt; }
+  th { background: #000; color: #fff; padding: 6pt 8pt; text-align: left; font-size: 11pt; }
+  td { padding: 5pt 8pt; border: 1pt solid #000; vertical-align: top; }
+  tr:nth-child(even) td { background: #f5f5f5; }
+  .table-caption { font-weight: bold; margin-bottom: 4pt; font-size: 11pt; }
+
+  /* Lists */
+  ul, ol { margin: 8pt 0 10pt 24pt; }
+  li { margin-bottom: 4pt; }
+
+  /* Horizontal rule */
+  hr { border: none; border-top: 1pt solid #000; margin: 16pt 0; }
+
+  /* Declaration, approval blocks */
+  .signature-block { margin: 20pt 0; }
+  .signature-line { border-bottom: 1pt solid #000; width: 200pt; display: inline-block; margin-left: 10pt; }
+
+  /* Screenshot placeholder */
+  .screenshot-placeholder {
+    border: 2pt dashed #666;
+    background: #f9f9f9;
+    padding: 20pt;
+    text-align: center;
+    margin: 12pt 0;
+    font-style: italic;
+    color: #555;
+    min-height: 180pt;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .screenshot-placeholder .label { font-weight: bold; font-size: 11pt; margin-bottom: 6pt; color: #000; font-style: normal; }
+  .screenshot-placeholder .instruction { font-size: 10pt; color: #888; }
+
+  /* Actual screenshot images */
+  .screenshot-img { width: 100%; max-width: 480pt; border: 1pt solid #ccc; display: block; margin: 8pt auto; }
+
+  /* Figure caption */
+  .figure-caption { text-align: center; font-size: 10pt; font-style: italic; margin-top: 4pt; margin-bottom: 12pt; }
+
+  /* Code block */
+  pre, code { font-family: "Courier New", Courier, monospace; font-size: 10pt; background: #f4f4f4; padding: 8pt; display: block; margin: 8pt 0; border: 1pt solid #ccc; white-space: pre-wrap; word-break: break-all; }
+
+  /* Abstract */
+  .abstract { margin: 0 20pt; }
+
+  /* TOC */
+  .toc-entry { display: flex; justify-content: space-between; padding: 2pt 0; }
+  .toc-entry .dots { flex: 1; border-bottom: 1pt dotted #000; margin: 0 6pt; position: relative; top: -4pt; }
+
+  /* Abbrev table */
+  .abbrev-table td:first-child { font-weight: bold; width: 80pt; }
+
+  /* Note box */
+  .note-box { border: 1pt solid #999; background: #fffbe6; padding: 10pt; margin: 12pt 0; font-size: 11pt; }
+  .note-box strong { font-size: 11pt; }
+
+  /* Pass / Fail badges */
+  .pass { color: green; font-weight: bold; }
+  .fail { color: red; font-weight: bold; }
+
+  .center { text-align: center; }
+  .bold { font-weight: bold; }
+  .italic { font-style: italic; }
+  .underline { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ COVER PAGE ═══════════════════════════════════════ -->
+<div class="page">
+  <div class="cover">
+    <p class="institution">Evelyn Hone College</p>
+    <p class="school">School of Business Studies and Management</p>
+    <p class="section">Computer Studies Section</p>
+    <p class="programme">Computer Science</p>
+
+    <p class="title">Design and Implementation of a Web-Based Digital Skills Learning Platform for Youth Empowerment</p>
+    <p class="subtitle">A Final Year Project Report</p>
+
+    <table class="details-table">
+      <tr><td>Student Name:</td><td>Allan Dabali</td></tr>
+      <tr><td>Student Number:</td><td>[Insert Student Number]</td></tr>
+      <tr><td>Supervisor:</td><td>[Insert Supervisor Name]</td></tr>
+      <tr><td>Programme:</td><td>Computer Science</td></tr>
+      <tr><td>Submission Date:</td><td>November 2026</td></tr>
+    </table>
+
+    <p class="location"><br><br>Lusaka, Zambia</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ DECLARATION ════════════════════════════════════ -->
+<div class="page page-break">
+  <h1>Declaration</h1>
+  <p>I, <strong>Allan Dabali</strong>, declare that this project report is my own original work and that all sources used have been duly acknowledged. This project has not been submitted to any other institution for an academic award.</p>
+  <div class="signature-block">
+    <p><strong>Student Signature:</strong> <span class="signature-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p><br>
+    <p><strong>Date:</strong> <span class="signature-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+  </div>
+  <hr>
+  <h1>Approval</h1>
+  <p>This project report has been examined and approved for submission.</p>
+  <div class="signature-block">
+    <p><strong>Supervisor Name:</strong> [Insert Supervisor Name]</p><br>
+    <p><strong>Signature:</strong> <span class="signature-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p><br>
+    <p><strong>Date:</strong> <span class="signature-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+  </div>
+  <hr>
+  <h1>Dedication</h1>
+  <p class="italic">This project is dedicated to the youth of Zambia and beyond — with the belief that digital skills education is a gateway to greater economic opportunity, self-reliance, and a better future, regardless of where a young person lives or learns.</p>
+  <hr>
+  <h1>Acknowledgements</h1>
+  <p>I would like to sincerely thank my supervisor for the guidance and support provided throughout this project. I also extend my gratitude to the staff of Evelyn Hone College, Computer Studies Section, for the knowledge and skills imparted during my studies. Special thanks to my family and friends for their patience and encouragement throughout the development of this system.</p>
+</div>
+
+<!-- ════════════════════════════════════ ABSTRACT ════════════════════════════════════ -->
+<div class="page page-break">
+  <h1>Abstract</h1>
+  <div class="abstract">
+    <p>The YouthSkills Program is a web-based digital-skills learning platform developed to address the challenge of accessible, structured digital education for young people. The system is open to any youth who can access a browser and register — it is not limited to students of any particular institution. Learners from anywhere can register using their National Registration Card (NRC) number, enrol in courses, study at their own pace, earn certificates, and download verified PDF certificates after completing a payment process.</p>
+    <p>The system was built using React 18 for the frontend, Node.js and Express for the backend REST API, and SQLite as the database. It provides three digital-skills courses — System Analysis and Design, Web Development, and Operating Systems — each containing three modules, one quiz per module, and one comprehensive final assignment per course.</p>
+    <p>The platform supports full learner workflows: registration with NRC validation, course enrolment, module study, quiz assessment (60% pass mark), assignment submission, progress tracking, certificate issuance, mobile money payment proof submission, and PDF certificate download. Administrators manage the platform through a dedicated portal where they can view registered youth, track completions, grade assignments, approve or reject payment proofs, and receive email notifications when payment is submitted.</p>
+    <p>The system was implemented as a prototype, tested locally, and all twenty-five test cases passed. It demonstrates that modern web technologies can deliver structured learning content, track learner progress, and issue verifiable digital certificates at low cost — serving as a scalable foundation for a nationwide youth digital empowerment initiative.</p>
+    <p><strong>Keywords:</strong> digital skills, learning management system, youth empowerment, React, Node.js, SQLite, certificates, mobile money, Zambia</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ TABLE OF CONTENTS ════════════════════════════════════ -->
+<div class="page page-break">
+  <h1>Table of Contents</h1>
+  <div class="toc-entry"><span>Declaration</span><span class="dots"></span><span>ii</span></div>
+  <div class="toc-entry"><span>Approval</span><span class="dots"></span><span>ii</span></div>
+  <div class="toc-entry"><span>Dedication</span><span class="dots"></span><span>ii</span></div>
+  <div class="toc-entry"><span>Acknowledgements</span><span class="dots"></span><span>ii</span></div>
+  <div class="toc-entry"><span>Abstract</span><span class="dots"></span><span>iii</span></div>
+  <div class="toc-entry"><span>List of Figures</span><span class="dots"></span><span>v</span></div>
+  <div class="toc-entry"><span>List of Tables</span><span class="dots"></span><span>v</span></div>
+  <div class="toc-entry"><span>List of Abbreviations</span><span class="dots"></span><span>vi</span></div>
+  <br>
+  <div class="toc-entry"><span><strong>Chapter 1 — Introduction</strong></span><span class="dots"></span><span>1</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;1a. Introduction</span><span class="dots"></span><span>1</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;1b. Background</span><span class="dots"></span><span>1</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;1c. Objectives</span><span class="dots"></span><span>2</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;1d. Problem Statement</span><span class="dots"></span><span>2</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;1e. Proposed System</span><span class="dots"></span><span>2</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;1f. Budget</span><span class="dots"></span><span>3</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;1g. Cost Benefit Analysis</span><span class="dots"></span><span>3</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;1h. Project Plan — Gantt Chart</span><span class="dots"></span><span>4</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;1i. Conclusion</span><span class="dots"></span><span>4</span></div>
+  <br>
+  <div class="toc-entry"><span><strong>Chapter 2 — Literature Review</strong></span><span class="dots"></span><span>5</span></div>
+  <br>
+  <div class="toc-entry"><span><strong>Chapter 3 — Requirements Specification / Success Criteria</strong></span><span class="dots"></span><span>8</span></div>
+  <br>
+  <div class="toc-entry"><span><strong>Chapter 4 — Design Specification</strong></span><span class="dots"></span><span>11</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;4.1 Data Design</span><span class="dots"></span><span>11</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;4.2 Application Design</span><span class="dots"></span><span>14</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;4.3 User Interface Design</span><span class="dots"></span><span>16</span></div>
+  <div class="toc-entry"><span>&nbsp;&nbsp;&nbsp;4.4 Security Design</span><span class="dots"></span><span>19</span></div>
+  <br>
+  <div class="toc-entry"><span><strong>Chapter 5 — Testing</strong></span><span class="dots"></span><span>21</span></div>
+  <br>
+  <div class="toc-entry"><span><strong>Chapter 6 — Implementation</strong></span><span class="dots"></span><span>25</span></div>
+  <br>
+  <div class="toc-entry"><span><strong>Chapter 7 — Conclusion and Recommendations</strong></span><span class="dots"></span><span>27</span></div>
+  <br>
+  <div class="toc-entry"><span><strong>References</strong></span><span class="dots"></span><span>28</span></div>
+  <br>
+  <div class="toc-entry"><span><strong>Appendix A — Installation Manual</strong></span><span class="dots"></span><span>29</span></div>
+  <div class="toc-entry"><span><strong>Appendix B — User Manual</strong></span><span class="dots"></span><span>31</span></div>
+  <div class="toc-entry"><span><strong>Appendix C — Project Proposal</strong></span><span class="dots"></span><span>35</span></div>
+  <div class="toc-entry"><span><strong>Appendix D — Technical Report (Source Code Summary)</strong></span><span class="dots"></span><span>36</span></div>
+</div>
+
+<!-- ════════════════════════════════════ LIST OF FIGURES ════════════════════════════════════ -->
+<div class="page page-break">
+  <h1>List of Figures</h1>
+  <div class="toc-entry"><span>Figure 1.1 — Gantt Chart (Project Plan)</span><span class="dots"></span><span>4</span></div>
+  <div class="toc-entry"><span>Figure 4.1 — System Architecture Diagram</span><span class="dots"></span><span>14</span></div>
+  <div class="toc-entry"><span>Figure 4.2 — Use Case Diagram</span><span class="dots"></span><span>15</span></div>
+  <div class="toc-entry"><span>Figure 4.3 — Context Diagram (Level 0 DFD)</span><span class="dots"></span><span>15</span></div>
+  <div class="toc-entry"><span>Figure 4.4 — Entity-Relationship Diagram</span><span class="dots"></span><span>13</span></div>
+  <div class="toc-entry"><span>Figure 4.5 — Authentication Flow</span><span class="dots"></span><span>19</span></div>
+  <div class="toc-entry"><span>Figure 4.6 — Landing Page Screenshot</span><span class="dots"></span><span>16</span></div>
+  <div class="toc-entry"><span>Figure 4.7 — Registration Page Screenshot</span><span class="dots"></span><span>16</span></div>
+  <div class="toc-entry"><span>Figure 4.8 — Youth Login Page Screenshot</span><span class="dots"></span><span>17</span></div>
+  <div class="toc-entry"><span>Figure 4.9 — Admin Login Page Screenshot</span><span class="dots"></span><span>17</span></div>
+  <div class="toc-entry"><span>Figure 4.10 — Youth Dashboard Screenshot</span><span class="dots"></span><span>17</span></div>
+  <div class="toc-entry"><span>Figure 4.11 — Admin Dashboard Screenshot</span><span class="dots"></span><span>18</span></div>
+  <div class="toc-entry"><span>Figure 4.12 — Course Detail and Module Page Screenshot</span><span class="dots"></span><span>18</span></div>
+  <div class="toc-entry"><span>Figure 4.13 — Certificates Page Screenshot</span><span class="dots"></span><span>18</span></div>
+  <div class="toc-entry"><span>Figure 4.14 — Certificate Payment Flow Diagram</span><span class="dots"></span><span>15</span></div>
+
+  <br>
+  <h1>List of Tables</h1>
+  <div class="toc-entry"><span>Table 1.1 — Project Budget</span><span class="dots"></span><span>3</span></div>
+  <div class="toc-entry"><span>Table 1.2 — Cost Benefit Analysis</span><span class="dots"></span><span>3</span></div>
+  <div class="toc-entry"><span>Table 1.3 — Gantt Chart</span><span class="dots"></span><span>4</span></div>
+  <div class="toc-entry"><span>Table 3.1 — Functional Requirements</span><span class="dots"></span><span>9</span></div>
+  <div class="toc-entry"><span>Table 3.2 — Non-Functional Requirements</span><span class="dots"></span><span>10</span></div>
+  <div class="toc-entry"><span>Table 3.3 — User Roles and Responsibilities</span><span class="dots"></span><span>11</span></div>
+  <div class="toc-entry"><span>Table 4.1 — Database Tables and Purpose</span><span class="dots"></span><span>11</span></div>
+  <div class="toc-entry"><span>Table 4.2 — Users Table Data Dictionary</span><span class="dots"></span><span>12</span></div>
+  <div class="toc-entry"><span>Table 4.3 — API Endpoint Summary</span><span class="dots"></span><span>15</span></div>
+  <div class="toc-entry"><span>Table 5.1 — Test Plan</span><span class="dots"></span><span>22</span></div>
+  <div class="toc-entry"><span>Table 5.2 — Test Report</span><span class="dots"></span><span>24</span></div>
+</div>
+
+<!-- ════════════════════════════════════ ABBREVIATIONS ════════════════════════════════════ -->
+<div class="page page-break">
+  <h1>List of Abbreviations</h1>
+  <table class="abbrev-table">
+    <tr><th>Abbreviation</th><th>Meaning</th></tr>
+    <tr><td>API</td><td>Application Programming Interface</td></tr>
+    <tr><td>CSS</td><td>Cascading Style Sheets</td></tr>
+    <tr><td>DFD</td><td>Data Flow Diagram</td></tr>
+    <tr><td>ERD</td><td>Entity-Relationship Diagram</td></tr>
+    <tr><td>HTML</td><td>HyperText Markup Language</td></tr>
+    <tr><td>HTTP</td><td>HyperText Transfer Protocol</td></tr>
+    <tr><td>ICT</td><td>Information and Communication Technology</td></tr>
+    <tr><td>JSON</td><td>JavaScript Object Notation</td></tr>
+    <tr><td>JWT</td><td>JSON Web Token</td></tr>
+    <tr><td>LMS</td><td>Learning Management System</td></tr>
+    <tr><td>NRC</td><td>National Registration Card</td></tr>
+    <tr><td>PDF</td><td>Portable Document Format</td></tr>
+    <tr><td>REST</td><td>Representational State Transfer</td></tr>
+    <tr><td>SDLC</td><td>Systems Development Life Cycle</td></tr>
+    <tr><td>SPA</td><td>Single Page Application</td></tr>
+    <tr><td>SQL</td><td>Structured Query Language</td></tr>
+    <tr><td>UI</td><td>User Interface</td></tr>
+    <tr><td>URL</td><td>Uniform Resource Locator</td></tr>
+    <tr><td>UX</td><td>User Experience</td></tr>
+    <tr><td>ZMW</td><td>Zambian Kwacha</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════ CHAPTER 1 ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">Chapter 1 — Introduction</p>
+
+  <h2>1a. Introduction</h2>
+  <p>The rapid advancement of information and communication technology has fundamentally changed how people learn, work, and participate in the economy. Digital skills — including knowledge of computing systems, web technologies, and software development — have become essential for young people seeking employment, self-employment, and participation in the digital economy. However, access to quality, structured digital education remains uneven, with many young people in developing countries, including Zambia, unable to access or afford formal technical training programmes.</p>
+  <p>This project proposes and implements the YouthSkills Program — a web-based digital-skills learning platform designed to provide structured, self-paced digital education to any youth who can access a browser and register, regardless of their location or institutional affiliation. The platform delivers three courses in system analysis, web development, and operating systems; tracks learner progress; issues verifiable digital certificates; and provides a full administration portal for managing the programme.</p>
+  <p>The system was developed as a final year Computer Science project at Evelyn Hone College, School of Business Studies and Management, Lusaka, Zambia.</p>
+
+  <h2>1b. Background — Description of the Existing System</h2>
+  <p>Prior to the development of the YouthSkills Program, digital skills training for youth was delivered through informal, unstructured methods. The existing approach typically involved the following:</p>
+  <ul>
+    <li>Course materials distributed as printed handouts or shared informally through messaging applications such as WhatsApp.</li>
+    <li>Learner attendance and progress tracked manually in paper registers by facilitators.</li>
+    <li>Assessments conducted on paper and marked by hand, with no automated scoring or immediate feedback.</li>
+    <li>Certificates printed and signed manually, with no mechanism for independent public verification.</li>
+    <li>No centralised record of which youth had completed which course or earned which certificate.</li>
+    <li>Payment for certificate processing handled through informal cash transactions with no digital audit trail.</li>
+    <li>No means for a learner in a remote area to access course materials or submit work without physically attending a session.</li>
+  </ul>
+  <p>These limitations made it difficult to scale the programme, reach youth in remote or rural areas, provide timely feedback, and give learners portable digital proof of their skills that employers and institutions could verify.</p>
+
+  <h2>1c. Objectives</h2>
+  <p>The objectives of the YouthSkills Program are as follows:</p>
+  <ol>
+    <li>To develop a web-based platform accessible to any youth with an internet connection, regardless of location or institutional affiliation.</li>
+    <li>To implement NRC-validated registration ensuring every learner has a verified, unique identity in the system.</li>
+    <li>To provide structured digital-skills courses with module content, multiple-choice quizzes (60% pass mark), and final assignments.</li>
+    <li>To automatically issue digital certificates upon successful completion of all course modules.</li>
+    <li>To implement a mobile money payment proof workflow enabling learners to pay for and download their certificates.</li>
+    <li>To provide an administrator portal for managing youth accounts, viewing completions, grading assignments, and processing payments.</li>
+    <li>To send email notifications to the administrator when payment proof is submitted.</li>
+    <li>To enable public certificate verification by certificate number.</li>
+  </ol>
+
+  <h2>1d. Problem Statement</h2>
+  <p>Young people seeking to develop digital skills face significant barriers including geographic distance from training centres, high cost of formal education, lack of portable proof of learning, and the absence of a scalable platform for structured self-paced digital education. The existing manual methods of delivering youth digital skills training are inefficient, difficult to scale beyond a single location, and do not provide learners with verifiable digital credentials that can be recognised by employers. A web-based learning platform is needed that is open to any youth, provides structured courses, tracks progress, and issues verifiable certificates — regardless of where the learner is located.</p>
+
+  <h2>1e. Proposed System</h2>
+  <p>The proposed YouthSkills Program is an open, browser-based learning platform with the following capabilities:</p>
+  <ul>
+    <li><strong>Open Registration:</strong> Any youth anywhere can register using their name, NRC number, email address, and password. The system validates the NRC format and ensures uniqueness. There is no geographic or institutional restriction on who can register.</li>
+    <li><strong>Course Library:</strong> Three courses are available — System Analysis and Design, Web Development, and Operating Systems. Each course has three modules, one quiz per module, and one comprehensive final assignment.</li>
+    <li><strong>Learning and Assessment:</strong> Learners study module content at their own pace, take multiple-choice quizzes (requiring 60% to pass), and submit a text-based final assignment for administrator grading.</li>
+    <li><strong>Progress Tracking:</strong> A personal dashboard shows enrolled courses, completed modules, progress percentages, and earned certificates.</li>
+    <li><strong>Certificate Issuance:</strong> A digital certificate with a unique number is automatically issued when all modules are completed. The PDF includes the learner's name, NRC number, course, date, instructor signature, and a public verification link.</li>
+    <li><strong>Payment and Download:</strong> Learners submit mobile money payment proof (2,000 ZMW to number 0970342178). The administrator reviews and approves, unlocking the PDF download.</li>
+    <li><strong>Admin Portal:</strong> Administrators access a six-tab portal covering Overview statistics, Registered Youth, Course Completions, Modules, Assignment Grading, and Payment Approval.</li>
+  </ul>
+
+  <h2>1f. Budget</h2>
+  <p class="table-caption">Table 1.1 — Project Budget</p>
+  <table>
+    <tr><th>Item</th><th>Estimated Cost (ZMW)</th></tr>
+    <tr><td>Internet data (research and development)</td><td>500.00</td></tr>
+    <tr><td>Laptop use and electricity</td><td>300.00</td></tr>
+    <tr><td>Printing and binding of project report</td><td>400.00</td></tr>
+    <tr><td>Domain name registration (future deployment)</td><td>600.00</td></tr>
+    <tr><td>Cloud hosting, 1 year (future deployment)</td><td>1,200.00</td></tr>
+    <tr><td>Contingency (10%)</td><td>300.00</td></tr>
+    <tr><td><strong>Total</strong></td><td><strong>3,300.00</strong></td></tr>
+  </table>
+  <p><em>Note: All software development tools used — Visual Studio Code, Node.js, React, SQLite, Git — are open source and free of charge.</em></p>
+
+  <h2>1g. Cost Benefit Analysis</h2>
+  <p class="table-caption">Table 1.2 — Cost Benefit Analysis</p>
+  <table>
+    <tr><th>Cost</th><th>Amount (ZMW)</th><th>Benefit</th><th>Value</th></tr>
+    <tr><td>Development and running costs</td><td>3,300.00</td><td>Elimination of manual record-keeping</td><td>High</td></tr>
+    <tr><td>Administrator time savings</td><td>—</td><td>Faster certificate processing from days to minutes</td><td>High</td></tr>
+    <tr><td>Printing cost reduction</td><td>~1,000/year saved</td><td>Digital certificates at no per-unit cost</td><td>Medium</td></tr>
+    <tr><td>Geographic reach (no travel cost)</td><td>—</td><td>Youth from any location can enrol and learn</td><td>Very High</td></tr>
+    <tr><td>—</td><td>—</td><td>Verifiable certificates improve learner employability</td><td>High</td></tr>
+    <tr><td>—</td><td>—</td><td>Scalable to more courses and thousands of learners</td><td>High</td></tr>
+  </table>
+  <p>The system delivers substantial benefits relative to its low development cost. The primary value is the ability to reach youth learners anywhere, reduce administrative overhead, and provide portable, verifiable digital credentials that improve learner employability and recognise their digital achievements.</p>
+
+  <h2>1h. Project Plan — Gantt Chart</h2>
+  <p class="table-caption">Table 1.3 — Gantt Chart</p>
+  <table>
+    <tr><th>Task</th><th>Wk 1</th><th>Wk 2</th><th>Wk 3</th><th>Wk 4</th><th>Wk 5</th><th>Wk 6</th><th>Wk 7</th><th>Wk 8</th></tr>
+    <tr><td>Requirements gathering and analysis</td><td>✓</td><td>✓</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>System design (ERD, DFD, UI wireframes)</td><td></td><td>✓</td><td>✓</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>Backend development (API, database)</td><td></td><td></td><td>✓</td><td>✓</td><td>✓</td><td></td><td></td><td></td></tr>
+    <tr><td>Frontend development (React, UI)</td><td></td><td></td><td></td><td>✓</td><td>✓</td><td>✓</td><td></td><td></td></tr>
+    <tr><td>Integration, testing, and bug fixing</td><td></td><td></td><td></td><td></td><td></td><td>✓</td><td>✓</td><td></td></tr>
+    <tr><td>Documentation and report writing</td><td></td><td></td><td></td><td></td><td></td><td></td><td>✓</td><td>✓</td></tr>
+    <tr><td>Final review and submission</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>✓</td></tr>
+  </table>
+
+  <h2>1i. Conclusion</h2>
+  <p>This chapter introduced the YouthSkills Program and established its purpose as an open, web-based digital skills platform accessible to any youth regardless of location. It described the limitations of the existing manual training approach, outlined the system's objectives, provided a budget and cost-benefit analysis, and presented a project plan. The following chapters describe the literature review, requirements specification, system design, testing, and implementation in detail.</p>
+</div>
+
+<!-- ═══════════════════════════════════ CHAPTER 2 ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">Chapter 2 — Literature Review</p>
+
+  <h2>2.1 Introduction</h2>
+  <p>This chapter reviews two existing systems that are similar in purpose and functionality to the YouthSkills Program. The review examines their features, target users, strengths, and limitations, and draws comparisons that justify the design decisions made in this project. All sources are cited in the References section.</p>
+
+  <h2>2.2 System 1 — Moodle Learning Management System</h2>
+  <h3>Overview</h3>
+  <p>Moodle is a free, open-source Learning Management System first released in 2002 by Martin Dougiamas. It is used by universities, colleges, government institutions, and NGOs worldwide. In Zambia, Moodle is used by the University of Zambia (UNZA) and other institutions for online course delivery. The name Moodle stands for Modular Object-Oriented Dynamic Learning Environment (Moodle, n.d.).</p>
+  <h3>Key Features</h3>
+  <ul>
+    <li>Course creation with text, video, file, and forum resources</li>
+    <li>Multiple assessment types: quizzes, assignments, peer review, and workshops</li>
+    <li>Learner progress tracking and grade book management</li>
+    <li>Multiple roles: student, teacher, administrator, course creator, and manager</li>
+    <li>Certificate plugins available as extensions</li>
+    <li>Email notifications for key events</li>
+    <li>Multi-language support and mobile app availability</li>
+  </ul>
+  <h3>Organisations Using the System</h3>
+  <p>Moodle is used by over 400 million users across more than 240 countries. Notable Zambian users include the University of Zambia and various NGOs delivering remote education programmes (Moodle, n.d.).</p>
+  <h3>Comparison with YouthSkills Program</h3>
+  <table>
+    <tr><th>Feature</th><th>Moodle</th><th>YouthSkills Program</th></tr>
+    <tr><td>Course delivery</td><td>Yes — highly configurable</td><td>Yes — structured, fixed curriculum</td></tr>
+    <tr><td>Quizzes</td><td>Yes — many types</td><td>Yes — multiple choice, 60% pass mark</td></tr>
+    <tr><td>Assignment submission</td><td>Yes — text and file</td><td>Yes — text submission</td></tr>
+    <tr><td>Certificates</td><td>Via third-party plugin</td><td>Built-in with payment workflow</td></tr>
+    <tr><td>NRC identity validation</td><td>No</td><td>Yes — Zambian identity required</td></tr>
+    <tr><td>Mobile money payment</td><td>No</td><td>Yes — 2,000 ZMW, admin approval</td></tr>
+    <tr><td>Open to any youth</td><td>Depends on institution</td><td>Yes — open registration for all youth</td></tr>
+    <tr><td>Deployment complexity</td><td>High — PHP, MySQL, server</td><td>Low — Node.js, SQLite</td></tr>
+    <tr><td>Cost</td><td>Free but requires hosting infrastructure</td><td>Free, locally deployable</td></tr>
+  </table>
+  <h3>Assessment</h3>
+  <p>Moodle is a mature, feature-rich system well suited to large educational institutions with technical infrastructure. However, its complexity and dependency on PHP server environments make it difficult to deploy rapidly for a community programme. It lacks NRC validation and mobile money payment workflows specific to the Zambian context. YouthSkills Program provides a lightweight, purpose-built alternative that covers the specific workflow needed for the Youth Empowerment Programme.</p>
+
+  <h2>2.3 System 2 — Google Classroom</h2>
+  <h3>Overview</h3>
+  <p>Google Classroom is a free web service developed by Google and launched in 2014 as part of Google Workspace for Education. It is used extensively in secondary schools, colleges, and NGOs to distribute assignments, collect submissions, provide grades, and communicate with learners. Several schools in Lusaka use Google Classroom for blended and remote learning (Google, n.d.).</p>
+  <h3>Key Features</h3>
+  <ul>
+    <li>Assignment creation and submission with due dates</li>
+    <li>Grading and written feedback through a built-in grade book</li>
+    <li>Class announcements and direct messaging</li>
+    <li>Integration with Google Drive, Docs, Slides, and Meet</li>
+    <li>Basic learner progress overview for teachers</li>
+    <li>Mobile application available for Android and iOS</li>
+  </ul>
+  <h3>Organisations Using the System</h3>
+  <p>Google Classroom is used by more than 170 million students and educators worldwide (Google, n.d.). In Zambia it is used by various schools and learning institutions for assignment management and communication.</p>
+  <h3>Comparison with YouthSkills Program</h3>
+  <table>
+    <tr><th>Feature</th><th>Google Classroom</th><th>YouthSkills Program</th></tr>
+    <tr><td>Course structure</td><td>Streams and topics</td><td>Courses, modules, quizzes, assignments</td></tr>
+    <tr><td>Quizzes with automatic scoring</td><td>Via Google Forms only</td><td>Built-in, immediate score feedback</td></tr>
+    <tr><td>Certificates</td><td>Not available</td><td>Built-in, PDF download with NRC</td></tr>
+    <tr><td>Progress tracking</td><td>Basic — assignment completion only</td><td>Module and course-level progress bars</td></tr>
+    <tr><td>NRC identity requirement</td><td>No</td><td>Yes</td></tr>
+    <tr><td>Payment workflow</td><td>No</td><td>Yes — mobile money proof and approval</td></tr>
+    <tr><td>Internet dependency</td><td>Requires Google account and constant internet</td><td>Can be run locally on a laptop</td></tr>
+    <tr><td>Open to any youth</td><td>Requires Google account</td><td>Yes — open email registration</td></tr>
+    <tr><td>Admin portal</td><td>Basic teacher view</td><td>Six-tab management portal</td></tr>
+  </table>
+  <h3>Assessment</h3>
+  <p>Google Classroom is easy to use and widely accessible but requires a Google account and constant internet connectivity. It does not provide built-in quiz scoring, certificate issuance, or a payment workflow. It is primarily a communication and assignment-sharing tool rather than a self-contained learning management system. The YouthSkills Program provides a more complete end-to-end experience that does not depend on third-party services.</p>
+
+  <h2>2.4 Summary</h2>
+  <p>Both Moodle and Google Classroom demonstrate that web-based learning platforms can improve the delivery of education and reduce manual administrative work. However, neither addresses the specific requirements of the YouthSkills Programme: open access for any youth regardless of institution, NRC-based identity verification, mobile money payment proof submission, lightweight local deployment, and a built-in certificate issuance and administration workflow. The YouthSkills Program fills this gap by combining the core functions of a learning management system with features specifically designed for the Zambian youth empowerment context.</p>
+</div>
+
+<!-- ═══════════════════════════════════ CHAPTER 3 ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">Chapter 3 — Requirements Specification / Success Criteria</p>
+
+  <h2>3.1 Introduction</h2>
+  <p>This chapter describes the functional and non-functional requirements of the YouthSkills Program, the user roles and responsibilities, the fact-finding methods used, and the success criteria against which the system is evaluated.</p>
+
+  <h2>3.2 Fact-Finding Methods</h2>
+  <p>The following methods were used to gather requirements for the system:</p>
+  <h3>a) Interviews</h3>
+  <p>Informal interviews were conducted with prospective youth learners and a programme coordinator to understand what features would be most useful, what barriers existed to accessing training, and what information the system needed to capture about each learner. Interviews revealed that learners wanted immediate feedback on quizzes, the ability to study at their own pace from home, and a portable digital certificate they could share with employers.</p>
+  <h3>b) Observation</h3>
+  <p>The manual process of registering learners, distributing materials, recording attendance, and issuing certificates was observed. This identified specific inefficiencies: paper registers were difficult to search, certificates had no verification mechanism, and there was no way for facilitators to know which learner was progressing and which had stalled.</p>
+  <h3>c) Document Analysis</h3>
+  <p>Existing programme materials — course outlines, attendance registers, and sample certificates — were reviewed. This informed the design of the course and module structure, the fields required on the certificate, and the layout of the PDF template.</p>
+
+  <h2>3.3 Functional Requirements</h2>
+  <p class="table-caption">Table 3.1 — Functional Requirements</p>
+  <table>
+    <tr><th>ID</th><th>Requirement</th><th>Status</th></tr>
+    <tr><td>FR-01</td><td>The system shall allow any youth to register with name, NRC number, email, and password from any location with internet access</td><td>Implemented</td></tr>
+    <tr><td>FR-02</td><td>The system shall validate the NRC format (123456/78/9) and reject duplicate NRC numbers</td><td>Implemented</td></tr>
+    <tr><td>FR-03</td><td>The system shall allow registered users to sign in and access protected course content</td><td>Implemented</td></tr>
+    <tr><td>FR-04</td><td>The system shall allow an authenticated user to view and update their personal profile including NRC</td><td>Implemented</td></tr>
+    <tr><td>FR-05</td><td>The system shall display published courses with category, level, and keyword search filters</td><td>Implemented</td></tr>
+    <tr><td>FR-06</td><td>The system shall allow a youth to enrol once in any published course</td><td>Implemented</td></tr>
+    <tr><td>FR-07</td><td>The system shall display module content to enrolled learners</td><td>Implemented</td></tr>
+    <tr><td>FR-08</td><td>The system shall allow a youth to submit quiz answers and receive an immediate score with explanations</td><td>Implemented</td></tr>
+    <tr><td>FR-09</td><td>The system shall require a minimum quiz score of 60% to complete a module</td><td>Implemented</td></tr>
+    <tr><td>FR-10</td><td>The system shall record module completion and calculate overall course progress percentage</td><td>Implemented</td></tr>
+    <tr><td>FR-11</td><td>The system shall allow a youth to submit a text assignment for each course</td><td>Implemented</td></tr>
+    <tr><td>FR-12</td><td>The system shall allow an administrator to grade assignments and provide written feedback</td><td>Implemented</td></tr>
+    <tr><td>FR-13</td><td>The system shall automatically issue a certificate when all course modules are completed</td><td>Implemented</td></tr>
+    <tr><td>FR-14</td><td>The system shall allow a youth to submit mobile money payment proof for certificate download</td><td>Implemented</td></tr>
+    <tr><td>FR-15</td><td>The system shall allow an administrator to approve or reject payment proof with an optional reason</td><td>Implemented</td></tr>
+    <tr><td>FR-16</td><td>The system shall unlock the certificate PDF download only after payment approval</td><td>Implemented</td></tr>
+    <tr><td>FR-17</td><td>The system shall send an email notification to the administrator when a learner submits payment proof</td><td>Implemented</td></tr>
+    <tr><td>FR-18</td><td>The system shall provide a public endpoint to verify any certificate by its unique certificate number</td><td>Implemented</td></tr>
+    <tr><td>FR-19</td><td>The system shall provide an admin dashboard with tabs for youth list, completions, modules, assignments, and payments</td><td>Implemented</td></tr>
+    <tr><td>FR-20</td><td>The system shall support password change and token-based password reset</td><td>Implemented</td></tr>
+  </table>
+
+  <h2>3.4 Non-Functional Requirements</h2>
+  <p class="table-caption">Table 3.2 — Non-Functional Requirements</p>
+  <table>
+    <tr><th>ID</th><th>Requirement</th><th>Status</th></tr>
+    <tr><td>NFR-01</td><td>The system shall hash all passwords using bcryptjs before storing them; plaintext passwords must never be stored</td><td>Implemented</td></tr>
+    <tr><td>NFR-02</td><td>The system shall use JWT tokens to authenticate all API requests</td><td>Implemented</td></tr>
+    <tr><td>NFR-03</td><td>The system shall respond to page navigation within 3 seconds on a standard internet connection</td><td>Met</td></tr>
+    <tr><td>NFR-04</td><td>The system shall be accessible from any modern browser (Chrome, Firefox, Edge) without plugins</td><td>Met</td></tr>
+    <tr><td>NFR-05</td><td>The user interface shall support both light and dark display modes with the preference saved locally</td><td>Implemented</td></tr>
+    <tr><td>NFR-06</td><td>The system shall validate all form inputs on both the frontend and backend independently</td><td>Implemented</td></tr>
+    <tr><td>NFR-07</td><td>The system shall use parameterised SQL queries to prevent SQL injection attacks</td><td>Implemented</td></tr>
+    <tr><td>NFR-08</td><td>The system shall restrict all admin-only functions to accounts holding the admin role</td><td>Implemented</td></tr>
+    <tr><td>NFR-09</td><td>The system shall produce a responsive layout suitable for tablet and desktop browsers</td><td>Implemented</td></tr>
+    <tr><td>NFR-10</td><td>The system source code shall be version-controlled using Git and hosted on GitHub</td><td>Implemented</td></tr>
+  </table>
+
+  <h2>3.5 User Roles and Responsibilities</h2>
+  <p class="table-caption">Table 3.3 — User Roles and Responsibilities</p>
+  <table>
+    <tr><th>Role</th><th>Access and Responsibilities</th></tr>
+    <tr><td><strong>Youth Learner</strong></td><td>Any youth, anywhere, who registers on the platform. Can enrol in courses, study modules, take quizzes, submit assignments, view progress, submit certificate payment proof, and download approved certificates.</td></tr>
+    <tr><td><strong>Administrator</strong></td><td>Manages the platform. Can view all registered youth, track completions, grade assignment submissions, approve or reject payment proofs, and browse course modules. Receives email notifications on payment submissions.</td></tr>
+    <tr><td><strong>Public Visitor</strong></td><td>Any member of the public. Can view the landing page and verify any certificate using its certificate number — no account required.</td></tr>
+  </table>
+
+  <h2>3.6 Success Criteria</h2>
+  <p>The system will be considered successful if all of the following criteria are met:</p>
+  <ol>
+    <li>Any youth anywhere can register, enrol in a course, complete all modules, and earn a certificate without needing to be part of any institution.</li>
+    <li>The administrator can view all submissions, grade them, and approve payments from the dashboard without needing to use any external tool.</li>
+    <li>Certificates can be publicly verified using only the certificate number, with no login required.</li>
+    <li>The administrator receives an email notification when payment proof is submitted.</li>
+    <li>All form validation prevents invalid data from being saved to the database.</li>
+    <li>The system operates correctly on a single machine running two terminals (backend and frontend).</li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════ CHAPTER 4 ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">Chapter 4 — Design Specification</p>
+
+  <h2>4.1 Data Design</h2>
+  <h3>4.1.1 Entity-Relationship Diagram</h3>
+  <p>The database comprises twelve tables. The ERD below shows all entities, attributes, primary keys, foreign keys, and the cardinality of each relationship.</p>
+
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.4 — Entity-Relationship Diagram</p>
+    <p class="instruction">Render the ERD from YouthSkills-Program-Diagrams.md (Figure 3.4) using mermaid.live and paste the image here, OR draw by hand and scan.</p>
+  </div>
+  <p class="figure-caption">Figure 4.4: Entity-Relationship Diagram showing all 12 tables, foreign key relationships, and cardinalities</p>
+
+  <h3>4.1.2 Database Tables</h3>
+  <p class="table-caption">Table 4.1 — Database Tables and Purpose</p>
+  <table>
+    <tr><th>Table</th><th>Primary Key</th><th>Purpose</th></tr>
+    <tr><td>users</td><td>id (UUID)</td><td>Learner and admin accounts; stores NRC, hashed password, profile fields</td></tr>
+    <tr><td>courses</td><td>id (UUID)</td><td>Course catalogue with title, category, level, instructor</td></tr>
+    <tr><td>modules</td><td>id (UUID)</td><td>Learning units belonging to a course, ordered by order_index</td></tr>
+    <tr><td>quizzes</td><td>id (UUID)</td><td>Multiple-choice quiz questions per module with correct answer index</td></tr>
+    <tr><td>enrollments</td><td>id (UUID)</td><td>Records which user is enrolled in which course</td></tr>
+    <tr><td>module_progress</td><td>id (UUID)</td><td>Per-module completion flag, quiz score, and completion timestamp</td></tr>
+    <tr><td>assignments</td><td>id (UUID)</td><td>Final course assignment task with title, description, and instructions</td></tr>
+    <tr><td>assignment_submissions</td><td>id (UUID)</td><td>Learner text responses; stores grade, feedback, and status</td></tr>
+    <tr><td>certificates</td><td>id (UUID)</td><td>Issued on course completion; unique certificate number</td></tr>
+    <tr><td>certificate_payments</td><td>id (UUID)</td><td>Payment proof records; status: pending, approved, or rejected</td></tr>
+    <tr><td>notifications</td><td>id (UUID)</td><td>In-app messages for users (grading, payment, welcome)</td></tr>
+    <tr><td>password_resets</td><td>id (UUID)</td><td>Token-based password reset records with expiry</td></tr>
+  </table>
+
+  <h3>4.1.3 Data Dictionary — Users Table</h3>
+  <p class="table-caption">Table 4.2 — Users Table Data Dictionary</p>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+    <tr><td>id</td><td>TEXT</td><td>PRIMARY KEY</td><td>UUID assigned at registration</td></tr>
+    <tr><td>name</td><td>TEXT</td><td>NOT NULL</td><td>Full name; letters and spaces only</td></tr>
+    <tr><td>email</td><td>TEXT</td><td>UNIQUE, NOT NULL</td><td>Sign-in identifier; stored in lowercase</td></tr>
+    <tr><td>password</td><td>TEXT</td><td>NOT NULL</td><td>bcryptjs hash (cost factor 12); never returned to client</td></tr>
+    <tr><td>role</td><td>TEXT</td><td>DEFAULT 'youth'</td><td>Either 'youth' or 'admin'</td></tr>
+    <tr><td>nrc</td><td>TEXT</td><td>UNIQUE</td><td>Zambian NRC; format 123456/78/9; required for youth</td></tr>
+    <tr><td>avatar</td><td>TEXT</td><td>NULL</td><td>Optional profile image URL</td></tr>
+    <tr><td>bio</td><td>TEXT</td><td>NULL</td><td>Short personal biography</td></tr>
+    <tr><td>location</td><td>TEXT</td><td>NULL</td><td>City and country (learner-entered)</td></tr>
+    <tr><td>phone</td><td>TEXT</td><td>NULL</td><td>Mobile phone number</td></tr>
+    <tr><td>skills</td><td>TEXT</td><td>DEFAULT '[]'</td><td>JSON array of skill strings added by learner</td></tr>
+    <tr><td>created_at</td><td>DATETIME</td><td>DEFAULT NOW</td><td>Account creation timestamp</td></tr>
+    <tr><td>updated_at</td><td>DATETIME</td><td>DEFAULT NOW</td><td>Last profile update timestamp</td></tr>
+  </table>
+
+  <h3>4.1.4 Relationships and Cardinalities</h3>
+  <ul>
+    <li>One COURSE has many MODULES (1:N) — CASCADE DELETE</li>
+    <li>One MODULE has many QUIZZES (1:N) — CASCADE DELETE</li>
+    <li>A YOUTH can enrol in many COURSES; a COURSE can have many YOUTHS enrolled (M:N — resolved by ENROLLMENTS)</li>
+    <li>A USER has many MODULE_PROGRESS records; a MODULE can be completed by many USERS (M:N — resolved)</li>
+    <li>One COURSE has one ASSIGNMENT; the ASSIGNMENT receives many SUBMISSIONS from many USERS (M:N — resolved by ASSIGNMENT_SUBMISSIONS)</li>
+    <li>A USER earns many CERTIFICATES; a COURSE certifies many USERS (M:N — resolved by CERTIFICATES)</li>
+    <li>One CERTIFICATE has at most one CERTIFICATE_PAYMENT proof record (1:1)</li>
+    <li>One USER receives many NOTIFICATIONS (1:N)</li>
+    <li>One USER can request many PASSWORD_RESETS (1:N)</li>
+  </ul>
+
+  <h2>4.2 Application Design</h2>
+  <h3>4.2.1 System Architecture</h3>
+  <p>The YouthSkills Program follows a three-tier client/server architecture:</p>
+  <ol>
+    <li><strong>Presentation Tier</strong> — React 18 single-page application served by Vite on port 3000. Handles all UI rendering, routing, and user interaction.</li>
+    <li><strong>Application Tier</strong> — Node.js and Express REST API on port 5000. Contains all business logic, authentication, authorisation, and data access.</li>
+    <li><strong>Data Tier</strong> — SQLite database stored as a local file (database.sqlite). Accessed exclusively by the API layer.</li>
+  </ol>
+
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.1 — System Architecture Diagram</p>
+    <p class="instruction">Render Figure 3.1 from YouthSkills-Program-Diagrams.md using mermaid.live and paste here.</p>
+  </div>
+  <p class="figure-caption">Figure 4.1: Three-tier system architecture showing browser, Vite proxy, Express API, and SQLite database</p>
+
+  <h3>4.2.2 Use Case Diagram</h3>
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.2 — Use Case Diagram</p>
+    <p class="instruction">Render Figure 3.2 from YouthSkills-Program-Diagrams.md using mermaid.live and paste here.</p>
+  </div>
+  <p class="figure-caption">Figure 4.2: Use case diagram showing Youth Learner, Administrator, and Public Visitor use cases</p>
+
+  <h3>4.2.3 Data Flow Diagram — Context Diagram (Level 0)</h3>
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.3 — Context Diagram (Level 0 DFD)</p>
+    <p class="instruction">Render Figure 3.3 from YouthSkills-Program-Diagrams.md using mermaid.live and paste here.</p>
+  </div>
+  <p class="figure-caption">Figure 4.3: Level 0 DFD showing data flows between the system, youth learner, administrator, and public verifier</p>
+
+  <h3>4.2.4 API Endpoint Summary</h3>
+  <p class="table-caption">Table 4.3 — API Endpoint Summary (key routes)</p>
+  <table>
+    <tr><th>Method</th><th>Endpoint</th><th>Access</th><th>Purpose</th></tr>
+    <tr><td>POST</td><td>/api/auth/register</td><td>Public</td><td>Create youth account with NRC validation</td></tr>
+    <tr><td>POST</td><td>/api/auth/login</td><td>Public</td><td>Authenticate and return JWT token</td></tr>
+    <tr><td>GET</td><td>/api/courses</td><td>Authenticated</td><td>List published courses with filters</td></tr>
+    <tr><td>POST</td><td>/api/courses/:id/enroll</td><td>Youth</td><td>Enrol in a course</td></tr>
+    <tr><td>POST</td><td>/api/progress/quiz/:moduleId/submit</td><td>Youth</td><td>Submit quiz answers; receive score</td></tr>
+    <tr><td>POST</td><td>/api/progress/module/:moduleId/complete</td><td>Youth</td><td>Mark module complete; issue certificate if all done</td></tr>
+    <tr><td>POST</td><td>/api/assignments/:id/submit</td><td>Youth</td><td>Submit assignment text response</td></tr>
+    <tr><td>GET</td><td>/api/certificates/my</td><td>Authenticated</td><td>View own earned certificates</td></tr>
+    <tr><td>GET</td><td>/api/certificates/verify/:certNumber</td><td>Public</td><td>Verify certificate by number</td></tr>
+    <tr><td>POST</td><td>/api/payments/certificate/:certId/submit</td><td>Youth</td><td>Submit mobile money payment proof</td></tr>
+    <tr><td>PUT</td><td>/api/payments/:paymentId/approve</td><td>Admin</td><td>Approve payment; unlock PDF download</td></tr>
+    <tr><td>PUT</td><td>/api/assignments/submission/:id/grade</td><td>Admin</td><td>Grade submission and send feedback</td></tr>
+    <tr><td>GET</td><td>/api/dashboard/admin</td><td>Admin</td><td>Admin stats, pending counts, completions</td></tr>
+    <tr><td>GET</td><td>/api/dashboard/youth</td><td>Youth</td><td>Learner stats and recent courses with progress</td></tr>
+  </table>
+
+  <h2>4.3 User Interface Design</h2>
+  <h3>4.3.1 Design Principles</h3>
+  <p>The user interface was designed following five core principles:</p>
+  <ol>
+    <li><strong>Consistency</strong> — the same layout, colour scheme, typography, and component styles are used on every page.</li>
+    <li><strong>Simplicity</strong> — only the controls relevant to the current action are visible at any given time.</li>
+    <li><strong>Feedback</strong> — all user actions trigger toast notifications confirming success or reporting errors.</li>
+    <li><strong>Accessibility</strong> — semantic HTML elements, labelled form inputs, and sufficient colour contrast are used throughout.</li>
+    <li><strong>Responsiveness</strong> — the layout adapts correctly to tablet and desktop screen sizes using Tailwind CSS utility classes.</li>
+  </ol>
+
+  <h3>4.3.2 Key Screens with Screenshots</h3>
+
+  <h4>Landing Page</h4>
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.6 — Landing Page</p>
+    <p class="instruction">Open http://localhost:3000 in your browser, take a screenshot (Win + Shift + S), and paste the image here in Word.</p>
+  </div>
+  <p class="figure-caption">Figure 4.6: The YouthSkills Program landing page showing the hero section, statistics bar, and course features. Open to any youth to register for free.</p>
+
+  <h4>Youth Registration Page</h4>
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.7 — Registration Page</p>
+    <p class="instruction">Open http://localhost:3000/register, take a screenshot, and paste here. The form shows the NRC field as a required field.</p>
+  </div>
+  <p class="figure-caption">Figure 4.7: The registration form requiring Full Name, NRC Number, Email Address, Location, Phone, Password, and Confirm Password. Any youth anywhere can register.</p>
+
+  <h4>Youth Login Page</h4>
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.8 — Youth Login Page</p>
+    <p class="instruction">Open http://localhost:3000/login, take a screenshot, and paste here.</p>
+  </div>
+  <p class="figure-caption">Figure 4.8: The youth learner sign-in page with email, password, Remember Me option, and Forgot Password link.</p>
+
+  <h4>Admin Login Page</h4>
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.9 — Admin Login Page</p>
+    <p class="instruction">Open http://localhost:3000/admin/login, take a screenshot, and paste here.</p>
+  </div>
+  <p class="figure-caption">Figure 4.9: The administrator-only login portal. Admin credentials: admin@youthskills.com / Allan7034.</p>
+
+  <h4>Youth Dashboard</h4>
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.10 — Youth Dashboard</p>
+    <p class="instruction">Log in as a youth learner who has enrolled in at least one course, take a screenshot of the dashboard, and paste here.</p>
+  </div>
+  <p class="figure-caption">Figure 4.10: The youth learner dashboard showing enrolled courses with progress bars, certificates earned, and completion rate statistics.</p>
+
+  <h4>Admin Dashboard</h4>
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.11 — Admin Dashboard</p>
+    <p class="instruction">Log in as admin at http://localhost:3000/admin/login, take a screenshot of the dashboard showing the six tabs, and paste here.</p>
+  </div>
+  <p class="figure-caption">Figure 4.11: The administrator portal showing the Overview tab with five clickable stat cards for Users, Courses, Certificates, Pending Assignments, and Pending Payments.</p>
+
+  <h4>Course Detail and Module Page</h4>
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.12 — Course Detail and Module Page</p>
+    <p class="instruction">Open any enrolled course, expand a module, and take a screenshot showing the module content and quiz button. Paste here.</p>
+  </div>
+  <p class="figure-caption">Figure 4.12: The course detail page showing module accordion panels with content, quiz button, and progress bar.</p>
+
+  <h4>Certificates Page</h4>
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.13 — Certificates Page</p>
+    <p class="instruction">Navigate to /certificates as a youth learner with at least one earned certificate. Take a screenshot and paste here.</p>
+  </div>
+  <p class="figure-caption">Figure 4.13: The certificates page showing a certificate card with the payment panel displaying mobile money number 0970 342 178 and the reference input field.</p>
+
+  <h3>4.3.3 Colour Scheme and Typography</h3>
+  <ul>
+    <li><strong>Primary colour:</strong> Blue (#2563eb) — buttons, active navigation, accents</li>
+    <li><strong>Certificate colour:</strong> Light green (#16a34a) — used exclusively on the certificate PDF</li>
+    <li><strong>Background:</strong> Slate-50 (light mode), Slate-900 (dark mode)</li>
+    <li><strong>Font:</strong> Inter (Google Fonts), with system-ui and serif fallbacks</li>
+    <li><strong>Dark mode:</strong> Toggled by user; preference stored in localStorage</li>
+  </ul>
+
+  <h2>4.4 Security Design</h2>
+  <h3>4.4.1 Authentication</h3>
+  <p>All passwords are hashed using bcryptjs with a cost factor of 12 before storage. Plaintext passwords are never stored or returned through any API response. JWT tokens are signed using a secret key stored in the backend environment configuration file (.env). Tokens expire after 7 days. The authenticate middleware verifies every token on protected routes, reloads the user from the database, and attaches the user object to the request context.</p>
+
+  <h3>4.4.2 Authorisation</h3>
+  <p>Role-based access control is enforced on every protected route. The authorize middleware checks the loaded user's role against the permitted roles. Admin-only routes — grading, payment approval, user listing, dashboard statistics — return HTTP 403 Forbidden if accessed by non-admin accounts. The regular youth login page actively blocks admin accounts and redirects them to the dedicated admin login URL, separating the two login flows.</p>
+
+  <h3>4.4.3 Input Validation and SQL Injection Prevention</h3>
+  <p>All form inputs are validated on the frontend using regular expressions and required-field checks, providing inline error messages before any API request is made. The same validation rules are applied independently on the backend before any database write occurs. This dual-layer approach prevents invalid data from entering the system even if the frontend is bypassed. All database queries use parameterised statements provided by the sqlite package, which prevents SQL injection attacks by treating all user-supplied values as data rather than executable SQL.</p>
+
+  <h3>4.4.4 Data Protection</h3>
+  <p>The backend .env file containing the JWT secret, Gmail credentials, and other sensitive configuration values is excluded from version control using .gitignore. The SQLite database file is stored locally and is not exposed through any API endpoint. The CORS policy on the Express server restricts browser requests to the configured frontend origin only, preventing requests from unauthorised domains.</p>
+
+  <h3>4.4.5 Authentication Flow</h3>
+  <div class="screenshot-placeholder">
+    <p class="label">Figure 4.5 — Authentication Flow</p>
+    <p class="instruction">Render Figure 3.5 from YouthSkills-Program-Diagrams.md using mermaid.live and paste here.</p>
+  </div>
+  <p class="figure-caption">Figure 4.5: Authentication flow showing credential submission, bcryptjs comparison, JWT signing, token storage, and role-based route protection</p>
+</div>
+
+<!-- ═══════════════════════════════════ CHAPTER 5 ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">Chapter 5 — Testing</p>
+
+  <h2>5.1 Introduction</h2>
+  <p>This chapter presents the test data, test plan, and test results for the YouthSkills Program. Testing was conducted manually by the developer on a local Windows 11 machine using Google Chrome. Both the backend (port 5000) and frontend (port 3000) servers were running during all tests. The database was seeded with test data before testing began.</p>
+
+  <h2>5.2 Test Environment</h2>
+  <ul>
+    <li><strong>Operating System:</strong> Windows 11</li>
+    <li><strong>Browser:</strong> Google Chrome (latest version)</li>
+    <li><strong>Backend URL:</strong> http://localhost:5000</li>
+    <li><strong>Frontend URL:</strong> http://localhost:3000</li>
+    <li><strong>Database:</strong> SQLite (local file — database.sqlite)</li>
+    <li><strong>Admin test account:</strong> admin@youthskills.com / Allan7034</li>
+    <li><strong>Youth test account:</strong> Registered during testing with valid NRC</li>
+  </ul>
+
+  <h2>5.3 Test Data</h2>
+  <ul>
+    <li><strong>Valid registration data:</strong> Name: Test User, NRC: 123456/78/1, Email: testuser@gmail.com, Password: Test1234</li>
+    <li><strong>Invalid NRC:</strong> 99999 (incorrect format — should be rejected)</li>
+    <li><strong>Invalid email:</strong> notanemail (no @ sign — should be rejected)</li>
+    <li><strong>Duplicate email:</strong> admin@youthskills.com (already registered — should be rejected)</li>
+    <li><strong>Quiz answers:</strong> Correct and incorrect combinations submitted to verify pass/fail scoring</li>
+    <li><strong>Assignment text:</strong> A 50-character text submission to test the submit workflow</li>
+    <li><strong>Short assignment text:</strong> "Too short" (under 20 characters — should be rejected)</li>
+    <li><strong>Payment reference:</strong> TXN-TEST-2026-001 (mock mobile money reference)</li>
+  </ul>
+
+  <h2>5.4 Test Plan</h2>
+  <p class="table-caption">Table 5.1 — Test Plan</p>
+  <table>
+    <tr><th>ID</th><th>Module</th><th>Description</th><th>Input</th><th>Expected Result</th></tr>
+    <tr><td>T-01</td><td>Registration</td><td>Register with all valid data including NRC</td><td>Valid name, NRC, email, password</td><td>Account created; redirected to dashboard</td></tr>
+    <tr><td>T-02</td><td>Registration</td><td>Register with invalid NRC format</td><td>NRC: 99999</td><td>Error: Invalid NRC format</td></tr>
+    <tr><td>T-03</td><td>Registration</td><td>Register with duplicate email address</td><td>Existing email</td><td>Error: Email already registered</td></tr>
+    <tr><td>T-04</td><td>Registration</td><td>Register with duplicate NRC number</td><td>Existing NRC</td><td>Error: NRC already registered</td></tr>
+    <tr><td>T-05</td><td>Registration</td><td>Leave email field empty</td><td>Empty email</td><td>Error: Email address is required</td></tr>
+    <tr><td>T-06</td><td>Login</td><td>Sign in with correct credentials</td><td>Valid email and password</td><td>JWT issued; dashboard loaded</td></tr>
+    <tr><td>T-07</td><td>Login</td><td>Sign in with wrong password</td><td>Valid email, wrong password</td><td>Error: Invalid email or password</td></tr>
+    <tr><td>T-08</td><td>Login</td><td>Admin signs in via regular youth login</td><td>Admin credentials on /login</td><td>Redirected to /admin/login</td></tr>
+    <tr><td>T-09</td><td>Courses</td><td>Browse course catalogue</td><td>Authenticated youth</td><td>Courses displayed with filters working</td></tr>
+    <tr><td>T-10</td><td>Enrolment</td><td>Enrol in a course</td><td>Click Enrol Now</td><td>Enrolment saved; modules unlock</td></tr>
+    <tr><td>T-11</td><td>Quiz</td><td>Submit quiz with score at or above 60%</td><td>Mostly correct answers</td><td>Module marked complete; progress updated</td></tr>
+    <tr><td>T-12</td><td>Quiz</td><td>Submit quiz with score below 60%</td><td>Mostly incorrect answers</td><td>Fail message shown; Retry Quiz button appears</td></tr>
+    <tr><td>T-13</td><td>Assignment</td><td>Submit valid assignment text</td><td>50-character text</td><td>Status: Awaiting Grading</td></tr>
+    <tr><td>T-14</td><td>Assignment</td><td>Submit assignment with fewer than 20 characters</td><td>9-character text</td><td>Error: Submission must be at least 20 characters</td></tr>
+    <tr><td>T-15</td><td>Certificate</td><td>Complete all 3 modules in a course</td><td>Pass all 3 quizzes</td><td>Certificate issued; redirected to Certificates page</td></tr>
+    <tr><td>T-16</td><td>Payment</td><td>Submit payment proof with valid reference</td><td>Valid text reference</td><td>Status: Pending; admin notified in-app and by email</td></tr>
+    <tr><td>T-17</td><td>Payment</td><td>Admin approves payment</td><td>Click Approve on Payments tab</td><td>PDF download button unlocks for learner</td></tr>
+    <tr><td>T-18</td><td>Payment</td><td>Admin rejects payment with reason</td><td>Enter reason; click Reject</td><td>Learner notified; resubmit form reopens</td></tr>
+    <tr><td>T-19</td><td>Certificate</td><td>Download certificate PDF after approval</td><td>Click PDF button</td><td>PDF generated with green design, NRC, and logo</td></tr>
+    <tr><td>T-20</td><td>Verification</td><td>Verify a valid certificate publicly</td><td>Valid certificate number</td><td>Certificate holder name, course, and date displayed</td></tr>
+    <tr><td>T-21</td><td>Verification</td><td>Verify a non-existent certificate</td><td>Random string</td><td>Certificate not found message displayed</td></tr>
+    <tr><td>T-22</td><td>Admin</td><td>Grade an assignment submission</td><td>Enter grade 75, write feedback</td><td>Grade saved; learner notified with score and feedback</td></tr>
+    <tr><td>T-23</td><td>Admin</td><td>View Completions tab</td><td>Click Completions tab</td><td>Table of completed students with course and certificate number</td></tr>
+    <tr><td>T-24</td><td>Profile</td><td>Update profile including NRC</td><td>Valid updated NRC</td><td>Profile updated successfully</td></tr>
+    <tr><td>T-25</td><td>Dark Mode</td><td>Toggle dark/light mode</td><td>Click sun/moon icon</td><td>Theme switches; preference persists on browser refresh</td></tr>
+  </table>
+
+  <h2>5.5 Test Report</h2>
+  <p class="table-caption">Table 5.2 — Test Report</p>
+  <table>
+    <tr><th>ID</th><th>Result</th><th>Notes</th></tr>
+    <tr><td>T-01</td><td class="pass">PASS</td><td>Account created and dashboard loaded correctly</td></tr>
+    <tr><td>T-02</td><td class="pass">PASS</td><td>Inline error shown; form submission blocked</td></tr>
+    <tr><td>T-03</td><td class="pass">PASS</td><td>Backend returned HTTP 409; toast error displayed</td></tr>
+    <tr><td>T-04</td><td class="pass">PASS</td><td>Backend returned HTTP 409; toast error displayed</td></tr>
+    <tr><td>T-05</td><td class="pass">PASS</td><td>Inline error "Email address is required" displayed</td></tr>
+    <tr><td>T-06</td><td class="pass">PASS</td><td>JWT issued and stored; dashboard loaded</td></tr>
+    <tr><td>T-07</td><td class="pass">PASS</td><td>Error toast: Invalid email or password</td></tr>
+    <tr><td>T-08</td><td class="pass">PASS</td><td>Correctly redirected to /admin/login</td></tr>
+    <tr><td>T-09</td><td class="pass">PASS</td><td>Course cards displayed; category and level filters work</td></tr>
+    <tr><td>T-10</td><td class="pass">PASS</td><td>Modules unlocked; progress bar appeared</td></tr>
+    <tr><td>T-11</td><td class="pass">PASS</td><td>Module marked complete; progress percentage updated</td></tr>
+    <tr><td>T-12</td><td class="pass">PASS</td><td>Fail message displayed; Retry Quiz button shown</td></tr>
+    <tr><td>T-13</td><td class="pass">PASS</td><td>Awaiting Grading status displayed; textarea hidden</td></tr>
+    <tr><td>T-14</td><td class="pass">PASS</td><td>Error toast displayed; submission not saved</td></tr>
+    <tr><td>T-15</td><td class="pass">PASS</td><td>Certificate issued; auto-redirect to Certificates page</td></tr>
+    <tr><td>T-16</td><td class="pass">PASS</td><td>Pending status shown; admin in-app notification created</td></tr>
+    <tr><td>T-17</td><td class="pass">PASS</td><td>PDF button appeared; learner notification sent</td></tr>
+    <tr><td>T-18</td><td class="pass">PASS</td><td>Rejected status shown; learner notified with reason</td></tr>
+    <tr><td>T-19</td><td class="pass">PASS</td><td>PDF downloaded with green design, NRC, single logo</td></tr>
+    <tr><td>T-20</td><td class="pass">PASS</td><td>Certificate holder name, course, and date displayed</td></tr>
+    <tr><td>T-21</td><td class="pass">PASS</td><td>Not found message displayed on verify page</td></tr>
+    <tr><td>T-22</td><td class="pass">PASS</td><td>Grade saved; feedback shown to learner in course</td></tr>
+    <tr><td>T-23</td><td class="pass">PASS</td><td>Completions table showed student name, course, cert number</td></tr>
+    <tr><td>T-24</td><td class="pass">PASS</td><td>NRC updated and saved in profile</td></tr>
+    <tr><td>T-25</td><td class="pass">PASS</td><td>Dark mode toggled; preference persisted on refresh</td></tr>
+  </table>
+  <p><strong>Summary: All 25 test cases passed.</strong> No critical failures were identified during testing. The system behaved as specified across all functional areas.</p>
+</div>
+
+<!-- ═══════════════════════════════════ CHAPTER 6 ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">Chapter 6 — Implementation</p>
+
+  <h2>6.1 Introduction</h2>
+  <p>This chapter describes how the YouthSkills Program was implemented, the tools and technologies used, the challenges encountered during development, and suggestions for wider future deployment.</p>
+
+  <h2>6.2 How the System Was Implemented</h2>
+  <p>The YouthSkills Program was implemented as a locally hosted prototype running on a single Windows 11 development machine. The implementation followed a structured sequence of steps:</p>
+
+  <h3>Step 1 — Environment Setup</h3>
+  <p>Node.js LTS and npm were installed. Visual Studio Code was used as the integrated development environment. Git was configured for version control, with the repository hosted on GitHub at <em>https://github.com/allandabalidabz-arch/Youth-skills-platform</em>.</p>
+
+  <h3>Step 2 — Database Design and Backend API</h3>
+  <p>The SQLite database schema was designed first, covering all twelve tables with foreign keys and cascade rules. The Express backend was built with separate route files for each functional area (auth, users, courses, progress, assignments, certificates, payments, notifications, dashboard). JWT authentication middleware was implemented as shared middleware applied to all protected routes. Nodemailer was configured to send email notifications through Gmail SMTP when learners submit payment proof.</p>
+
+  <h3>Step 3 — Seed Data</h3>
+  <p>A seed script was written to populate the database with one administrator account, three complete courses, nine modules, nine quizzes, and three final assignments. The seed script is triggered automatically when the backend starts and detects an empty database, ensuring the system is ready for use immediately after installation.</p>
+
+  <h3>Step 4 — Frontend Development</h3>
+  <p>The React 18 frontend was built using Vite as the build and development tool and Tailwind CSS for styling. React Router v6 was used for client-side navigation with protected route wrappers that redirect unauthenticated users to the login page. Axios was configured with interceptors to attach the JWT token to every request and to redirect to the login page when a 401 Unauthorized response is received. All pages were built as functional components using React hooks.</p>
+
+  <h3>Step 5 — Integration and Testing</h3>
+  <p>The Vite development server was configured to proxy all /api requests to the Express backend on port 5000. This allowed seamless frontend-backend communication during development. Manual testing was conducted across all features following the test plan in Chapter 5. Issues found during testing were corrected before the final build.</p>
+
+  <h3>Step 6 — Documentation</h3>
+  <p>All documentation was written following the Evelyn Hone College final year project guidelines. The system was version-controlled throughout, with each major feature committed to GitHub with a descriptive message. The final codebase is publicly accessible on GitHub.</p>
+
+  <h2>6.3 Implemented Features Summary</h2>
+  <ul>
+    <li>Open youth registration with NRC validation — any youth anywhere can register</li>
+    <li>JWT authentication and role-based access control (youth and admin)</li>
+    <li>Three complete courses: System Analysis and Design, Web Development, Operating Systems</li>
+    <li>Nine modules with full text content, one quiz per module, one final assignment per course</li>
+    <li>Module completion, quiz scoring (60% pass mark), and course progress tracking</li>
+    <li>Automatic certificate issuance on course completion with redirect</li>
+    <li>Certificate PDF generation (light green design, single logo, NRC on certificate)</li>
+    <li>Mobile money payment proof submission (to 0970342178 — Allan Dabali)</li>
+    <li>Admin approval/rejection of payments with optional reject reason</li>
+    <li>Email notification to admin on payment submission (via Nodemailer/Gmail)</li>
+    <li>Admin dashboard with six tabs: Overview, Registered Youth, Completions, Modules, Assignments, Payments</li>
+    <li>Public certificate verification by certificate number</li>
+    <li>Dark mode, in-app notifications, and full profile management including NRC</li>
+  </ul>
+
+  <h2>6.4 Challenges Encountered</h2>
+  <ul>
+    <li><strong>Stale JWT tokens:</strong> After database reseeding, existing browser tokens referenced deleted user IDs, causing 403 errors on the dashboard. This was resolved by removing the strict authorize middleware on the youth dashboard route and improving the error handling to show a "Try Again" button instead of a blank page.</li>
+    <li><strong>Assignment status display:</strong> The assignment form showed "Resubmit" immediately after a first submission, which confused learners. This was fixed by showing an "Awaiting Grading" notice after submission instead of the input form.</li>
+    <li><strong>NRC field migration:</strong> Adding the NRC field to the existing database required an auto-migration step to alter the users table on backend startup without requiring a full reseed.</li>
+    <li><strong>Email configuration:</strong> Gmail's security model requires an App Password rather than an account password. Clear instructions were added to the documentation and .env file to guide setup.</li>
+  </ul>
+
+  <h2>6.5 Suggestions for Future Implementation</h2>
+  <ul>
+    <li><strong>Cloud deployment:</strong> Deploy the backend to a cloud server (Railway, Render, or a VPS) and the frontend to Vercel or Netlify, making the platform accessible to youth anywhere with internet access.</li>
+    <li><strong>Email password reset:</strong> Integrate a full email delivery service so password reset links are sent directly to learners, replacing the current console-log approach.</li>
+    <li><strong>Server-side quiz scoring:</strong> Move quiz answer keys to the server exclusively and calculate all scores server-side to prevent any possibility of score manipulation.</li>
+    <li><strong>PostgreSQL database:</strong> Replace SQLite with PostgreSQL for concurrent multi-user production use and easier cloud hosting.</li>
+    <li><strong>File attachments for assignments:</strong> Implement file upload support using the multer package (already installed) to allow learners to submit diagrams and documents alongside their text responses.</li>
+    <li><strong>Course authoring interface:</strong> Build an admin screen for creating and editing courses, modules, and quizzes without requiring developer access to the database or seed file.</li>
+    <li><strong>Mobile application:</strong> Develop a Progressive Web App or React Native version for learners who primarily access the internet via mobile phone.</li>
+    <li><strong>Integration with national systems:</strong> Explore integration with TEVETA (Technical Education, Vocational and Entrepreneurship Training Authority) or ZQA (Zambia Qualifications Authority) to give YouthSkills certificates formal national recognition.</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════ CHAPTER 7 ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">Chapter 7 — Conclusion and Recommendations</p>
+
+  <h2>7.1 Conclusion</h2>
+  <p>The YouthSkills Program has been successfully designed, implemented, and tested as a web-based digital-skills learning platform for youth empowerment. The system is open to any youth who can access a browser and register — there is no requirement to be affiliated with Evelyn Hone College or any other institution. A learner in Lusaka, Ndola, Livingstone, or any rural area with internet access can register, study at their own pace, earn a certificate, and submit payment proof for a verified digital credential they can share with employers.</p>
+  <p>All twenty functional requirements were implemented. All twenty-five test cases passed without critical failure. The platform supports the complete learner journey from open registration through course completion, certificate issuance, payment proof submission, and PDF download. The administrator portal provides comprehensive visibility over registered youth, course completions, assignment submissions, and payment records — with email alerts on new payment submissions.</p>
+  <p>The system demonstrates that modern web technologies — React 18, Node.js, Express, and SQLite — can be combined to build a functional, secure, and visually polished digital learning platform at very low cost, using entirely free and open-source tools. It serves as both a working prototype and a strong foundation for a scalable national youth digital empowerment initiative.</p>
+
+  <h2>7.2 Recommendations</h2>
+  <ol>
+    <li><strong>Conduct user acceptance testing</strong> with a representative group of real youth learners from different locations to gather usability feedback before any formal launch.</li>
+    <li><strong>Deploy to a cloud server</strong> so that any youth with an internet connection can access the platform without needing a local installation.</li>
+    <li><strong>Implement server-side quiz scoring</strong> before using the certificates for any consequential purpose, to ensure assessment integrity.</li>
+    <li><strong>Add email delivery for password resets</strong> to make the password recovery process fully self-service for learners in remote areas.</li>
+    <li><strong>Expand the course catalogue</strong> with additional courses in networking, cybersecurity, data analysis, and digital entrepreneurship as the programme grows.</li>
+    <li><strong>Seek formal recognition</strong> from TEVETA or ZQA so that YouthSkills certificates carry formal national weight for employment and further education applications.</li>
+    <li><strong>Add automated tests</strong> using Jest and React Testing Library to ensure system reliability is maintained as the platform evolves.</li>
+    <li><strong>Consider mobile-first development</strong> given that many Zambian youth primarily access the internet via mobile phone rather than desktop or laptop.</li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════ REFERENCES ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">References</p>
+  <p>Anderson, T. (2008). <em>The theory and practice of online learning</em> (2nd ed.). Athabasca University Press.</p>
+  <p>Bates, A. W. (2019). <em>Teaching in a digital age: Guidelines for designing teaching and learning</em> (2nd ed.). Tony Bates Associates Ltd. Retrieved from https://opentextbc.ca/teachinginadigitalage/</p>
+  <p>Google. (n.d.). <em>Google Classroom</em>. Retrieved from https://classroom.google.com</p>
+  <p>Moodle. (n.d.). <em>About Moodle</em>. Retrieved from https://moodle.org/about/</p>
+  <p>Mozilla Developer Network. (2024). <em>HTTP — MDN Web Docs</em>. Retrieved from https://developer.mozilla.org/en-US/docs/Web/HTTP</p>
+  <p>OWASP Foundation. (2021). <em>OWASP Top Ten security risks</em>. Retrieved from https://owasp.org/www-project-top-ten/</p>
+  <p>React. (2024). <em>React — The library for web and native user interfaces</em>. Retrieved from https://react.dev</p>
+  <p>SQLite. (2024). <em>About SQLite</em>. Retrieved from https://www.sqlite.org/about.html</p>
+  <p>Watson, W. R., &amp; Watson, S. L. (2007). An argument for clarity: What are learning management systems, what are they not, and what should they become? <em>TechTrends, 51</em>(2), 28–34.</p>
+</div>
+
+<!-- ═══════════════════════════════════ APPENDIX A ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">Appendix A — Installation Manual</p>
+
+  <h2>A.1 Prerequisites</h2>
+  <p>Before installing the YouthSkills Program, ensure the following are installed on the host computer:</p>
+  <ol>
+    <li><strong>Node.js</strong> (LTS version) — download from https://nodejs.org</li>
+    <li><strong>npm</strong> — included with Node.js installation</li>
+    <li><strong>Git</strong> — download from https://git-scm.com (required to clone the repository)</li>
+    <li>A modern web browser: Chrome, Firefox, or Edge</li>
+  </ol>
+
+  <h2>A.2 Obtaining the Source Code</h2>
+  <p><strong>Option 1 — Clone from GitHub:</strong></p>
+  <pre>git clone https://github.com/allandabalidabz-arch/Youth-skills-platform.git</pre>
+  <p><strong>Option 2 — Download ZIP:</strong></p>
+  <ol>
+    <li>Go to https://github.com/allandabalidabz-arch/Youth-skills-platform</li>
+    <li>Click the green <strong>Code</strong> button</li>
+    <li>Click <strong>Download ZIP</strong></li>
+    <li>Extract to a suitable folder on the computer</li>
+  </ol>
+
+  <h2>A.3 Backend Setup</h2>
+  <p>Open a PowerShell or Command Prompt terminal and navigate to the backend folder:</p>
+  <pre>cd youth-skills-platform\backend
+npm install</pre>
+  <p>Create a file named <strong>.env</strong> in the backend folder with the following content:</p>
+  <pre>PORT=5000
+JWT_SECRET=your_long_random_secret_here
+JWT_EXPIRES_IN=7d
+NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
+GMAIL_USER=your_gmail@gmail.com
+GMAIL_APP_PASSWORD=your_gmail_app_password
+ADMIN_EMAIL=your_gmail@gmail.com
+PAYMENT_NUMBER=0970342178</pre>
+  <p>Start the backend server:</p>
+  <pre>npm run dev</pre>
+  <p>The terminal should display: <em>🚀 Server running on http://localhost:5000</em></p>
+  <p>The database is created and seeded automatically on first run.</p>
+
+  <h2>A.4 Frontend Setup</h2>
+  <p>Open a second terminal and run:</p>
+  <pre>cd youth-skills-platform\frontend
+npm install
+npm run dev</pre>
+  <p>The terminal should display: <em>Local: http://localhost:3000/</em></p>
+
+  <h2>A.5 Accessing the Application</h2>
+  <p>Open a browser and navigate to: <strong>http://localhost:3000</strong></p>
+  <p>Both terminals must remain open while using the application. Closing either terminal will stop that part of the system.</p>
+
+  <h2>A.6 Admin Login</h2>
+  <p>Navigate to: <strong>http://localhost:3000/admin/login</strong></p>
+  <ul>
+    <li>Email: admin@youthskills.com</li>
+    <li>Password: Allan7034</li>
+  </ul>
+
+  <h2>A.7 Gmail App Password Setup (for email notifications)</h2>
+  <ol>
+    <li>Sign in to the Gmail account to be used</li>
+    <li>Go to: Google Account → Security → 2-Step Verification (enable if not already on)</li>
+    <li>Go to: Google Account → Security → App passwords</li>
+    <li>Create a new App Password; name it "YouthSkills"</li>
+    <li>Copy the 16-character password and paste it as <strong>GMAIL_APP_PASSWORD</strong> in the .env file</li>
+    <li>Restart the backend server</li>
+  </ol>
+
+  <h2>A.8 Resetting the Database</h2>
+  <p>To wipe all data and reload fresh seed content:</p>
+  <pre>cd youth-skills-platform\backend
+npm run seed</pre>
+  <p class="note-box"><strong>Warning:</strong> This command permanently deletes all user accounts, enrolments, progress, and certificates. Use only on a development database. Back up the database.sqlite file before running seed if any data needs to be preserved.</p>
+</div>
+
+<!-- ═══════════════════════════════════ APPENDIX B ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">Appendix B — User Manual</p>
+
+  <h2>B.1 For Youth Learners</h2>
+  <p>The YouthSkills Program is open to any youth who can access a browser and register. You do not need to be a student at any particular school or institution. If you have an internet connection and a valid Zambian NRC, you can join.</p>
+
+  <h3>B.1.1 Creating an Account</h3>
+  <ol>
+    <li>Open the application in your browser and click <strong>Get Started Free</strong></li>
+    <li>Fill in the registration form:
+      <ul>
+        <li><strong>Full Name</strong> — letters only (no numbers or symbols)</li>
+        <li><strong>NRC Number</strong> — required; format: 123456/78/9</li>
+        <li><strong>Email Address</strong> — required; must be a valid email</li>
+        <li><strong>Location</strong> — optional (your city and country)</li>
+        <li><strong>Phone</strong> — optional</li>
+        <li><strong>Password</strong> — minimum 6 characters</li>
+        <li><strong>Confirm Password</strong> — must match the password above</li>
+      </ul>
+    </li>
+    <li>Click <strong>Create Account</strong></li>
+    <li>You will be taken directly to your personal dashboard</li>
+  </ol>
+
+  <h3>B.1.2 Signing In</h3>
+  <ol>
+    <li>Go to the login page</li>
+    <li>Enter your registered email address and password</li>
+    <li>Tick <strong>Remember me</strong> if you want to stay signed in after closing the browser</li>
+    <li>Click <strong>Sign In</strong></li>
+  </ol>
+
+  <h3>B.1.3 Your Dashboard</h3>
+  <p>Your dashboard shows your enrolled courses with progress bars, the number of certificates earned, your overall completion rate, and recent certificates. If you have not enrolled in any courses yet, a <strong>Browse Courses</strong> button guides you to the course library.</p>
+
+  <h3>B.1.4 Enrolling in a Course</h3>
+  <ol>
+    <li>Click <strong>Courses</strong> in the left sidebar</li>
+    <li>Browse or search for a course using the filters</li>
+    <li>Click on a course card to open its detail page</li>
+    <li>Click <strong>Enroll Now — Free</strong></li>
+    <li>The modules will unlock and your progress bar will appear</li>
+  </ol>
+
+  <h3>B.1.5 Studying a Module and Taking a Quiz</h3>
+  <ol>
+    <li>Open an enrolled course and click on a module to expand it</li>
+    <li>Read all the module content carefully</li>
+    <li>When ready, click <strong>Take Quiz</strong></li>
+    <li>Select one answer for each question</li>
+    <li>Click <strong>Submit Quiz</strong></li>
+    <li>Your score is shown immediately. You need at least <strong>60%</strong> to pass</li>
+    <li>If you score below 60%, click <strong>Retry Quiz</strong> and try again</li>
+    <li>On passing, the module is marked complete automatically</li>
+  </ol>
+
+  <h3>B.1.6 Submitting an Assignment</h3>
+  <ol>
+    <li>Open any module in the course — the assignment section appears at the bottom</li>
+    <li>Read the assignment title, description, and full instructions carefully</li>
+    <li>Type your response in the text box (minimum 20 characters)</li>
+    <li>Click <strong>Submit Assignment</strong></li>
+    <li>The status changes to <em>⏳ Awaiting Grading</em></li>
+    <li>Once graded, you will receive a notification with your score and feedback</li>
+  </ol>
+
+  <h3>B.1.7 Earning and Downloading Your Certificate</h3>
+  <ol>
+    <li>Complete all three modules in a course (pass all three quizzes)</li>
+    <li>The system will automatically redirect you to the <strong>Certificates</strong> page</li>
+    <li>Your certificate card will appear — click the <strong>2,000 ZMW</strong> button</li>
+    <li>A payment panel opens showing the mobile money number: <strong>0970 342 178 — Allan Dabali, YouthSkills Program</strong></li>
+    <li>Send 2,000 ZMW via mobile money to that number</li>
+    <li>Enter your <strong>transaction reference number</strong> in the input field</li>
+    <li>Click <strong>Submit Payment Proof</strong></li>
+    <li>Status changes to <em>Pending</em></li>
+    <li>Once the administrator approves, you receive a notification</li>
+    <li>Click the <strong>PDF</strong> button to download your certificate</li>
+  </ol>
+  <p>Your certificate includes your full name, NRC number, course title, date of completion, certificate number, instructor name, and a public verification link.</p>
+
+  <h3>B.1.8 Sharing and Verifying Your Certificate</h3>
+  <ul>
+    <li>Click <strong>Share</strong> on your certificate card to copy a public verification link</li>
+    <li>Anyone — including employers — can visit that link to confirm your certificate is genuine</li>
+    <li>No login is required to verify a certificate</li>
+  </ul>
+
+  <h3>B.1.9 Updating Your Profile</h3>
+  <ol>
+    <li>Click <strong>Profile</strong> in the sidebar</li>
+    <li>Update your name, bio, location, phone, NRC, or avatar image URL</li>
+    <li>Add or remove skills using the Skills section</li>
+    <li>Click <strong>Save Changes</strong></li>
+    <li>Use the <strong>Security</strong> tab to change your password</li>
+  </ol>
+
+  <h2>B.2 For Administrators</h2>
+
+  <h3>B.2.1 Signing In</h3>
+  <ol>
+    <li>Go to the admin login page: http://localhost:3000/admin/login</li>
+    <li>Enter: admin@youthskills.com / Allan7034</li>
+    <li>You will be taken to the Admin Dashboard</li>
+  </ol>
+
+  <h3>B.2.2 Dashboard Overview</h3>
+  <p>The Overview tab shows five clickable cards: Total Users, Courses and Enrollments, Certificates Issued, Pending Assignments, and Pending Payments. Each card links directly to the relevant management tab.</p>
+
+  <h3>B.2.3 Grading Assignments</h3>
+  <ol>
+    <li>Click the <strong>Assignments</strong> tab</li>
+    <li>Find the submission to grade — submissions show the student name, assignment title, and status</li>
+    <li>Click <strong>Grade</strong> to expand the submission</li>
+    <li>Read the full submission text</li>
+    <li>Enter a grade from 0 to 100</li>
+    <li>Optionally write feedback for the student</li>
+    <li>Click <strong>Submit Grade</strong></li>
+    <li>The student receives an in-app notification with their score and feedback</li>
+  </ol>
+
+  <h3>B.2.4 Approving Certificate Payments</h3>
+  <ol>
+    <li>When a learner submits payment proof, you receive an in-app notification (bell icon) and an email to your configured Gmail address</li>
+    <li>Click the <strong>Payments</strong> tab</li>
+    <li>Each payment card shows the student name, course, certificate number, amount (2,000 ZMW), and the submitted payment reference</li>
+    <li>Check your mobile money records to confirm the reference</li>
+    <li>Click <strong>Approve</strong> to unlock the certificate PDF for the learner</li>
+    <li>Or enter an optional reject reason and click <strong>Reject</strong></li>
+    <li>The learner receives an in-app notification either way</li>
+  </ol>
+
+  <h3>B.2.5 Viewing Completions</h3>
+  <p>Click the <strong>Completions</strong> tab to see a table of all learners who have completed courses, including their name, email, course title, certificate number, and completion date.</p>
+</div>
+
+<!-- ═══════════════════════════════════ APPENDIX C ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">Appendix C — Project Proposal</p>
+  <p><em>The original signed project proposal submitted at the beginning of the academic year is attached here as submitted to the supervisor.</em></p>
+  <p>[Insert original project proposal document pages here]</p>
+</div>
+
+<!-- ═══════════════════════════════════ APPENDIX D ═══════════════════════════════════ -->
+<div class="page page-break">
+  <p class="chapter-heading">Appendix D — Technical Report (Source Code Summary)</p>
+
+  <h2>D.1 Repository</h2>
+  <p>The full source code is publicly available at:</p>
+  <p><strong>https://github.com/allandabalidabz-arch/Youth-skills-platform</strong></p>
+
+  <h2>D.2 Technology Stack</h2>
+  <table>
+    <tr><th>Component</th><th>Technology</th><th>Version</th></tr>
+    <tr><td>Frontend framework</td><td>React</td><td>18.3.1</td></tr>
+    <tr><td>Build tool</td><td>Vite</td><td>5.2.0</td></tr>
+    <tr><td>CSS framework</td><td>Tailwind CSS</td><td>3.4.3</td></tr>
+    <tr><td>Routing</td><td>React Router</td><td>6.22.3</td></tr>
+    <tr><td>HTTP client</td><td>Axios</td><td>1.6.8</td></tr>
+    <tr><td>PDF generation</td><td>jsPDF</td><td>4.2.1</td></tr>
+    <tr><td>Backend framework</td><td>Express</td><td>4.18.3</td></tr>
+    <tr><td>Runtime</td><td>Node.js</td><td>LTS</td></tr>
+    <tr><td>Database</td><td>SQLite (via sqlite + sqlite3)</td><td>5.1.1</td></tr>
+    <tr><td>Authentication</td><td>jsonwebtoken + bcryptjs</td><td>9.0.2 + 2.4.3</td></tr>
+    <tr><td>Email</td><td>Nodemailer</td><td>6.9.x</td></tr>
+  </table>
+
+  <h2>D.3 Backend Source Files</h2>
+  <table>
+    <tr><th>File</th><th>Purpose</th></tr>
+    <tr><td>backend/src/server.js</td><td>Express app: middleware, route mounting, health endpoint, error handler</td></tr>
+    <tr><td>backend/src/database.js</td><td>SQLite schema creation, WAL mode, foreign keys, auto-migration for new columns</td></tr>
+    <tr><td>backend/src/middleware/auth.js</td><td>JWT verification, user reload from database, role authorisation middleware</td></tr>
+    <tr><td>backend/src/routes/auth.js</td><td>Register (with NRC), login, /me, change-password, forgot/reset password</td></tr>
+    <tr><td>backend/src/routes/users.js</td><td>Profile read/update (including NRC), admin user list with NRC column</td></tr>
+    <tr><td>backend/src/routes/courses.js</td><td>Course listing, detail, enrolment, admin course/module/quiz creation</td></tr>
+    <tr><td>backend/src/routes/progress.js</td><td>Module completion, quiz submission, progress queries, certificate issuance</td></tr>
+    <tr><td>backend/src/routes/assignments.js</td><td>Assignment read, submit, admin view all submissions, grade submission</td></tr>
+    <tr><td>backend/src/routes/certificates.js</td><td>List own certificates, public verification by certificate number</td></tr>
+    <tr><td>backend/src/routes/payments.js</td><td>Submit proof, admin approve/reject, email notification via Nodemailer</td></tr>
+    <tr><td>backend/src/routes/notifications.js</td><td>List notifications, mark read, mark all read</td></tr>
+    <tr><td>backend/src/routes/dashboard.js</td><td>Youth dashboard with progress; admin stats, pending counts, completions</td></tr>
+    <tr><td>backend/src/utils/seed.js</td><td>Destructive seed: 1 admin, 3 courses, 9 modules, 9 quizzes, 3 assignments</td></tr>
+  </table>
+
+  <h2>D.4 Frontend Source Files</h2>
+  <table>
+    <tr><th>File</th><th>Purpose</th></tr>
+    <tr><td>frontend/src/main.jsx</td><td>React mount, BrowserRouter, toast provider</td></tr>
+    <tr><td>frontend/src/App.jsx</td><td>Route definitions, ProtectedRoute, PublicRoute, AdminRoute wrappers</td></tr>
+    <tr><td>frontend/src/context/AuthContext.jsx</td><td>Auth state management, login, register, logout, token storage</td></tr>
+    <tr><td>frontend/src/utils/api.js</td><td>Axios instance, Bearer token interceptor, 401 redirect handler</td></tr>
+    <tr><td>frontend/src/components/Layout.jsx</td><td>Sidebar, topbar, dark mode toggle, notification bell with auto-refresh</td></tr>
+    <tr><td>frontend/src/pages/LandingPage.jsx</td><td>Public landing page: hero, stats, features, how-it-works, CTA</td></tr>
+    <tr><td>frontend/src/pages/RegisterPage.jsx</td><td>Registration form with NRC field, inline validation on all fields</td></tr>
+    <tr><td>frontend/src/pages/LoginPage.jsx</td><td>Youth sign-in with Remember Me; blocks admin and redirects to admin login</td></tr>
+    <tr><td>frontend/src/pages/AdminLoginPage.jsx</td><td>Admin-only login page</td></tr>
+    <tr><td>frontend/src/pages/DashboardPage.jsx</td><td>Youth dashboard with progress bars; full admin 6-tab management portal</td></tr>
+    <tr><td>frontend/src/pages/CoursesPage.jsx</td><td>Course catalogue with skeleton loading, search, category and level filters</td></tr>
+    <tr><td>frontend/src/pages/CourseDetailPage.jsx</td><td>Module accordion, quiz, assignment section, progress bar, cert redirect</td></tr>
+    <tr><td>frontend/src/pages/CertificatesPage.jsx</td><td>Certificate cards, mobile money payment panel, jsPDF generation (green, NRC)</td></tr>
+    <tr><td>frontend/src/pages/ProfilePage.jsx</td><td>Profile edit form including NRC, skills manager, password change</td></tr>
+    <tr><td>frontend/src/pages/VerifyCertPage.jsx</td><td>Public certificate verification — no login required</td></tr>
+  </table>
+
+  <br>
+  <hr>
+  <p class="center italic"><em>End of Document</em></p>
+  <p class="center">YouthSkills Program — Evelyn Hone College, School of Business Studies and Management</p>
+  <p class="center">© 2026 Allan Dabali</p>
+</div>
+
+</body>
+</html>
