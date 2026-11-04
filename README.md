@@ -1,56 +1,57 @@
-# YouthSkills Platform
+# YouthSkills Program
 
-A web-based system empowering youth through digital skills training, progress tracking, and certificate issuance.
+A web-based digital-skills learning platform developed for Evelyn Hone College. It enables youth learners to access structured courses, complete quizzes and assignments, track progress, earn verifiable certificates, and download PDF certificates after payment approval.
+
+---
 
 ## Features
 
-- **User Registration & Auth** — Youth registration with JWT authentication
-- **Course Modules** — System Analysis & Design, Web Development, Operating Systems
-- **Progress Tracking** — Module-by-module progress with visual progress bars
-- **Quizzes** — Interactive quizzes with instant scoring and feedback (60% pass mark)
-- **Assignments** — Submit and receive graded feedback on assignments
-- **Certificates** — Auto-issued digital certificates on course completion with public verification
-- **Notifications** — Real-time in-app notifications for key events
-- **Dark Mode** — Full light/dark mode toggle with localStorage persistence
-- **Admin Portal** — Separate admin login, user management, and module overview
+- **Registration with NRC** — Youth accounts require a valid Zambian NRC number (`123456/78/9`)
+- **Course Library** — System Analysis & Design, Web Development, Operating Systems
+- **Module Learning** — Structured content with quizzes (60% pass mark) and one final assignment per course
+- **Progress Tracking** — Module-by-module progress bars on dashboard and course pages
+- **Certificates** — Auto-issued on full course completion with public verification
+- **Certificate Payment** — Learner submits mobile money proof; admin approves to unlock PDF download
+- **Email Notifications** — Admin receives email when a learner submits payment proof
+- **Admin Dashboard** — Overview, Registered Youth, Completions, Modules, Assignments grading, Payments approval
+- **Dark Mode** — Full light/dark mode toggle
+- **Notifications** — In-app bell notifications for key events
+
+---
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React 18, Vite, Tailwind CSS, React Router v6 |
-| Backend | Node.js, Express.js |
-| Database | SQLite (via sqlite + sqlite3) |
+| Backend | Node.js, Express 4 |
+| Database | SQLite (sqlite + sqlite3) |
 | Auth | JWT + bcryptjs |
-| Icons | Lucide React |
+| Email | Nodemailer (Gmail SMTP) |
 | PDF | jsPDF |
+| Icons | Lucide React |
+
+---
 
 ## Quick Start
 
-### 1. Install Backend Dependencies
-```bash
-cd youth-skills-platform/backend
+### 1. Backend
+```powershell
+cd youth-skills-platform\backend
 npm install
-```
-
-### 2. Start the Backend
-```bash
 npm run dev
-# API runs on http://localhost:5000
-# Database auto-seeds on first run
 ```
+API runs on `http://localhost:5000`
 
-### 3. Install Frontend Dependencies (new terminal)
-```bash
-cd youth-skills-platform/frontend
+### 2. Frontend (new terminal)
+```powershell
+cd youth-skills-platform\frontend
 npm install
-```
-
-### 4. Start the Frontend
-```bash
 npm run dev
-# App runs on http://localhost:3000
 ```
+App runs on `http://localhost:3000`
+
+---
 
 ## Accounts
 
@@ -58,47 +59,65 @@ npm run dev
 |------|-------|----------|
 | Admin | admin@youthskills.com | Allan7034 |
 
-> Youth accounts are created by registering on the platform.
+> Youth accounts are created by registering on the platform. NRC is required.
+
+---
 
 ## Admin Portal
 
-Access the admin portal at:
 ```
 http://localhost:3000/admin/login
 ```
 
+---
+
+## Payment Number
+
+Learners send **2,000 ZMW** to mobile money number **0970 342 178** (Allan Dabali — YouthSkills Program), then submit the transaction reference for admin approval.
+
+---
+
+## Email Notifications Setup
+
+To receive email alerts when a learner submits payment proof, add these to `backend/.env`:
+
+```dotenv
+GMAIL_USER=allandabalidabz@gmail.com
+GMAIL_APP_PASSWORD=<your-16-char-gmail-app-password>
+ADMIN_EMAIL=allandabalidabz@gmail.com
+```
+
+Generate a Gmail App Password: Google Account → Security → 2-Step Verification → App passwords.
+
+---
+
 ## Courses
 
-| Course | Category |
-|--------|----------|
-| System Analysis and Design | Systems |
-| Web Development | Coding |
-| Operating Systems | Systems |
+| Course | Category | Modules |
+|--------|----------|---------|
+| System Analysis and Design | Systems | 3 |
+| Web Development | Coding | 3 |
+| Operating Systems | Systems | 3 |
 
-Each course has 3 modules, quizzes (60% pass mark), and assignments.
+Each course has 1 quiz per module (60% pass mark) and 1 final assignment covering all modules.
 
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /api/auth/register | Register new user (youth only) |
-| POST | /api/auth/login | Login |
-| GET | /api/auth/me | Get current user |
-| POST | /api/auth/forgot-password | Request password reset |
-| POST | /api/auth/reset-password | Reset password with token |
-| GET | /api/courses | List courses |
-| GET | /api/courses/:id | Course details + modules |
-| POST | /api/courses/:id/enroll | Enroll in course |
-| POST | /api/progress/module/:id/complete | Mark module complete |
-| POST | /api/progress/quiz/:id/submit | Submit quiz answers |
-| GET | /api/certificates/my | My certificates |
-| GET | /api/certificates/verify/:number | Verify certificate (public) |
-| GET | /api/dashboard/youth | Youth dashboard stats |
-| GET | /api/dashboard/admin | Admin dashboard stats |
+---
 
 ## Certificate Verification
 
-Certificates can be publicly verified at:
 ```
 http://localhost:3000/verify/{CERTIFICATE_NUMBER}
 ```
+
+---
+
+## Documentation
+
+Full documentation is in the `docs/` folder:
+
+| File | Contents |
+|------|---------|
+| `YouthSkills-Program-Technical-Documentation.md` | Architecture, schema, API reference, deployment |
+| `YouthSkills-Program-User-Manual.md` | Step-by-step guide for learners and admins |
+| `YouthSkills-Program-Diagrams.md` | Mermaid system diagrams (architecture, ERD, flows) |
+| `YouthSkills-Program-Academic-Documentation.md` | Full academic project report |

@@ -1,95 +1,119 @@
-# YouthSkills Program — Editable System Diagrams
+# YouthSkills Program — System Diagrams
 
-**Diagram status:** These Mermaid diagrams describe the current inspected implementation. They intentionally omit employment, opportunity, trainer and mentorship components because those features are not present in the current application. They can be rendered in Mermaid-compatible editors or documentation systems and redrawn for a final Word submission.
+**Version:** 2.0 — reflects the fully implemented system.  
+These diagrams are written in Mermaid syntax. Render them in any Mermaid-compatible editor (e.g. mermaid.live) or import into a word processor for the final submission.
 
-## Figure 3.1: Implemented high-level system architecture
+---
+
+## Figure 3.1: System Architecture
 
 ```mermaid
 flowchart LR
-    Browser["User browser<br/>React 18 + React Router + Tailwind"]
-    Vite["Vite development server<br/>port 3000; /api proxy"]
-    API["Express API<br/>Node.js; port 5000"]
-    Auth["JWT authentication<br/>bcryptjs password hashing<br/>role middleware"]
-    Routes["API route modules<br/>auth, users, courses, progress,<br/>assignments, certificates, payments,<br/>notifications, dashboards"]
-    DB["SQLite database<br/>schema initialised at startup"]
-    Seed["Seed utility<br/>sample learning content"]
-    PDF["Browser PDF generation<br/>jsPDF"]
+    Browser["User Browser\nReact 18 + React Router + Tailwind CSS"]
+    Vite["Vite Dev Server\nport 3000 — /api proxy"]
+    API["Express REST API\nNode.js — port 5000"]
+    Auth["JWT Middleware\nbcryptjs password hashing\nrole-based authorisation"]
+    Routes["Route Modules\nauth, users, courses, progress\nassignments, certificates\npayments, notifications, dashboard"]
+    DB["SQLite Database\nWAL mode — auto-migration"]
+    Email["Nodemailer\nGmail SMTP"]
+    PDF["jsPDF\nBrowser-side PDF generation"]
 
     Browser --> Vite
-    Vite --> API
-    Browser -->|"REST/JSON requests"| API
+    Vite -->|"/api proxy"| API
     API --> Auth
     Auth --> Routes
     Routes --> DB
-    API --> Seed
+    Routes --> Email
     Browser --> PDF
 ```
 
-## Figure 3.2: Implemented use-case overview
+---
+
+## Figure 3.2: User Roles and Use Cases
 
 ```mermaid
 flowchart LR
-    Youth([Youth learner])
+    Youth([Youth Learner])
     Admin([Administrator])
-    Visitor([Public visitor])
+    Public([Public Visitor])
 
-    subgraph System["YouthSkills Program"]
-      Register["Register / sign in"]
-      Profile["Manage profile"]
-      Courses["Browse courses and modules"]
-      Enrol["Enrol in a course"]
-      Quiz["Submit quiz answers"]
-      Assignment["Submit assignment"]
-      Progress["View course progress"]
-      Certificate["View / download certificate"]
-      Notify["View notifications"]
-      Verify["Verify certificate number"]
-      AdminDash["View admin dashboard"]
-      UserList["Search youth accounts"]
-      ModuleList["View courses and modules"]
-      AdminAPI["Use protected admin APIs<br/>course creation, grading,<br/>payment decisions"]
+    subgraph Platform["YouthSkills Program"]
+      Reg["Register with NRC"]
+      Login["Sign In"]
+      Profile["Manage Profile"]
+      Browse["Browse Courses"]
+      Enrol["Enrol in Course"]
+      Study["Study Module Content"]
+      Quiz["Take Quiz"]
+      Assign["Submit Assignment"]
+      Progress["View Progress"]
+      Cert["View / Download Certificate"]
+      Pay["Submit Payment Proof"]
+      Notify["View Notifications"]
+      Verify["Verify Certificate"]
+
+      AdminLogin["Admin Sign In"]
+      Overview["View Overview Dashboard"]
+      YouthList["Search Registered Youth"]
+      Completions["View Course Completions"]
+      Modules["Browse Modules"]
+      Grade["Grade Assignment"]
+      ApprovePay["Approve / Reject Payment"]
     end
 
-    Youth --> Register
+    Youth --> Reg
+    Youth --> Login
     Youth --> Profile
-    Youth --> Courses
+    Youth --> Browse
     Youth --> Enrol
+    Youth --> Study
     Youth --> Quiz
-    Youth --> Assignment
+    Youth --> Assign
     Youth --> Progress
-    Youth --> Certificate
+    Youth --> Cert
+    Youth --> Pay
     Youth --> Notify
-    Visitor --> Verify
-    Admin --> Register
-    Admin --> Profile
-    Admin --> AdminDash
-    Admin --> UserList
-    Admin --> ModuleList
-    Admin --> AdminAPI
+
+    Public --> Verify
+
+    Admin --> AdminLogin
+    Admin --> Overview
+    Admin --> YouthList
+    Admin --> Completions
+    Admin --> Modules
+    Admin --> Grade
+    Admin --> ApprovePay
 ```
 
-> The administrator use case includes API capabilities that are not all accessible through the current dashboard UI. The system provides no employer, opportunity or recruitment role or workflow.
+---
 
-## Figure 3.3: Level 0 data-flow diagram
+## Figure 3.3: Level 0 Data Flow Diagram (Context Diagram)
 
 ```mermaid
 flowchart LR
-    Learner["External entity:<br/>Youth learner"]
-    Admin["External entity:<br/>Administrator"]
-    Public["External entity:<br/>Certificate verifier"]
-    App["Process 0:<br/>YouthSkills Program<br/>React client + Express API"]
-    DB[("D1: SQLite database")]
+    Learner["Youth Learner"]
+    AdminActor["Administrator"]
+    PublicActor["Public Certificate Verifier"]
+    System["YouthSkills Program\nReact Client + Express API"]
+    DBStore[("SQLite Database")]
+    EmailSvc["Gmail SMTP"]
 
-    Learner -->|"credentials, profile, enrolment,<br/>quiz answers, assignment text,<br/>payment proof"| App
-    App -->|"course content, progress,<br/>scores, notifications,<br/>certificate status"| Learner
-    Admin -->|"course/module/quiz data,<br/>grades, payment decisions"| App
-    App -->|"dashboard summaries, youth/course data,<br/>submission/payment lists"| Admin
-    Public -->|"certificate number"| App
-    App -->|"verification status and selected<br/>certificate/holder details"| Public
-    App <--> DB
+    Learner -->|"credentials, NRC, profile\nenrolment, quiz answers\nassignment text, payment proof"| System
+    System -->|"course content, quiz results\nprogress, notifications\ncertificate status"| Learner
+
+    AdminActor -->|"grades, payment decisions\ncourse/module data"| System
+    System -->|"dashboard stats, youth list\ncompletions, submissions\npayment records"| AdminActor
+
+    PublicActor -->|"certificate number"| System
+    System -->|"verification result\nholder name, course, date"| PublicActor
+
+    System <-->|"read/write"| DBStore
+    System -->|"payment notification email"| EmailSvc
 ```
 
-## Figure 3.4: Entity-relationship overview based on actual tables
+---
+
+## Figure 3.4: Entity-Relationship Diagram
 
 ```mermaid
 erDiagram
@@ -99,6 +123,9 @@ erDiagram
         TEXT email UK
         TEXT password
         TEXT role
+        TEXT nrc UK
+        TEXT location
+        TEXT phone
         TEXT skills
     }
     COURSES {
@@ -114,6 +141,7 @@ erDiagram
         TEXT title
         TEXT content
         INTEGER order_index
+        INTEGER duration_minutes
     }
     QUIZZES {
         TEXT id PK
@@ -121,6 +149,7 @@ erDiagram
         TEXT question
         TEXT options
         INTEGER correct_answer
+        TEXT explanation
     }
     ENROLLMENTS {
         TEXT id PK
@@ -142,6 +171,7 @@ erDiagram
         TEXT module_id FK
         TEXT course_id FK
         TEXT title
+        TEXT instructions
     }
     ASSIGNMENT_SUBMISSIONS {
         TEXT id PK
@@ -150,12 +180,14 @@ erDiagram
         TEXT submission_text
         INTEGER grade
         TEXT feedback
+        TEXT status
     }
     CERTIFICATES {
         TEXT id PK
         TEXT user_id FK
         TEXT course_id FK
         TEXT certificate_number UK
+        DATETIME issued_at
     }
     CERTIFICATE_PAYMENTS {
         TEXT id PK
@@ -163,12 +195,15 @@ erDiagram
         TEXT certificate_id FK
         INTEGER amount
         TEXT currency
+        TEXT proof_text
         TEXT status
     }
     NOTIFICATIONS {
         TEXT id PK
         TEXT user_id FK
         TEXT title
+        TEXT message
+        TEXT type
         INTEGER is_read
     }
     PASSWORD_RESETS {
@@ -179,138 +214,147 @@ erDiagram
         INTEGER used
     }
 
-    COURSES ||--o{ MODULES : contains
-    MODULES ||--o{ QUIZZES : has
-    USERS ||--o{ ENROLLMENTS : makes
-    COURSES ||--o{ ENROLLMENTS : receives
-    USERS ||--o{ MODULE_PROGRESS : records
-    MODULES ||--o{ MODULE_PROGRESS : tracks
-    COURSES ||--o{ ASSIGNMENTS : includes
-    MODULES ||--o{ ASSIGNMENTS : includes
-    ASSIGNMENTS ||--o{ ASSIGNMENT_SUBMISSIONS : receives
-    USERS ||--o{ ASSIGNMENT_SUBMISSIONS : submits
-    USERS ||--o{ CERTIFICATES : earns
-    COURSES ||--o{ CERTIFICATES : certifies
-    USERS ||--o{ CERTIFICATE_PAYMENTS : submits
-    CERTIFICATES ||--o{ CERTIFICATE_PAYMENTS : has_proof
-    USERS ||--o{ NOTIFICATIONS : receives
-    USERS ||--o{ PASSWORD_RESETS : requests
+    COURSES ||--o{ MODULES : "contains"
+    MODULES ||--o{ QUIZZES : "has"
+    USERS ||--o{ ENROLLMENTS : "makes"
+    COURSES ||--o{ ENROLLMENTS : "receives"
+    USERS ||--o{ MODULE_PROGRESS : "records"
+    MODULES ||--o{ MODULE_PROGRESS : "tracked in"
+    COURSES ||--o{ ASSIGNMENTS : "includes"
+    MODULES ||--o{ ASSIGNMENTS : "linked to"
+    ASSIGNMENTS ||--o{ ASSIGNMENT_SUBMISSIONS : "receives"
+    USERS ||--o{ ASSIGNMENT_SUBMISSIONS : "submits"
+    USERS ||--o{ CERTIFICATES : "earns"
+    COURSES ||--o{ CERTIFICATES : "certifies"
+    USERS ||--o{ CERTIFICATE_PAYMENTS : "submits"
+    CERTIFICATES ||--o{ CERTIFICATE_PAYMENTS : "has proof"
+    USERS ||--o{ NOTIFICATIONS : "receives"
+    USERS ||--o{ PASSWORD_RESETS : "requests"
 ```
 
-> The diagram shows declared foreign-key relationships. Some columns that logically refer to another table do not have declared foreign keys in the schema; see the technical documentation. Mermaid cardinalities do not replace the exact unique constraints documented in the schema.
+---
 
-## Figure 3.5: Authentication process
+## Figure 3.5: Authentication Flow
 
 ```mermaid
 flowchart TD
-    Start([User opens sign-in page])
-    Credentials["Enter email and password"]
+    Start([User opens login page])
+    Enter["Enter email and password"]
     Submit["POST /api/auth/login"]
-    Lookup["Backend looks up email"]
-    Compare["bcryptjs compares password"]
+    Lookup["Backend looks up email in database"]
+    Compare["bcryptjs compares password hash"]
     Valid{"Credentials valid?"}
-    Sign["Sign JWT using environment secret"]
-    Store["Frontend stores token and user<br/>in localStorage or sessionStorage"]
-    Request["Protected request sends Bearer token"]
-    Verify["Middleware verifies JWT and reloads user"]
+    Sign["Sign JWT with JWT_SECRET"]
+    Store["Frontend stores token\nlocalStorage or sessionStorage"]
+    Request["Protected request with Bearer token"]
+    Verify["Middleware verifies JWT\nreloads user from database"]
     Role{"Route requires role?"}
-    Allow["Continue to route"]
-    Deny["Return 403"]
-    Fail["Return 401"]
-    End([Authenticated session])
+    Allow["Continue to route handler"]
+    Deny403["Return 403 Forbidden"]
+    Fail401["Return 401 Unauthorised"]
+    End([Authenticated session active])
 
-    Start --> Credentials --> Submit --> Lookup --> Compare --> Valid
-    Valid -- No --> Fail
+    Start --> Enter --> Submit --> Lookup --> Compare --> Valid
+    Valid -- No --> Fail401
     Valid -- Yes --> Sign --> Store --> Request --> Verify --> Role
     Role -- No --> Allow --> End
     Role -- Yes, permitted --> Allow
-    Role -- Yes, not permitted --> Deny
+    Role -- Yes, not permitted --> Deny403
 ```
 
-## Figure 3.6: Course enrolment and course-access workflow
+---
+
+## Figure 3.6: Course Enrolment and Completion Flow
 
 ```mermaid
 flowchart TD
-    Open["Authenticated learner opens course catalogue"]
+    Open["Learner opens Courses page"]
     List["GET /api/courses"]
-    Select["Select a published course"]
+    Select["Select a course"]
     Detail["GET /api/courses/:id"]
-    Enrolled{"Enrolment exists?"}
-    Show["Frontend shows course and modules"]
-    Enrol["Learner selects Enroll Now"]
-    Post["POST /api/courses/:id/enroll"]
-    Duplicate{"Already enrolled?"}
-    Save["Create enrolment and notification"]
-    Done([Course enrolled])
-    Error["Return conflict or course-not-found response"]
+    Enrolled{"Already enrolled?"}
+    ShowLocked["Show locked modules\nEnroll Now button visible"]
+    Enrol["POST /api/courses/:id/enroll"]
+    ShowModules["Modules unlock\nProgress bar appears"]
+    StudyModule["Learner studies module content"]
+    HasQuiz{"Module has quiz?"}
+    MarkComplete["Click Mark Complete"]
+    TakeQuiz["Take Quiz"]
+    Score{"Score ≥ 60%?"}
+    Retry["Retry Quiz"]
+    ModuleComplete["Module marked complete\nPOST /progress/module/:id/complete"]
+    AllDone{"All 3 modules complete?"}
+    Certificate["Certificate issued\nNotification sent\nRedirect to Certificates page"]
+    NextModule["Continue to next module"]
 
     Open --> List --> Select --> Detail --> Enrolled
-    Enrolled -- Yes --> Show
-    Enrolled -- No --> Show --> Enrol --> Post --> Duplicate
-    Duplicate -- No --> Save --> Done
-    Duplicate -- Yes --> Error
+    Enrolled -- No --> ShowLocked --> Enrol --> ShowModules
+    Enrolled -- Yes --> ShowModules
+    ShowModules --> StudyModule --> HasQuiz
+    HasQuiz -- No --> MarkComplete --> ModuleComplete
+    HasQuiz -- Yes --> TakeQuiz --> Score
+    Score -- No --> Retry --> TakeQuiz
+    Score -- Yes --> ModuleComplete
+    ModuleComplete --> AllDone
+    AllDone -- No --> NextModule --> StudyModule
+    AllDone -- Yes --> Certificate
 ```
 
-> Access-control limitation: the frontend visually locks module interactions for a youth who is not enrolled, but the authenticated course-detail API returns module/quiz content without requiring an enrolment. This workflow diagram describes user-facing behaviour, not a guaranteed server-side content restriction.
+---
 
-## Figure 3.7: Assessment workflow as implemented
+## Figure 3.7: Certificate Payment Flow
 
 ```mermaid
 flowchart TD
-    Start([Enrolled learner opens module])
-    Read["Read module content"]
-    HasQuiz{"Module has quiz?"}
-    Mark["Learner selects Mark Complete"]
-    Answer["Select answers"]
-    Submit["POST quiz answers"]
-    Score["Server calculates score"]
-    Return["Response includes score,<br/>correct answers and explanations"]
-    Pass{"Score at least 60%?"}
-    Complete["Client sends quiz_score<br/>to module completion route"]
-    Check["Server checks enrolment and<br/>client-supplied score"]
-    Save["Progress record saved"]
-    Retry["Learner may retry quiz"]
-    End([Module completion recorded])
-
-    Start --> Read --> HasQuiz
-    HasQuiz -- No --> Mark --> Check
-    HasQuiz -- Yes --> Answer --> Submit --> Score --> Return --> Pass
-    Pass -- Yes --> Complete --> Check --> Save --> End
-    Pass -- No --> Retry --> Answer
-```
-
-> Security limitation: the quiz response reveals correct answers, and the module-completion request accepts the client's score. The diagram documents this behaviour; it is not a recommended assessment design.
-
-## Figure 3.8: Certificate generation and payment-proof workflow
-
-```mermaid
-flowchart TD
-    Progress["Learner completes modules"]
-    All{"All course modules recorded complete?"}
-    No["Continue course"]
-    Issue["Backend creates certificate record<br/>and certificate number"]
-    Notify["Backend creates notification"]
-    Page["Certificate appears in learner page"]
-    Proof["Learner submits payment-reference text"]
-    Pending["Payment proof stored as pending"]
-    Admin["Admin reviews via protected API"]
+    CertPage["Learner opens Certificates page"]
+    NotPaid{"Payment approved?"}
+    ShowLock["Show 2,000 ZMW button"]
+    ShowPDF["PDF download button enabled"]
+    OpenForm["Learner clicks 2,000 ZMW\nPayment panel opens"]
+    ShowNumber["Display mobile money number\n0970 342 178 — Allan Dabali"]
+    Send["Learner sends 2,000 ZMW\nvia mobile money"]
+    EnterRef["Enter transaction reference number"]
+    Submit["POST /api/payments/certificate/:id/submit"]
+    InAppNotif["In-app notification created for admin"]
+    EmailNotif["Email sent to allandabalidabz@gmail.com"]
+    AdminReview["Admin opens Payments tab\nReviews proof reference"]
     Decision{"Admin decision"}
-    Approve["Mark approved and notify learner"]
-    Reject["Mark rejected and notify learner"]
-    Download{"Payment status approved?"}
-    PDF["Browser creates PDF using jsPDF"]
-    Verify["Public endpoint verifies certificate number"]
+    Approve["PUT /api/payments/:id/approve\nStatus = approved"]
+    Reject["PUT /api/payments/:id/reject\nStatus = rejected"]
+    NotifyApprove["Learner notified: Certificate Unlocked"]
+    NotifyReject["Learner notified: Payment Not Verified"]
+    Download["PDF download button unlocks\nLearner downloads certificate"]
 
-    Progress --> All
-    All -- No --> No --> Progress
-    All -- Yes --> Issue --> Notify --> Page
-    Page --> Proof --> Pending --> Admin --> Decision
-    Decision -- Approve --> Approve --> Download
-    Decision -- Reject --> Reject --> Page
-    Page --> Download
-    Download -- Yes --> PDF
-    Download -- No --> Proof
-    Page --> Verify
+    CertPage --> NotPaid
+    NotPaid -- No --> ShowLock --> OpenForm --> ShowNumber --> Send --> EnterRef --> Submit
+    Submit --> InAppNotif
+    Submit --> EmailNotif
+    InAppNotif --> AdminReview
+    AdminReview --> Decision
+    Decision -- Approve --> Approve --> NotifyApprove --> Download
+    Decision -- Reject --> Reject --> NotifyReject --> OpenForm
+    NotPaid -- Yes --> ShowPDF --> Download
 ```
 
-> No electronic payment provider is integrated. Approval represents a manual status change. The inspected administrator interface does not include a payment-review screen; the decision is exposed as an admin API operation.
+---
+
+## Figure 3.8: Assignment Submission and Grading Flow
+
+```mermaid
+flowchart TD
+    Open["Learner opens enrolled course module"]
+    AssignSection["Assignment section visible at bottom of module"]
+    Read["Read assignment instructions"]
+    Write["Type response in text area\nminimum 20 characters"]
+    Submit["POST /api/assignments/:id/submit"]
+    Status["Status: Awaiting Grading\nText area hidden"]
+    AdminTab["Admin opens Assignments tab"]
+    Expand["Click Grade button\nRead full submission"]
+    EnterGrade["Enter grade 0–100\nWrite optional feedback"]
+    Grade["PUT /api/assignments/submission/:id/grade"]
+    Notify["Learner notified with score and feedback"]
+    ViewFeedback["Learner sees grade badge and feedback\nin course module"]
+
+    Open --> AssignSection --> Read --> Write --> Submit --> Status
+    Status --> AdminTab --> Expand --> EnterGrade --> Grade --> Notify --> ViewFeedback
+```

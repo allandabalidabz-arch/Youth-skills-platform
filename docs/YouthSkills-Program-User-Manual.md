@@ -3,229 +3,283 @@
 
 **Institution:** Evelyn Hone College  
 **System:** YouthSkills Program  
-**Document status:** Prepared from inspection of the current application. It describes the current learner screens and identifies administrator actions that have API support but no corresponding screen.
+**Version:** 2.0
 
 ---
 
 ## 1. Introduction
 
-This manual explains how to install and use the YouthSkills Program digital-skills learning application. The system provides course browsing, module content, quizzes, text assignments, learner progress, certificates and notifications. The current application does **not** provide job listings, recruitment, mentorship or opportunity applications.
+The YouthSkills Program is a web-based digital-skills learning platform developed for Evelyn Hone College. It allows youth learners to register, enrol in digital-skills courses, study module content, complete quizzes and assignments, earn certificates, and download verified PDF certificates after payment approval.
 
-## 2. System Requirements
+Administrators manage the platform through a dedicated portal where they can view registered youth, track course completions, grade assignment submissions, and approve or reject certificate payment proofs.
 
-### For learners and administrators
-
-- A current web browser such as Chrome, Firefox or Edge.
-- Access to the deployed application and internet connection, or a local network connection to a running development server.
-- An email address for account registration.
-
-### For local installation
-
-- Windows, macOS or Linux computer.
-- Node.js and npm installed.
-- The project source code and its package manifests.
-- A current browser and a code editor such as Visual Studio Code.
-
-The project does not specify a tested minimum Node.js version. Use a maintained Node.js LTS release compatible with the packages in the supplied lockfiles, then record the exact version used for the final submission.
-
-## 3. Installation and Setup
-
-1. Open a terminal in the project folder.
-2. In a first terminal, install backend dependencies and start the API:
-
-   ```powershell
-   Set-Location .\backend
-   npm install
-   npm run dev
-   ```
-
-   The backend is configured to listen on port `5000` by default.
-
-3. In a second terminal, install frontend dependencies and start the web app:
-
-   ```powershell
-   Set-Location .\frontend
-   npm install
-   npm run dev
-   ```
-
-4. Open `http://localhost:3000` in a browser.
-5. Confirm that the API health endpoint responds at `http://localhost:5000/api/health`.
-
-The frontend Vite development configuration proxies `/api` requests to `http://localhost:5000`.
-
-### Database setup
-
-The API initialises its SQLite schema when it starts. The database connection path is defined in `backend/src/database.js`. When the database contains no users, the server attempts to seed demonstration content. The sample content includes three courses and related modules, quizzes and assignments.
-
-> **Important:** `backend/src/utils/seed.js` contains commands that delete existing rows before seeding. Do not run `npm run seed` on a database containing learner records you need. Use a disposable development database or make and verify a backup first.
-
-### Environment configuration
-
-The backend reads environment variables using dotenv. The variable names found in the local configuration are `PORT`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `DB_PATH`, `NODE_ENV` and `FRONTEND_URL`. Do not copy or share actual secret values. The database implementation inspected does not use the configured `DB_PATH` value; it constructs a fixed path relative to the backend source.
-
-The frontend `.env.example` contains `VITE_API_URL` as a placeholder for a deployed API. For local Vite development, the proxy is configured in `frontend/vite.config.js`.
-
-## 4. Starting and Stopping the Application
-
-Start the backend and frontend in separate terminals using the commands above. Keep both processes running while using the local application. To stop a process, focus its terminal and press `Ctrl+C`.
-
-## 5. Learner Instructions
-
-### 5.1 Register an account
-
-1. Open the application landing page.
-2. Select **Get Started** or **Create Account**.
-3. Enter your name, email address and password. Location and phone are optional.
-4. Confirm the password if requested.
-5. Submit the form and wait for the success message and dashboard.
-
-The registration page is designed for youth/learner registration. The backend accepts the `youth` role only; employer and recruitment features are not part of the application.
-
-### 5.2 Sign in
-
-1. Select **Sign In**.
-2. Enter the email address and password used during registration.
-3. Select **Remember me** if you want the browser to retain the session in persistent storage. If you leave it unchecked, the session is stored in session storage.
-4. Select **Sign In**.
-
-Administrator accounts should use the separate **Admin Portal** sign-in page. The learner login page redirects admin users to that portal.
-
-### 5.3 Navigate the learner dashboard
-
-The learner navigation includes:
-
-- **Dashboard:** Summary of enrolments, completed courses and certificates, with recent course and certificate records.
-- **Courses:** Course catalogue with search, category and level filters.
-- **Certificates:** Issued certificate records, payment state, download, share and verification actions.
-- **Profile:** Personal profile, skills and password-security tabs.
-
-The header includes a notification control and dark-mode toggle. Notifications are refreshed periodically while the page is open; they are not guaranteed to arrive as push messages.
-
-### 5.4 Browse and enrol in a course
-
-1. Select **Courses** in the navigation.
-2. Use the search box or category and level filters.
-3. Open a course card to view the course description, modules, instructor label and enrolment count.
-4. Select **Enroll Now — Free** if you are eligible to enrol and are not already enrolled.
-5. Return to the course details. Your progress is displayed once enrolled.
-
-The user interface restricts a learner from opening a module before enrolment. However, the course-detail API returns course modules and quiz content to authenticated users regardless of enrolment. This is a known backend access-control limitation; do not treat the interface restriction as server-side content protection.
-
-### 5.5 Study modules and complete learning activities
-
-1. Open an enrolled course.
-2. Select a module to expand its content.
-3. Read the displayed module material.
-4. If the module has quiz questions, select an answer for each question and choose **Submit Quiz**.
-5. A score of 60% or higher is treated by the current completion workflow as a pass.
-6. If a module has no quiz, select **Mark Complete**.
-7. Check the module status and course progress bar.
-
-The current quiz implementation has an assessment-integrity weakness: the API returns correct answers and trusts a score submitted by the browser when marking a module complete. Quiz scores and completion records should therefore be treated as demonstration data, not secure examination results.
-
-### 5.6 Submit an assignment
-
-1. Open the relevant course and module.
-2. Find the assignment and read its description and instructions.
-3. Enter a text response of at least 20 characters.
-4. Select **Submit Assignment**.
-5. Review the displayed submission status. If it has not been graded, the interface allows resubmission.
-6. If an administrator grades the submission, review the score and feedback shown in the assignment area.
-
-The learner interface supports text submissions. A database field for file URLs exists, but the reviewed application does not provide a file-upload workflow.
-
-### 5.7 Track progress
-
-Course progress is based on the proportion of course modules recorded complete. Open a course to see its progress bar and completed-module count. The dashboard also reports course enrolments and completed courses. These values reflect records in the system; they are not independent measures of acquired skill.
-
-### 5.8 View, download and verify certificates
-
-1. Complete all modules in a course according to the application's progress workflow.
-2. Open **Certificates** or review the dashboard.
-3. Select **Share** to copy the certificate verification link or **Verify** to open its public verification page.
-4. To download a PDF, the displayed payment record must have status `approved`.
-5. The PDF is created in the browser and saved to the device.
-
-The interface displays a 2,000 ZMW payment amount and asks for a payment reference. The application records a text proof and administrator status; it does not make or verify a mobile-money, bank or card payment. Confirm the fee and payment instructions with the responsible project owner before making any payment. Do not submit actual financial credentials or sensitive payment information through a demonstration system.
-
-### 5.9 Manage profile and password
-
-1. Open **Profile**.
-2. In **Profile**, update supported personal information, skills and avatar URL, then save.
-3. In **Security**, enter the current password and a new password to change it.
-
-The registration and password reset screens enforce a minimum password length of six characters. This is the implemented rule, not a recommendation for a production account-security policy.
-
-### 5.10 Forgot password
-
-1. Select **Forgot password?** on the login page.
-2. Enter the registered email address and submit.
-3. In the inspected development workflow, a reset link is logged by the backend and may be returned in non-production mode. No email provider is integrated.
-4. Open the development reset link, enter a new password and submit it.
-
-Do not expect a real email to be sent by the current code. Reset-link handling should only be performed in a controlled development environment.
-
-## 6. Administrator Instructions
-
-### 6.1 Administrator sign-in
-
-1. Open `/admin/login` on the application.
-2. Enter administrator credentials supplied securely by the project owner.
-3. Successful sign-in opens the dashboard.
-
-This manual intentionally does not reproduce seeded demo passwords or values from local environment files.
-
-### 6.2 Administrator dashboard screens
-
-The current visible dashboard provides:
-
-- **Overview:** Summary of users, youth users, courses, enrolments and certificates.
-- **Registered Youth:** A searchable list of youth accounts with profile and registration fields.
-- **Modules:** A course list that can be expanded to inspect its modules.
-
-The administrator can use **Profile** to view or update supported profile fields and change their password.
-
-### 6.3 Administrator API-only capabilities
-
-Protected backend endpoints allow administrators to create courses, add modules and quizzes, view course assignment submissions, grade submissions, list certificate-payment records, and approve or reject submitted payment proofs. The inspected dashboard does not provide corresponding screens for all of these functions. Operating these endpoints requires an authorised API client and must follow the API specification in the technical documentation. Do not claim that these operations are available through the current dashboard UI.
-
-### 6.4 Content and records
-
-Only add course content that has been approved by the responsible content owner. Avoid using real learner or payment data in demonstrations. Take a backup before changing or reseeding a database.
-
-## 7. Notifications
-
-Select the bell icon to open the notification panel. The panel shows recent notifications and unread count. Select **Mark all read** to clear unread status. The reviewed UI does not show a per-notification read action, although a per-notification API route exists.
-
-## 8. Logging Out Safely
-
-Select **Sign Out** in the navigation. This removes the application token and saved user record from local and session storage and returns the browser to the landing page. On a shared device, close the browser after signing out.
-
-## 9. Troubleshooting
-
-| Problem | Suggested action |
-|---|---|
-| Page cannot connect to the API | Check that the backend is running on port 5000, then refresh the page. Check `/api/health`. |
-| API requests fail after changing deployment | Verify the frontend API base URL and backend CORS `FRONTEND_URL` configuration. Never share secret values. |
-| Sign-in returns an error | Confirm the email/password and ensure the database contains the account. Use the admin portal for an administrator account. |
-| User is repeatedly returned to login | The API may have rejected an expired/invalid token. Sign in again. |
-| Course list is empty | Confirm the database was initialised and course seed content exists. Seed only an empty or disposable database. |
-| Quiz completion behaves unexpectedly | The quiz implementation has known integrity limitations. Do not use it for a formal examination. |
-| Certificate cannot be downloaded | The UI requires an approved payment record. The application does not process actual payments; contact the project owner rather than submitting sensitive details. |
-| Forgot-password link is not received | Email delivery is not implemented. In local development, the reset link is logged by the backend. |
-| Missing or incorrect profile information | Update the profile and save. If an API error occurs, sign in again and report the issue to the administrator. |
-
-## 10. Known Limitations
-
-- No employment, mentoring or recruitment functionality.
-- No trainer role in the account model.
-- No email delivery for password resets.
-- Manual certificate-payment proof workflow; no integrated payment provider.
-- Some administrator actions are API-only.
-- Quiz answer disclosure and client-submitted scores weaken assessment integrity.
-- No formal user-acceptance or accessibility evaluation is documented.
+The system does not provide job listings, recruitment, mentorship or employer features.
 
 ---
 
-**For developer setup, API endpoint details, schema and backup guidance, see `docs/YouthSkills-Program-Technical-Documentation.md`.**
+## 2. System Requirements
+
+- A modern web browser: Chrome, Firefox, or Edge (latest version recommended)
+- Internet or local network access to the running server
+- For local installation: Node.js (LTS), npm, and a code editor
+
+---
+
+## 3. Starting the System (Local Development)
+
+Both the backend and frontend must be running at the same time.
+
+**Terminal 1 — Backend API:**
+```powershell
+cd "youth-skills-platform\backend"
+npm install
+npm run dev
+```
+Wait for: `🚀 Server running on http://localhost:5000`
+
+**Terminal 2 — Frontend:**
+```powershell
+cd "youth-skills-platform\frontend"
+npm install
+npm run dev
+```
+Wait for: `Local: http://localhost:3000/`
+
+Open `http://localhost:3000` in your browser. Both terminals must stay open while using the system.
+
+**Verify the API is running:** Open `http://localhost:5000/api/health` — it should return a JSON status message.
+
+---
+
+## 4. Demo Accounts
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@youthskills.com | Allan7034 |
+
+Youth accounts are created by registering on the platform.
+
+---
+
+## 5. Youth Learner Guide
+
+### 5.1 Creating an Account
+
+1. Open the application landing page at `http://localhost:3000`
+2. Click **Get Started Free** or **Create Account**
+3. Fill in all required fields:
+   - **Full Name** — letters only
+   - **NRC Number** — required; Zambian format `123456/78/9`
+   - **Email Address** — required; must be a valid email
+   - **Location** — optional
+   - **Phone** — optional; format `+260...`
+   - **Password** — minimum 6 characters
+   - **Confirm Password**
+4. Click **Create Account**
+5. You will be taken directly to your dashboard
+
+### 5.2 Signing In
+
+1. Go to `http://localhost:3000/login`
+2. Enter your registered email and password
+3. Tick **Remember me** to stay logged in after closing the browser
+4. Click **Sign In**
+
+> Admin accounts must sign in at `http://localhost:3000/admin/login`
+
+### 5.3 Dashboard
+
+Your dashboard shows:
+- Number of enrolled and completed courses
+- Number of certificates earned
+- Your overall completion rate
+- Recent courses with a progress bar showing modules completed
+- Recent certificates earned
+
+If you have not enrolled in any courses yet, a **Browse Courses** button guides you to the course library.
+
+### 5.4 Browsing and Enrolling in Courses
+
+1. Click **Courses** in the left sidebar
+2. Use the search bar, category filter (Systems / Coding), or level filter to find a course
+3. Click on a course card to open its detail page
+4. Click **Enroll Now — Free** to enrol
+5. Once enrolled, the modules unlock and your progress bar appears
+
+### 5.5 Studying a Module
+
+1. Open a course you are enrolled in
+2. Click on a module to expand it
+3. Read the module content carefully
+4. When ready, click **Take Quiz** if the module has quiz questions
+
+### 5.6 Taking a Quiz
+
+1. Read each question and select one answer per question
+2. Click **Submit Quiz** when all questions are answered
+3. Your score is shown immediately
+4. You need at least **60%** to pass and complete the module
+5. If you score below 60%, click **Retry Quiz** and try again
+6. On passing, the module is marked complete automatically
+
+### 5.7 Submitting an Assignment
+
+Each course has one final assignment covering all three modules.
+
+1. Open any module in the course to find the assignment section at the bottom
+2. Read the assignment title, description, and full instructions carefully
+3. Type your response in the text box (minimum 20 characters)
+4. Click **Submit Assignment**
+5. The status changes to **⏳ Awaiting Grading**
+6. Once graded by the admin, you will receive a notification with your score and feedback
+
+### 5.8 Completing a Course and Earning a Certificate
+
+After passing all three module quizzes:
+- You receive a **🏆 Certificate Earned!** notification
+- The system automatically redirects you to the **Certificates** page
+- A certificate record is created with a unique certificate number
+
+### 5.9 Downloading Your Certificate
+
+Certificates require a payment of **2,000 ZMW** before the PDF can be downloaded.
+
+1. Go to **Certificates** in the sidebar
+2. Click the **2,000 ZMW** button on your certificate card
+3. A payment panel opens showing the mobile money number:
+   - **Send 2,000 ZMW to: 0970 342 178 (Allan Dabali — YouthSkills Program)**
+4. After sending, enter your **transaction reference number** in the input field
+5. Click **Submit Payment Proof**
+6. The status changes to **⏳ Pending**
+7. Once the admin approves, you receive a notification
+8. The **PDF** download button unlocks — click it to download your certificate
+
+The certificate PDF includes your name, NRC number, course, date, certificate number, and a verification link.
+
+### 5.10 Sharing and Verifying Your Certificate
+
+- Click **Share** to copy a public verification link
+- Anyone can visit `http://localhost:3000/verify/{CERTIFICATE_NUMBER}` to confirm the certificate is genuine
+
+### 5.11 Managing Your Profile
+
+1. Click **Profile** in the sidebar
+2. Update your name, bio, location, phone, NRC, or avatar URL
+3. Add or remove skills using the Skills section
+4. Click **Save Changes**
+5. Use the **Security** tab to change your password
+
+### 5.12 Notifications
+
+- The bell icon in the top bar shows a red badge when you have unread notifications
+- Click the bell to see messages about certificate earnings, assignment grades, and payment approvals
+- Click **Mark all read** to clear the badge
+
+### 5.13 Forgot Password
+
+1. Go to the login page and click **Forgot password?**
+2. Enter your registered email
+3. The reset link is logged to the backend console (development mode)
+4. Open the link, enter a new password, and submit
+
+---
+
+## 6. Administrator Guide
+
+### 6.1 Signing In as Admin
+
+1. Go to `http://localhost:3000/admin/login`
+2. Enter: `admin@youthskills.com` / `Allan7034`
+3. You will be taken to the Admin Dashboard
+
+### 6.2 Admin Dashboard Overview
+
+The Overview tab shows five clickable cards:
+
+| Card | What it shows |
+|---|---|
+| Total Users | All registered accounts; click to see youth list |
+| Courses | Total courses and enrollments; click to see modules |
+| Certificates Issued | Total certificates; click to see completions list |
+| Pending Assignments | Submissions awaiting grading; click to grade |
+| Pending Payments | Payment proofs awaiting approval; click to review |
+
+### 6.3 Registered Youth Tab
+
+- View a searchable, paginated table of all registered youth
+- Columns: Name, Email, NRC, Location, Registration Date
+- Use the search box to find a specific learner by name or email
+
+### 6.4 Completions Tab
+
+- View a table of all course completions across the platform
+- Columns: Student Name, Email, Course, Certificate Number, Date Completed
+- Shows the 10 most recent completions
+
+### 6.5 Modules Tab
+
+- Browse all courses and expand each one to see its modules
+- Useful for verifying course content during demonstrations
+
+### 6.6 Assignments Tab — Grading
+
+1. Click the **Assignments** tab
+2. All submissions appear, sorted by most recent first
+3. Each card shows the student name, assignment title, module, submission time, and status (Pending / Graded with score)
+4. Click **Grade** to expand a submission
+5. Read the full student submission text
+6. Enter a **grade** from 0 to 100
+7. Optionally write **feedback** for the student
+8. Click **Submit Grade**
+9. The student receives an in-app notification with their score and feedback
+
+### 6.7 Payments Tab — Approving Certificates
+
+When a learner submits payment proof you receive:
+- An **in-app notification** in the bell icon
+- An **email** to `allandabalidabz@gmail.com` with full details
+
+To review:
+1. Click the **Payments** tab
+2. Each payment card shows student name, course, certificate number, amount (2,000 ZMW), and the submitted payment reference
+3. Verify the reference number matches your mobile money records
+4. Click **Approve** to unlock the certificate PDF for the learner
+5. Or type an optional reject reason and click **Reject**
+6. The learner receives an in-app notification either way
+
+### 6.8 Profile
+
+Admins can update their own name, bio, location, and password from the **Profile** page.
+
+---
+
+## 7. Certificate Verification (Public)
+
+Anyone — including employers and institutions — can verify a certificate without logging in:
+
+1. Go to `http://localhost:3000/verify/{CERTIFICATE_NUMBER}`
+2. The page shows whether the certificate is valid and displays the holder's name, course, and issue date
+
+---
+
+## 8. Troubleshooting
+
+| Problem | Solution |
+|---|---|
+| Dashboard shows an error or "Try Again" button | The backend is not running. Start it with `npm run dev` in the backend folder, then click Try Again |
+| Login says "Invalid email or password" | Check credentials. Admin must use `/admin/login`, not the regular login |
+| Registration fails with "NRC already registered" | That NRC number is already linked to another account |
+| Course list is empty | The database needs seeding. Run `npm run seed` in the backend (warning: this deletes all data) |
+| Certificate download is locked | Payment proof has not been approved yet. Check the Payments tab in the admin dashboard |
+| Forgot-password link not received by email | Email delivery is only configured for payment notifications. The reset link is logged to the backend console in development mode |
+| Quiz score not saving | Ensure you score at least 60% and click Submit Quiz. The module completes automatically on passing |
+
+---
+
+## 9. Known Limitations
+
+- No email delivery for password resets (link is console-logged only)
+- No employment, mentorship or recruitment features
+- No trainer/instructor role — course content is seeded by the developer
+- Assignment file upload is not implemented — text submissions only
+- SQLite is suitable for small deployments; high-concurrency production use requires a different database

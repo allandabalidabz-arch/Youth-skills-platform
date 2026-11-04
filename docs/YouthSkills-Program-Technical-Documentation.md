@@ -3,29 +3,39 @@
 
 **Institution:** Evelyn Hone College  
 **System type:** Web-based digital-skills learning platform  
-**Document status:** Prepared from static inspection of the current project source and SQLite schema.
+**Document version:** 2.0 — reflects the fully implemented and tested system.
 
-> Do not copy real values from `.env` files, expose demo account credentials or publish a database containing real user data. Environment values shown below are placeholders only.
+> Do not copy real values from `.env` files, expose admin credentials or publish a database containing real user data. Environment values shown below are placeholders only.
+
+---
 
 ## 1. Project Overview
 
-YouthSkills Program is a React single-page application backed by a Node.js/Express API and SQLite database. It supports user accounts, digital-skills courses and modules, quizzes, text assignments, enrolments, progress tracking, certificate records and verification, notifications, and selected administration functions. Certificate payment is recorded as manually submitted proof; no payment gateway is integrated. Password reset does not use an email provider in the inspected implementation.
+YouthSkills Program is a React single-page application backed by a Node.js/Express REST API and a SQLite database. It delivers structured digital-skills training to youth learners through three courses — System Analysis and Design, Web Development, and Operating Systems — each containing three modules, one quiz per module, and one comprehensive final assignment per course.
 
-The current codebase does not provide opportunity, job, employer recruitment, mentor or trainer workflows. No employer role, employer UI or employer dashboard is provided.
+The platform supports full learner workflows: registration (with NRC validation), authentication, course browsing, enrolment, module study, quiz submission, assignment submission, progress tracking, certificate issuance, certificate payment proof submission, and certificate PDF download. Administrators have a dedicated portal with five management tabs: Overview, Registered Youth, Completions, Modules, Assignments (grading), and Payments (approval). Email notifications are sent to the administrator when a learner submits payment proof.
+
+The system does not provide job listings, recruitment, employer, mentorship or trainer workflows.
+
+---
 
 ## 2. Technology Stack
 
 | Component | Technology |
 |---|---|
-| Frontend | React 18, JSX, Vite, React Router, Tailwind CSS |
+| Frontend | React 18, JSX, Vite 5, React Router v6, Tailwind CSS 3 |
 | HTTP client | Axios |
-| Icons and feedback | Lucide React, react-hot-toast |
+| Icons | Lucide React |
+| Notifications | react-hot-toast |
 | PDF generation | jsPDF |
 | Backend | Node.js, Express 4 |
-| Database | SQLite through `sqlite` and `sqlite3` |
-| Authentication | JWT (`jsonwebtoken`), bcryptjs |
-| Other backend packages | cors, dotenv, uuid, multer (listed; no source use found) |
-| Build/configuration | npm, Vite, PostCSS, Tailwind |
+| Database | SQLite via `sqlite` and `sqlite3` packages |
+| Authentication | JWT (`jsonwebtoken`), bcryptjs (cost factor 12) |
+| Email | Nodemailer (Gmail SMTP) |
+| Other backend | cors, dotenv, uuid |
+| Build tools | npm, Vite, PostCSS, Autoprefixer |
+
+---
 
 ## 3. Folder Structure
 
@@ -34,384 +44,327 @@ youth-skills-platform/
 ├── README.md
 ├── backend/
 │   ├── package.json
-│   ├── package-lock.json
-│   ├── .env                     # Local-only; never publish its values
-│   ├── database.sqlite          # Local database; may contain private data
+│   ├── .env                        # Local only — never commit real values
+│   ├── database.sqlite             # SQLite database file
 │   └── src/
-│       ├── server.js
-│       ├── database.js
+│       ├── server.js               # Express app entry point
+│       ├── database.js             # Schema + auto-migration
 │       ├── middleware/
-│       │   └── auth.js
+│       │   └── auth.js             # JWT verify + role check
 │       ├── routes/
-│       │   ├── assignments.js
-│       │   ├── auth.js
-│       │   ├── certificates.js
-│       │   ├── courses.js
-│       │   ├── dashboard.js
-│       │   ├── notifications.js
-│       │   ├── payments.js
-│       │   ├── progress.js
-│       │   └── users.js
+│       │   ├── auth.js             # Register, login, password reset
+│       │   ├── users.js            # Profile read/update, admin user list
+│       │   ├── courses.js          # Course CRUD, enrolment
+│       │   ├── progress.js         # Module completion, quiz submission
+│       │   ├── assignments.js      # Assignment read, submit, grade
+│       │   ├── certificates.js     # Certificate list, public verify
+│       │   ├── payments.js         # Payment proof submit, approve, reject
+│       │   ├── notifications.js    # Notification list, mark read
+│       │   └── dashboard.js        # Youth + admin dashboard stats
 │       └── utils/
-│           └── seed.js
+│           └── seed.js             # Database seed (destructive)
 ├── frontend/
 │   ├── package.json
-│   ├── package-lock.json
-│   ├── .env.example
-│   ├── vite.config.js
-│   ├── vercel.json
-│   ├── public/
+│   ├── vite.config.js              # Port 3000, /api proxy to 5000
+│   ├── index.html
 │   └── src/
 │       ├── main.jsx
-│       ├── App.jsx
-│       ├── index.css
-│       ├── components/
+│       ├── App.jsx                 # Route definitions
+│       ├── index.css               # Tailwind + component classes
 │       ├── context/
-│       ├── pages/
-│       └── utils/
+│       │   └── AuthContext.jsx     # Auth state, login, register, logout
+│       ├── utils/
+│       │   └── api.js              # Axios instance, token interceptors
+│       ├── components/
+│       │   ├── Layout.jsx          # Sidebar, topbar, notifications
+│       │   └── Logo.jsx
+│       └── pages/
+│           ├── LandingPage.jsx
+│           ├── LoginPage.jsx
+│           ├── RegisterPage.jsx
+│           ├── AdminLoginPage.jsx
+│           ├── DashboardPage.jsx   # Youth + admin dashboard
+│           ├── CoursesPage.jsx
+│           ├── CourseDetailPage.jsx
+│           ├── CertificatesPage.jsx
+│           ├── ProfilePage.jsx
+│           ├── VerifyCertPage.jsx
+│           ├── ForgotPasswordPage.jsx
+│           ├── ResetPasswordPage.jsx
+│           └── NotFoundPage.jsx
 └── docs/
+    ├── YouthSkills-Program-Technical-Documentation.md
     ├── YouthSkills-Program-Academic-Documentation.md
     ├── YouthSkills-Program-User-Manual.md
-    ├── YouthSkills-Program-Technical-Documentation.md
     └── YouthSkills-Program-Diagrams.md
 ```
 
-The nested `youth-skills-platform/frontend` directory in the inspected workspace contains an image asset and is not the active package root; the active frontend package is the top-level `frontend` folder.
+---
 
 ## 4. Application Architecture
 
-1. `frontend/src/main.jsx` mounts React, browser routing and toast presentation.
-2. `frontend/src/App.jsx` defines public routes and authentication/role-gated routes.
-3. `frontend/src/context/AuthContext.jsx` performs sign-in and registration calls and keeps user state in React.
-4. `frontend/src/utils/api.js` sets Axios base URL, attaches the token and clears browser session data after a 401 response.
-5. `frontend/vite.config.js` configures port 3000 and proxies `/api` to `http://localhost:5000`.
-6. `backend/src/server.js` configures Express, CORS, body parsing, static uploads, route groups, health endpoint and error middleware.
-7. Route handlers call `getDb()` from `backend/src/database.js`, perform SQL operations and return JSON.
-8. `backend/src/middleware/auth.js` verifies JWTs, reloads user identity from the database and checks permitted role(s).
-9. SQLite stores users, learning data, progress, assignments, certificates, payment-proof state, notifications and reset tokens.
+1. `frontend/src/main.jsx` mounts React with `BrowserRouter` and the toast provider.
+2. `App.jsx` defines public, protected, and admin-only routes with role-gated wrappers.
+3. `AuthContext.jsx` manages sign-in, registration, token storage (localStorage for Remember Me, sessionStorage otherwise), and token validation on load.
+4. `api.js` sets the Axios base URL to `/api` (proxied to port 5000 in development), attaches the Bearer token, and redirects to `/login` on 401.
+5. `server.js` configures Express with CORS, JSON parsing (10 MB limit), static uploads, all route groups, a health endpoint, and a final error handler.
+6. Route handlers call `getDb()`, validate inputs, apply middleware, and return JSON.
+7. `database.js` opens the SQLite file, enables WAL journal mode and foreign keys, creates all tables via `CREATE TABLE IF NOT EXISTS`, and runs auto-migrations (e.g. adding the `nrc` column to existing databases).
 
-An editable architecture diagram is supplied in `docs/YouthSkills-Program-Diagrams.md`.
+---
 
-## 5. Installation and Development Setup
+## 5. Database Schema
 
-Use PowerShell from the project root:
+The schema is initialised in `backend/src/database.js`. Auto-migration adds columns to existing tables without requiring a fresh seed.
 
+### Tables
+
+| Table | Purpose |
+|---|---|
+| `users` | Accounts with role, NRC, profile fields, hashed password |
+| `courses` | Course metadata and instructor display fields |
+| `modules` | Learning units belonging to a course |
+| `quizzes` | Multiple-choice quiz questions per module |
+| `enrollments` | User/course membership and completion timestamp |
+| `module_progress` | Per-module completion flag, quiz score, timestamp |
+| `assignments` | Text-based task per course (one per course, linked to last module) |
+| `assignment_submissions` | Learner text response, grade, feedback, status |
+| `certificates` | Issued on full course completion; unique certificate number |
+| `certificate_payments` | Manual payment proof; status pending/approved/rejected |
+| `notifications` | Per-user in-app messages |
+| `password_resets` | Token-based reset records with expiry |
+
+### Key fields — users table
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | TEXT PK | UUID |
+| `name` | TEXT | Required; letters only |
+| `email` | TEXT UNIQUE | Required; lowercase stored |
+| `password` | TEXT | bcryptjs hash; never returned to client |
+| `role` | TEXT | `youth` or `admin` |
+| `nrc` | TEXT | Zambian NRC; format `123456/78/9`; required for youth; unique |
+| `location`, `phone`, `bio`, `avatar` | TEXT | Optional profile fields |
+| `skills` | TEXT | JSON array |
+
+### Foreign-key relationships
+
+- `modules.course_id` → `courses.id` (CASCADE DELETE)
+- `quizzes.module_id` → `modules.id` (CASCADE DELETE)
+- `enrollments.user_id` → `users.id`, `enrollments.course_id` → `courses.id`
+- `module_progress.user_id` → `users.id`, `module_progress.module_id` → `modules.id`
+- `certificates.user_id` → `users.id`, `certificates.course_id` → `courses.id`
+- `assignment_submissions.assignment_id` → `assignments.id`, `.user_id` → `users.id`
+- `certificate_payments.user_id` → `users.id`, `.certificate_id` → `certificates.id`
+- `notifications.user_id` → `users.id`
+- `password_resets.user_id` → `users.id`
+
+---
+
+## 6. API Endpoints
+
+Base URL (local development): `http://localhost:5000`. The Vite proxy forwards `/api` to this base during frontend development.
+
+### Authentication
+
+| Method | Path | Access | Purpose |
+|---|---|---|---|
+| POST | `/api/auth/register` | Public | Create youth account; requires name, email, NRC, password |
+| POST | `/api/auth/login` | Public | Verify credentials; return JWT |
+| GET | `/api/auth/me` | Authenticated | Return current user |
+| PUT | `/api/auth/change-password` | Authenticated | Verify current password and set new one |
+| POST | `/api/auth/forgot-password` | Public | Create reset token; log link to console |
+| POST | `/api/auth/reset-password` | Public with token | Set new password; mark token used |
+
+### Users
+
+| Method | Path | Access | Purpose |
+|---|---|---|---|
+| GET | `/api/users/profile` | Authenticated | Read own full profile including NRC |
+| PUT | `/api/users/profile` | Authenticated | Update profile fields including NRC |
+| GET | `/api/users/:id/public` | Authenticated | Read public profile and certificates |
+| GET | `/api/users` | Admin | List/search/paginate accounts |
+
+### Courses and Learning
+
+| Method | Path | Access | Purpose |
+|---|---|---|---|
+| GET | `/api/courses` | Authenticated | List published courses with filters |
+| GET | `/api/courses/:id` | Authenticated | Course detail, modules, quizzes, enrolment |
+| POST | `/api/courses/:id/enroll` | Youth | Enrol in course |
+| POST | `/api/courses` | Admin | Create course |
+| POST | `/api/courses/:id/modules` | Admin | Add module |
+| POST | `/api/courses/modules/:moduleId/quiz` | Admin | Add quiz question |
+| POST | `/api/progress/module/:moduleId/complete` | Youth | Mark module complete; issue certificate if all done |
+| POST | `/api/progress/quiz/:moduleId/submit` | Youth | Submit quiz answers; receive score |
+| GET | `/api/progress/course/:courseId` | Authenticated | Progress for current user in a course |
+| GET | `/api/progress/my-courses` | Authenticated | All enrolments with progress |
+
+### Assignments
+
+| Method | Path | Access | Purpose |
+|---|---|---|---|
+| GET | `/api/assignments/module/:moduleId` | Authenticated | Read assignment; youth gets own submission |
+| GET | `/api/assignments/my` | Youth | All own submissions |
+| POST | `/api/assignments/:id/submit` | Youth | Submit or resubmit text response |
+| GET | `/api/assignments/course/:courseId/submissions` | Admin | All submissions for a course |
+| PUT | `/api/assignments/submission/:id/grade` | Admin | Grade and give feedback; notify learner |
+
+### Certificates and Payments
+
+| Method | Path | Access | Purpose |
+|---|---|---|---|
+| GET | `/api/certificates/my` | Authenticated | Own certificates |
+| GET | `/api/certificates/verify/:certNumber` | Public | Verify certificate by number |
+| POST | `/api/payments/certificate/:certId/submit` | Youth | Submit payment proof; notify admin in-app and by email |
+| GET | `/api/payments/certificate/:certId/status` | Authenticated | Own payment status |
+| GET | `/api/payments/pending` | Admin | Pending payment proofs |
+| GET | `/api/payments/all` | Admin | All payment records |
+| PUT | `/api/payments/:paymentId/approve` | Admin | Approve; unlock PDF download; notify learner |
+| PUT | `/api/payments/:paymentId/reject` | Admin | Reject with optional reason; notify learner |
+
+### Notifications and Dashboards
+
+| Method | Path | Access | Purpose |
+|---|---|---|---|
+| GET | `/api/notifications` | Authenticated | Latest notifications and unread count |
+| PUT | `/api/notifications/read-all` | Authenticated | Mark all read |
+| PUT | `/api/notifications/:id/read` | Authenticated | Mark one read |
+| GET | `/api/dashboard/youth` | Youth/Admin | Learner stats, recent courses with progress, recent certificates |
+| GET | `/api/dashboard/admin` | Admin | Aggregate stats, pending counts, recent completions |
+| GET | `/api/health` | Public | API health check |
+
+---
+
+## 7. Authentication and Authorisation
+
+- Backend expects `Authorization: Bearer <token>` on protected routes.
+- `authenticate` middleware verifies the JWT using `JWT_SECRET`, reloads the user from SQLite, and attaches to `req.user`.
+- `authorize(...roles)` checks the loaded role. Some routes use an inline role check instead.
+- The standard login page blocks admin accounts and redirects to `/admin/login`.
+- Tokens are stored in localStorage (Remember Me) or sessionStorage (session only).
+- The Axios interceptor clears both stores on 401 and navigates to `/login`.
+
+---
+
+## 8. Email Notifications (Nodemailer)
+
+When a learner submits certificate payment proof, `payments.js` sends an HTML email to the admin address configured in `.env`. The email includes student name, email, course title, certificate number, amount, and the submitted payment reference. If `GMAIL_APP_PASSWORD` is not configured, the email step is skipped silently without affecting the submission.
+
+### Required `.env` variables for email
+
+```dotenv
+GMAIL_USER=allandabalidabz@gmail.com
+GMAIL_APP_PASSWORD=<16-character Gmail App Password>
+ADMIN_EMAIL=allandabalidabz@gmail.com
+PAYMENT_NUMBER=0970342178
+```
+
+To generate a Gmail App Password: Google Account → Security → 2-Step Verification → App passwords.
+
+---
+
+## 9. Certificate PDF
+
+The certificate PDF is generated client-side using jsPDF. It is a landscape A4 document with:
+
+- Light green (`#16a34a`) accent bars, borders, and text
+- Organisation name in the top bar
+- Decorative line below the heading
+- Single YouthSkills logo centered below the line
+- Student name (large, underlined) with NRC number below
+- Course title, category and level badges
+- Three-column footer: instructor name, date issued, certificate number
+- Verification URL in the bottom bar
+
+PDF download is only enabled when the learner's payment proof has been approved by the admin.
+
+---
+
+## 10. Environment Variables
+
+### Backend `.env`
+
+```dotenv
+PORT=5000
+JWT_SECRET=<long-random-secret>
+JWT_EXPIRES_IN=7d
+NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
+GMAIL_USER=allandabalidabz@gmail.com
+GMAIL_APP_PASSWORD=<gmail-app-password>
+ADMIN_EMAIL=allandabalidabz@gmail.com
+PAYMENT_NUMBER=0970342178
+```
+
+### Frontend `.env` (production only)
+
+```dotenv
+VITE_API_URL=https://<your-api-host>/api
+```
+
+---
+
+## 11. Installation and Development
+
+Open two PowerShell terminals from the project root:
+
+**Terminal 1 — Backend:**
 ```powershell
 Set-Location .\backend
 npm install
 npm run dev
 ```
 
-Open a second PowerShell terminal:
-
+**Terminal 2 — Frontend:**
 ```powershell
 Set-Location .\frontend
 npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`. The API health endpoint is `http://localhost:5000/api/health`.
+Open `http://localhost:3000`. API health: `http://localhost:5000/api/health`.
 
-For a production frontend build:
+### Seeding the database
 
 ```powershell
-Set-Location .\frontend
-npm run build
-npm run preview
+Set-Location .\backend
+npm run seed
 ```
 
-The inspected production build completed successfully. It emitted a Browserslist data age warning and a large-chunk warning. This is build evidence only, not an API or user-flow test.
+**Warning:** The seed script deletes all existing data before inserting fresh content. Only run it on a disposable or empty development database.
 
-### Environment variables
+After seeding:
+- Admin: `admin@youthskills.com` / `Allan7034`
+- Youth accounts: register on the platform
 
-Backend variable names read or referenced in the project:
-
-```dotenv
-PORT=5000
-JWT_SECRET=<generate-a-long-random-secret>
-JWT_EXPIRES_IN=<for-example-1d>
-DB_PATH=<currently-not-used-by-database.js>
-NODE_ENV=<development-or-production>
-FRONTEND_URL=<trusted-frontend-origin>
-```
-
-Frontend deployment example:
-
-```dotenv
-VITE_API_URL=https://<your-api-host>/api
-```
-
-`frontend/.env.example` provides a placeholder deployment URL. The actual backend `.env` is local configuration and must not be copied to public documentation, source control or screenshots. `JWT_SECRET` must be unique and private. Do not reuse any demo or example credential.
-
-### Database behaviour
-
-At backend startup, `getDb()` opens the SQLite database at a path computed from `__dirname`, enables WAL and foreign keys, and creates missing tables. The `DB_PATH` environment variable is present in local configuration but is not read by the inspected database module. This discrepancy should be fixed or documented before deployment.
-
-When no users exist, the server attempts to seed the database. The seed routine also contains `DELETE FROM` statements. **Treat `npm run seed` as destructive.** Back up a database and verify the backup before using seed on anything other than a disposable development database.
-
-## 6. Database Schema and Relationships
-
-The schema is created in `backend/src/database.js`; no separate SQL import file was identified.
-
-### 6.1 Tables
-
-| Table | Key fields and purpose |
-|---|---|
-| `users` | `id TEXT PRIMARY KEY`; `name`, unique `email`, hashed `password`, `role`, `avatar`, `bio`, `location`, `phone`, JSON text `skills`, timestamps |
-| `courses` | `id TEXT PRIMARY KEY`; title, description, category, level, duration, thumbnail, instructor display fields, JSON text tags, publication flag, creation time |
-| `modules` | `id`; `course_id` FK to courses; title, description, content, video URL, ordering, duration, creation time |
-| `quizzes` | `id`; `module_id` FK to modules; question, JSON text options, correct option index, explanation |
-| `enrollments` | `id`; `user_id` FK; `course_id` FK; enrolment/completion dates; unique user/course pair |
-| `module_progress` | `id`; `user_id` FK; `module_id` FK; `course_id`; completion flag, score, completion time; unique user/module pair |
-| `certificates` | `id`; `user_id` FK; `course_id` FK; issue time, unique certificate number; unique user/course pair |
-| `notifications` | `id`; `user_id` FK; title, message, type, read flag, creation time |
-| `assignments` | `id`; `module_id` FK; `course_id` FK; title, description, instructions, due days, creation time |
-| `assignment_submissions` | `id`; assignment and user FKs; module/course IDs, submission text, file URL, status, grade, feedback and timestamps; unique user/assignment pair |
-| `certificate_payments` | `id`; user and certificate FKs; amount default 2000, currency default ZMW, proof, status, submission/approval metadata; unique user/certificate pair |
-| `password_resets` | `id`; user FK; token, expiry, used flag and creation time |
-
-### 6.2 Foreign-key relationships and constraints
-
-- `modules.course_id` → `courses.id` (`ON DELETE CASCADE`).
-- `quizzes.module_id` → `modules.id` (`ON DELETE CASCADE`).
-- `enrollments.user_id` → `users.id`; `enrollments.course_id` → `courses.id` (cascade deletes).
-- `module_progress.user_id` → `users.id`; `module_progress.module_id` → `modules.id` (cascade deletes).
-- `certificates.user_id` → `users.id`; `certificates.course_id` → `courses.id` (cascade deletes).
-- `notifications.user_id` → `users.id` (cascade delete).
-- `assignments.module_id` → `modules.id`; `assignments.course_id` → `courses.id` (cascade deletes).
-- `assignment_submissions.assignment_id` → `assignments.id`; `assignment_submissions.user_id` → `users.id` (cascade deletes).
-- `certificate_payments.user_id` → `users.id`; `certificate_payments.certificate_id` → `certificates.id` (cascade deletes).
-- `password_resets.user_id` → `users.id` (cascade delete).
-- `module_progress.course_id`, `assignment_submissions.module_id`, `assignment_submissions.course_id` and `certificate_payments.approved_by` do not have declared foreign keys in the inspected schema.
-
-### 6.3 Data dictionary: user and course records
-
-| Field | Type / default | Meaning |
-|---|---|---|
-| `users.id` | TEXT, primary key | User UUID assigned by application |
-| `users.name` | TEXT, required | Account display name |
-| `users.email` | TEXT, unique, required | Sign-in identifier |
-| `users.password` | TEXT, required | bcryptjs password hash; never return to client |
-| `users.role` | TEXT, default `youth` | Role string used by authorisation middleware |
-| `users.avatar`, `bio`, `location`, `phone` | TEXT, nullable | Profile data |
-| `users.skills` | TEXT, default `[]` | JSON-encoded list of skills |
-| `users.created_at`, `updated_at` | DATETIME | Account timestamps |
-| `courses.id` | TEXT, primary key | Course UUID |
-| `courses.title`, `description`, `category` | TEXT, required | Course identity and catalogue text |
-| `courses.level` | TEXT, default `beginner` | Course level label |
-| `courses.duration_hours` | INTEGER, default `0` | Displayed planned duration |
-| `courses.thumbnail` | TEXT, nullable | Image URL |
-| `courses.instructor_name` | TEXT, required | Display text; not a trainer account |
-| `courses.instructor_bio` | TEXT, nullable | Instructor display biography |
-| `courses.tags` | TEXT, default `[]` | JSON-encoded tags |
-| `courses.is_published` | INTEGER, default `1` | Published filter flag |
-| `courses.created_at` | DATETIME | Creation timestamp |
-
-### 6.4 Data dictionary: learning and results
-
-| Table/field | Type / default | Meaning |
-|---|---|---|
-| `modules.id` | TEXT, primary key | Module UUID |
-| `modules.course_id` | TEXT, required, FK | Parent course |
-| `modules.title`, `content` | TEXT, required | Module heading and learning material |
-| `modules.description`, `video_url` | TEXT, nullable | Optional description or video URL |
-| `modules.order_index` | INTEGER, required | Course sequence |
-| `modules.duration_minutes` | INTEGER, default `0` | Estimated module time |
-| `quizzes.id` | TEXT, primary key | Quiz-question UUID |
-| `quizzes.module_id` | TEXT, required, FK | Parent module |
-| `quizzes.question` | TEXT, required | Question text |
-| `quizzes.options` | TEXT, required | JSON-encoded options |
-| `quizzes.correct_answer` | INTEGER, required | Correct option index |
-| `quizzes.explanation` | TEXT, nullable | Explanation returned with quiz result |
-| `enrollments.id` | TEXT, primary key | Enrolment UUID |
-| `enrollments.user_id`, `course_id` | TEXT, required, FK | Learner and course |
-| `enrollments.enrolled_at` | DATETIME | Enrolment date |
-| `enrollments.completed_at` | DATETIME, nullable | Course completion date |
-| `module_progress.id` | TEXT, primary key | Progress UUID |
-| `module_progress.user_id`, `module_id`, `course_id` | TEXT, required | User, module and stored course identifiers |
-| `module_progress.completed` | INTEGER, default `0` | Completion flag |
-| `module_progress.quiz_score` | INTEGER, nullable | Reported percentage score |
-| `module_progress.completed_at` | DATETIME, nullable | Completion timestamp |
-| `assignments.id` | TEXT, primary key | Assignment UUID |
-| `assignments.module_id`, `course_id` | TEXT, required | Associated learning unit |
-| `assignments.title`, `description`, `instructions` | TEXT, required | Assignment content |
-| `assignments.due_days` | INTEGER, default `7` | Configured due-day value |
-| `assignment_submissions.id` | TEXT, primary key | Submission UUID |
-| `assignment_submissions.assignment_id`, `user_id` | TEXT, required, FK | Assignment and submitting user |
-| `assignment_submissions.submission_text` | TEXT, required | Learner response |
-| `assignment_submissions.file_url` | TEXT, nullable | Schema field; upload workflow not identified |
-| `assignment_submissions.status` | TEXT, default `submitted` | Submission state |
-| `assignment_submissions.grade` | INTEGER, nullable | Admin-entered grade |
-| `assignment_submissions.feedback` | TEXT, nullable | Admin feedback |
-| `assignment_submissions.submitted_at`, `graded_at` | DATETIME | Submission and grading times |
-
-### 6.5 Data dictionary: certificates, messaging and security
-
-| Table/field | Type / default | Meaning |
-|---|---|---|
-| `certificates.id` | TEXT, primary key | Certificate UUID |
-| `certificates.user_id`, `course_id` | TEXT, required, FK | Recipient and completed course |
-| `certificates.issued_at` | DATETIME | Issue timestamp |
-| `certificates.certificate_number` | TEXT, unique, required | Public verification identifier |
-| `certificate_payments.id` | TEXT, primary key | Payment-proof record UUID |
-| `certificate_payments.user_id`, `certificate_id` | TEXT, required, FK | Submitting user and certificate |
-| `certificate_payments.amount` | INTEGER, default `2000` | Amount recorded by schema |
-| `certificate_payments.currency` | TEXT, default `ZMW` | Currency code |
-| `certificate_payments.proof_text` | TEXT, nullable | User-entered reference/proof |
-| `certificate_payments.status` | TEXT, default `pending` | Manual decision status |
-| `certificate_payments.submitted_at`, `approved_at` | DATETIME | Submission/approval times |
-| `certificate_payments.approved_by` | TEXT, nullable | Admin identifier; no declared FK |
-| `notifications.id` | TEXT, primary key | Notification UUID |
-| `notifications.user_id` | TEXT, required, FK | Recipient |
-| `notifications.title`, `message` | TEXT, required | Notification contents |
-| `notifications.type` | TEXT, default `info` | UI category |
-| `notifications.is_read` | INTEGER, default `0` | Read indicator |
-| `notifications.created_at` | DATETIME | Creation timestamp |
-| `password_resets.id` | TEXT, primary key | Reset record UUID |
-| `password_resets.user_id` | TEXT, required, FK | Account requesting reset |
-| `password_resets.token` | TEXT, required | Reset token |
-| `password_resets.expires_at` | DATETIME, required | Token expiry |
-| `password_resets.used` | INTEGER, default `0` | Used marker |
-| `password_resets.created_at` | DATETIME | Request time |
-
-## 7. API Endpoints
-
-Base URL in local development: `http://localhost:5000`. Frontend development normally calls `/api` through Vite's proxy.
-
-### Authentication and profile
-
-| Method | Path | Access | Purpose |
-|---|---|---|---|
-| POST | `/api/auth/register` | Public | Create account; `youth` role only |
-| POST | `/api/auth/login` | Public | Verify password and issue JWT |
-| GET | `/api/auth/me` | Authenticated | Return current user |
-| PUT | `/api/auth/change-password` | Authenticated | Verify current password and change it |
-| POST | `/api/auth/forgot-password` | Public | Create reset token; development link is logged |
-| POST | `/api/auth/reset-password` | Reset token | Validate token and set new password |
-| GET | `/api/users/profile` | Authenticated | Read own profile |
-| PUT | `/api/users/profile` | Authenticated | Update own profile |
-| GET | `/api/users/:id/public` | Authenticated | Read selected public user fields and certificates |
-| GET | `/api/users` | Admin | List/search/paginate accounts |
-
-### Courses and learning
-
-| Method | Path | Access | Purpose |
-|---|---|---|---|
-| GET | `/api/courses` | Authenticated | List published courses; supports category, level, search, page, limit |
-| GET | `/api/courses/:id` | Authenticated | Return published course, modules, quizzes and current user's enrolment |
-| POST | `/api/courses/:id/enroll` | Youth | Create enrolment if not already enrolled |
-| POST | `/api/courses` | Admin | Create course |
-| POST | `/api/courses/:id/modules` | Admin | Create module for course |
-| POST | `/api/courses/modules/:moduleId/quiz` | Admin | Add quiz question |
-| POST | `/api/progress/module/:moduleId/complete` | Youth | Mark module complete and possibly issue certificate |
-| GET | `/api/progress/course/:courseId` | Authenticated | Read progress for current user |
-| GET | `/api/progress/my-courses` | Authenticated | List current user's enrolments and progress |
-| POST | `/api/progress/quiz/:moduleId/submit` | Youth | Submit quiz answers and receive score/result |
-
-### Assignments
-
-| Method | Path | Access | Purpose |
-|---|---|---|---|
-| GET | `/api/assignments/module/:moduleId` | Authenticated | Read assignment; youth receives own submission |
-| GET | `/api/assignments/my` | Youth | List own submissions |
-| POST | `/api/assignments/:id/submit` | Youth | Create or resubmit text response; requires enrolment |
-| GET | `/api/assignments/course/:courseId/submissions` | Admin | List submissions for a course |
-| PUT | `/api/assignments/submission/:id/grade` | Admin | Store grade and feedback; notify learner |
-
-### Certificates and payments
-
-| Method | Path | Access | Purpose |
-|---|---|---|---|
-| GET | `/api/certificates/my` | Authenticated | List current user's certificates |
-| GET | `/api/certificates/verify/:certNumber` | Public | Verify certificate and return selected holder/course details |
-| POST | `/api/payments/certificate/:certId/submit` | Youth | Submit payment-proof text |
-| GET | `/api/payments/certificate/:certId/status` | Authenticated | Read current user's status for certificate |
-| GET | `/api/payments/pending` | Admin | List pending proof records |
-| GET | `/api/payments/all` | Admin | List all proof records |
-| PUT | `/api/payments/:paymentId/approve` | Admin | Approve proof record and notify learner |
-| PUT | `/api/payments/:paymentId/reject` | Admin | Reject proof record and notify learner |
-
-### Notifications and dashboards
-
-| Method | Path | Access | Purpose |
-|---|---|---|---|
-| GET | `/api/notifications` | Authenticated | Return user's latest notifications and unread count |
-| PUT | `/api/notifications/read-all` | Authenticated | Mark all user's notifications read |
-| PUT | `/api/notifications/:id/read` | Authenticated | Mark own notification read |
-| GET | `/api/dashboard/youth` | Youth | Return course and certificate summary |
-| GET | `/api/dashboard/admin` | Admin | Return aggregate users, courses, enrolments and certificates |
-| GET | `/api/health` | Public | Return API health message and timestamp |
-
-No employment/opportunity endpoint is part of the current application.
-
-## 8. Authentication and Authorisation
-
-The backend expects an `Authorization: Bearer <token>` header. Middleware verifies the JWT using `JWT_SECRET`, retrieves the user by the token's ID, attaches the user to `req.user`, then proceeds. `authorize(...roles)` checks the database role against the route's permitted roles.
-
-The client stores tokens in local storage when “Remember me” is selected, and in session storage otherwise. The Axios response interceptor clears both storage areas when a 401 is returned and navigates to `/login`. Browser storage exposes tokens to scripts running in the same origin; a production design should assess an HTTP-only cookie/session approach and implement appropriate CSRF protections if adopted.
-
-Registration and password-change functions hash passwords using bcryptjs. The project enforces a six-character minimum in the reviewed code; consider adopting a stronger policy suitable for deployment. JWT expiry and signing key values depend on environment configuration.
-
-## 9. Important Implementation Notes and Known Issues
-
-1. Quiz endpoint returns correct answer indexes and explanations. Do not expose answer keys before the learner's attempt is scored.
-2. Module completion trusts a score submitted by the client. Calculate and persist assessment attempts server-side.
-3. Course-detail API returns quiz and module content to any authenticated user; the frontend's pre-enrolment lock is not server-side authorisation.
-4. Reset links are logged for development. No mail-sending package or provider integration was identified.
-5. Certificate payment is proof-text collection and manual approval, not a payment gateway.
-6. Admin dashboard does not expose all admin APIs, including grading and payment review.
-7. Public certificate verification reveals the certificate holder's name and course metadata; review the privacy implications.
-8. The app returns quiz correctness data and uses browser token storage; threat-model these before any public deployment.
-9. No automated tests, test script, formal accessibility report or user-acceptance report was found.
-10. `DB_PATH` is defined locally but unused by the database module.
-11. `multer` and `html2canvas` are package dependencies but no use was found in reviewed application source.
-12. `backend/src/utils/seed.js` deletes data before reseeding.
-
-## 10. Error Handling and Validation
-
-The server enables JSON parsing with a 10 MB body limit and URL-encoded parsing. CORS restricts browser origins to local URLs plus the configured frontend URL. A final Express error handler logs the error stack and returns JSON. Routes apply selected validation and generally use parameterised SQL statements in reviewed queries. Validation is not uniform across all fields/routes; verify it with tests before deployment.
-
-## 11. Testing Instructions
-
-No test runner is configured in the package manifests. The frontend build command is:
+### Production build
 
 ```powershell
 Set-Location .\frontend
 npm run build
 ```
 
-The build was executed successfully during the documentation review. To add automated tests, select a runner compatible with the installed versions, configure an isolated test database, and create tests for authentication/roles, SQL constraints, quiz scoring, enrolment, progress, assignment grading, certificates, payment states and notification ownership. Never run destructive seed logic against live data.
+---
 
-For manual verification, see Chapter Five of `docs/YouthSkills-Program-Academic-Documentation.md`. Proposed unexecuted checks are explicitly **Not Tested**.
+## 12. Known Limitations
 
-## 12. Deployment Requirements
+1. **Quiz integrity** — quiz answers are returned in the API response; module completion accepts a client-supplied score. Not suitable for high-stakes assessment without server-side scoring.
+2. **Pre-enrolment content access** — the course-detail API returns module content to any authenticated user; the UI lock is frontend-only.
+3. **Password reset** — reset links are logged to the backend console only; no email is sent for password reset (only for payment notifications).
+4. **No automated tests** — no test runner is configured.
+5. **SQLite concurrency** — SQLite in WAL mode is suitable for a low-concurrency deployment. A high-concurrency production environment would require a different database.
+6. **`DB_PATH` env var** — defined in `.env` but not used; path is computed from `__dirname` in `database.js`.
 
-- Maintain a supported Node.js runtime and pinned npm dependency lockfiles.
-- Set a unique strong `JWT_SECRET`, expiry and trusted frontend origin.
-- Serve the frontend and API over HTTPS.
-- Use a production database strategy appropriate to expected concurrent use.
-- Use a writable, backed-up persistent database location if SQLite remains in use.
-- Confirm CORS origins and frontend API base URL.
-- Avoid public exposure of uploads or database files.
-- Establish logging, monitoring, backup, retention and incident-response procedures.
-- Review privacy, access controls, quiz integrity, public certificate disclosure and payment policy.
-- Remove development reset-link disclosure and demo secrets from production.
+---
 
-The frontend has a Vercel SPA rewrite configuration and a placeholder remote API URL example. This does not by itself configure, validate or secure a backend deployment.
+## 13. Deployment Checklist
 
-## 13. Backup and Recovery
-
-The database runs in WAL mode and may have associated `-wal` and `-shm` files while active. For consistent backups, use SQLite's online backup mechanism or stop the backend cleanly and follow SQLite backup guidance. Do not copy only the main database file while it is being written without understanding WAL state. Store backups securely, restrict access and test restore using a copy. This is particularly important because the seed script deletes records.
-
-## 14. Maintenance Recommendations
-
-- Add schema migrations rather than relying only on `CREATE TABLE IF NOT EXISTS` when changing existing structures.
-- Add automated unit, integration and regression tests.
-- Reconcile or remove unused dependencies.
-- Use environment configuration consistently, including `DB_PATH` if supported.
-- Add admin UI for the protected operations intended for administrators.
-- Keep course content and assets current and properly attributed.
-- Review npm dependency updates and build warnings.
-- Document releases, schema changes, backups and recovery tests.
-- Do not expose real user data in screenshots, seed files or project documentation.
-
+- [ ] Set a strong unique `JWT_SECRET`
+- [ ] Set `NODE_ENV=production`
+- [ ] Configure `FRONTEND_URL` to the exact deployed frontend origin
+- [ ] Configure `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `ADMIN_EMAIL`
+- [ ] Serve both frontend and API over HTTPS
+- [ ] Use a writable, backed-up persistent path for the SQLite database
+- [ ] Remove or disable the `resetLink` field in the forgot-password response (currently only sent in development)
+- [ ] Back up the database before running seed on any non-empty database
