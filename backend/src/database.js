@@ -22,17 +22,26 @@ async function getDb() {
   await db.exec(`
     CREATE TABLE IF NOT EXISTS issue_reports (
       id TEXT PRIMARY KEY,
-      user_id TEXT NOT NULL,
+      user_id TEXT,
       subject TEXT NOT NULL,
       description TEXT NOT NULL,
       category TEXT DEFAULT 'general',
       status TEXT DEFAULT 'open',
+      reporter_name TEXT,
+      reporter_email TEXT,
       admin_response TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       resolved_at DATETIME,
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
     );
   `);
+  // Migration: add reporter columns to existing issue_reports table
+  const issueCols = await db.all("PRAGMA table_info(issue_reports)");
+  if (!issueCols.find(c => c.name === 'reporter_name')) {
+    await db.exec("ALTER TABLE issue_reports ADD COLUMN reporter_name TEXT");
+    await db.exec("ALTER TABLE issue_reports ADD COLUMN reporter_email TEXT");
+    console.log('✅ Migrated: added reporter columns to issue_reports');
+  }
   return db;
 }
 
@@ -197,15 +206,17 @@ async function initializeDatabase(db) {
 
     CREATE TABLE IF NOT EXISTS issue_reports (
       id TEXT PRIMARY KEY,
-      user_id TEXT NOT NULL,
+      user_id TEXT,
       subject TEXT NOT NULL,
       description TEXT NOT NULL,
       category TEXT DEFAULT 'general',
       status TEXT DEFAULT 'open',
+      reporter_name TEXT,
+      reporter_email TEXT,
       admin_response TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       resolved_at DATETIME,
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
     );
   `);
   console.log('✅ Database initialized');

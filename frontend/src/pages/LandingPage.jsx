@@ -23,7 +23,18 @@ export default function LandingPage() {
 
   const handleContact = (e) => {
     e.preventDefault();
-    // In production this would POST to an API endpoint
+    // Post to issues API as a public report
+    fetch('/api/issues', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        subject: contactForm.message.substring(0, 60) || 'Contact Us Enquiry',
+        description: contactForm.message,
+        category: 'general',
+        reporter_name: contactForm.name,
+        reporter_email: contactForm.email,
+      }),
+    }).catch(() => {}); // fire and forget — don't block UX
     setContactSent(true);
     setContactForm({ name: '', email: '', message: '' });
     setTimeout(() => setContactSent(false), 5000);
@@ -174,9 +185,19 @@ export default function LandingPage() {
             <div className="space-y-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4">Get in Touch</h3>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                  Whether you have a question about our courses, need help with your account, or want to learn more about the YouthSkills Program, our team is ready to help. Reach out through any of the channels below.
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                  Whether you have a question about our courses, need help with your account, or want to report a problem — we are here to help. Use the form to send us a message or reach out directly through the channels below.
                 </p>
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-3 mb-4">
+                  <p className="text-sm text-blue-700 dark:text-blue-300">
+                    <strong>Already have an account?</strong> Log in and use the <strong>"Report an Issue"</strong> button in your sidebar for faster, tracked support.
+                  </p>
+                  <div className="flex gap-2 mt-2">
+                    <Link to="/login" className="text-xs font-semibold text-blue-600 hover:underline">Sign In →</Link>
+                    <span className="text-blue-300">|</span>
+                    <Link to="/register" className="text-xs font-semibold text-blue-600 hover:underline">Create Account →</Link>
+                  </div>
+                </div>
               </div>
               <div className="space-y-4">
                 <div className="flex items-center gap-4 p-4 bg-white dark:bg-slate-700 rounded-xl shadow-sm">
