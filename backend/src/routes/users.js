@@ -1,54 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
-const fs = require('fs');
-const multer = require('multer');
 const { getDb } = require('../database');
 const { authenticate, authorize } = require('../middleware/auth');
 
-// ── Multer config — store avatar in uploads/avatars/ ──────────────────────
-const avatarDir = path.join(__dirname, '..', '..', 'uploads', 'avatars');
-if (!fs.existsSync(avatarDir)) fs.mkdirSync(avatarDir, { recursive: true });
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, avatarDir),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
-    cb(null, `avatar-${req.user.id}-${Date.now()}${ext}`);
-  },
-});
-const upload = multer({
-  storage,
-  limits: { fileSize: 3 * 1024 * 1024 }, // 3 MB
-  fileFilter: (req, file, cb) => {
-    if (['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.mimetype)) cb(null, true);
-    else cb(new Error('Only image files (JPG, PNG, WEBP, GIF) are allowed.'));
-  },
-});
-
 // ── Validators ────────────────────────────────────────────────────────────
 const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.trim());
-const isValidUrl      = (url)      => /^https?:\/\/.+\..+/.test(url);
 const isValidLocation = (location) => /[a-zA-Z]/.test(location);
 const isValidNRC      = (nrc)      => /^[0-9]{6}\/[0-9]{2}\/[0-9]$/.test(nrc.trim());
 
-// ── POST /api/users/avatar — upload a profile picture ────────────────────
-router.post('/avatar', authenticate, upload.single('avatar'), async (req, res) => {
-  if (!req.file) return res.status(400).json({ success: false, message: 'No image file uploaded.' });
-
-  const avatarUrl = `/uploads/avatars/${req.file.filename}`;
-  const db = await getDb();
-
-  // Delete old avatar file if it was a local upload
-  const existing = await db.get('SELECT avatar FROM users WHERE id = ?', req.user.id);
-  if (existing?.avatar?.startsWith('/uploads/avatars/')) {
-    const oldPath = path.join(__dirname, '..', '..', existing.avatar);
-    if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+// ── POST /api/users/avatar — save base64 avatar directly ─────────────────
+router.post('/avatar', authenticate, async (req, res) => {
+  const { avatar } = req.body;
+  if (!avatar) return res.status(400).json({ success: false, message: 'No image data provided.' });
+  if (!avatar.startsWith('data:image/')) {
+    return res.status(400).json({ success: false, message: 'Invalid image format.' });
   }
-
-  await db.run('UPDATE users SET avatar = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [avatarUrl, req.user.id]);
+  // Rough size check — base64 is ~1.33x original; 4MB base64 ≈ 3MB file
+  if (avatar.length > 4 * 1024 * 1024) {
+    return res.status(400).json({ success: false, message: 'Image is too large. Please use an image under 3 MB.' });
+  }
+  const db = await getDb();
+  await db.run('UPDATE users SET avatar = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [avatar, req.user.id]);
   const updated = await db.get('SELECT id, name, email, role, avatar, bio, location, phone, nrc, skills FROM users WHERE id = ?', req.user.id);
-  res.json({ success: true, message: 'Profile picture updated.', avatarUrl, user: { ...updated, skills: JSON.parse(updated.skills || '[]') } });
+  res.json({ success: true, message: 'Profile picture updated.', avatarUrl: avatar, user: { ...updated, skills: JSON.parse(updated.skills || '[]') } });
 });
 
 router.get('/profile', authenticate, async (req, res) => {
@@ -62,9 +36,6 @@ router.put('/profile', authenticate, async (req, res) => {
   const { name, bio, location, phone, nrc, skills, avatar } = req.body;
   if (phone && !isValidPhone(phone)) {
     return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
-  }
-  if (avatar && !isValidUrl(avatar) && !avatar.startsWith('/uploads/')) {
-    return res.status(400).json({ success: false, message: 'Invalid avatar URL. Must start with http:// or https://' });
   }
   if (location && !isValidLocation(location)) {
     return res.status(400).json({ success: false, message: 'Enter a valid location.' });

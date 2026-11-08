@@ -33,12 +33,8 @@ export default function ProfilePage() {
     });
   }, []);
 
-  // Resolve avatar src — local upload or external URL
-  const getAvatarSrc = (src) => {
-    if (!src) return null;
-    if (src.startsWith('/uploads/')) return `http://localhost:5000${src}`;
-    return src;
-  };
+  // Resolve avatar src — base64 or external URL
+  const getAvatarSrc = (src) => src || null;
 
   const currentAvatar = avatarPreview || getAvatarSrc(form.avatar);
 
@@ -56,30 +52,28 @@ export default function ProfilePage() {
       return toast.error('Image must be smaller than 3 MB.');
     }
 
-    // Show instant preview
-    const reader = new FileReader();
-    reader.onloadend = () => setAvatarPreview(reader.result);
-    reader.readAsDataURL(file);
-
-    // Upload to backend
     setUploadingAvatar(true);
-    try {
-      const formData = new FormData();
-      formData.append('avatar', file);
-      const res = await api.post('/users/avatar', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      setForm(p => ({ ...p, avatar: res.data.avatarUrl }));
-      setAvatarPreview(null); // Use the saved path from now on
-      updateUser({ ...user, avatar: res.data.avatarUrl });
-      toast.success('Profile picture updated!');
-    } catch (err) {
-      setAvatarPreview(null);
-      toast.error(err.response?.data?.message || 'Upload failed. Please try again.');
-    } finally {
-      setUploadingAvatar(false);
-      e.target.value = '';
-    }
+
+    // Convert to base64
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64 = reader.result;
+      setAvatarPreview(base64);
+      try {
+        const res = await api.post('/users/avatar', { avatar: base64 });
+        setForm(p => ({ ...p, avatar: base64 }));
+        setAvatarPreview(null);
+        updateUser({ ...user, avatar: base64 });
+        toast.success('Profile picture updated!');
+      } catch (err) {
+        setAvatarPreview(null);
+        toast.error(err.response?.data?.message || 'Upload failed. Please try again.');
+      } finally {
+        setUploadingAvatar(false);
+        e.target.value = '';
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSave = async (e) => {
