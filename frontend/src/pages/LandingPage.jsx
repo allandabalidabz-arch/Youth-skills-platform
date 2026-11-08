@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Code2, Monitor, Globe, Award, ArrowRight, Mail, Phone, MapPin, Facebook, Twitter, Youtube, CheckCircle2 } from 'lucide-react';
+import { Code2, Monitor, Globe, Award, ArrowRight, Mail, Phone, MapPin } from 'lucide-react';
 import Logo, { LogoIcon } from '../components/Logo';
 
 const features = [
@@ -41,7 +41,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/"><Logo size="sm" /></Link>
           <div className="hidden md:flex items-center gap-6">
-            <button onClick={() => scrollTo('about')} className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm transition-colors">About</button>
+            <Link to="/about" className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm transition-colors">About</Link>
             <button onClick={() => scrollTo('courses')} className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm transition-colors">Courses</button>
             <button onClick={() => scrollTo('how-it-works')} className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm transition-colors">How It Works</button>
             <button onClick={() => scrollTo('contact')} className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm transition-colors">Contact Us</button>
@@ -93,59 +93,16 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── About ─────────────────────────────────────────────────────────── */}
-      <section id="about" className="py-20 bg-white dark:bg-slate-900">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">About YouthSkills Program</h2>
-            <p className="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto">Who we are, what we do, and why we exist</p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-5">
-              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                The <strong>YouthSkills Program</strong> is a free, web-based digital skills learning platform open to any young person who wants to build a future in technology. We believe that where you live should never determine what you can learn. Whether you are in Lusaka, Ndola, a rural town, or anywhere with internet access — you can register, study, and earn a verified certificate.
-              </p>
-              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                Our platform was built to address the gap in accessible, structured digital education for youth. We provide three professionally designed courses covering the fundamentals of computing — System Analysis and Design, Web Development, and Operating Systems — taught through structured modules, interactive quizzes, and practical assignments.
-              </p>
-              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                Every learner who completes a course earns a digitally verified certificate that can be shared with employers and institutions. Our certificates include the learner's name, NRC number, and a public verification link so anyone can confirm its authenticity.
-              </p>
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                {[
-                  'Free to register and enrol',
-                  'Open to all youth everywhere',
-                  'Structured courses with quizzes',
-                  'Verified digital certificates',
-                  'Learn at your own pace',
-                  'Mobile money payment support',
-                ].map(item => (
-                  <div key={item} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-6 text-center">
-                <div className="text-4xl font-extrabold text-blue-600 mb-2">3</div>
-                <p className="text-slate-600 dark:text-slate-400 font-medium text-sm">Professional Courses</p>
-              </div>
-              <div className="bg-green-50 dark:bg-green-900/20 rounded-2xl p-6 text-center">
-                <div className="text-4xl font-extrabold text-green-600 mb-2">9</div>
-                <p className="text-slate-600 dark:text-slate-400 font-medium text-sm">Learning Modules</p>
-              </div>
-              <div className="bg-purple-50 dark:bg-purple-900/20 rounded-2xl p-6 text-center">
-                <div className="text-4xl font-extrabold text-purple-600 mb-2">500+</div>
-                <p className="text-slate-600 dark:text-slate-400 font-medium text-sm">Youth Trained</p>
-              </div>
-              <div className="bg-orange-50 dark:bg-orange-900/20 rounded-2xl p-6 text-center">
-                <div className="text-4xl font-extrabold text-orange-500 mb-2">100%</div>
-                <p className="text-slate-600 dark:text-slate-400 font-medium text-sm">Free to Register</p>
-              </div>
-            </div>
-          </div>
+      {/* ── About teaser ──────────────────────────────────────────────────── */}
+      <section className="py-16 bg-white dark:bg-slate-900">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-4">About YouthSkills Program</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
+            A free digital skills platform open to any youth, anywhere. Learn who we are, what we offer, and how our certificates work.
+          </p>
+          <Link to="/about" className="btn-primary inline-flex gap-2 px-8 py-3">
+            Learn About Us <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
 
@@ -326,7 +283,7 @@ export default function LandingPage() {
             <div>
               <h4 className="text-white font-bold mb-4">Quick Links</h4>
               <div className="space-y-2 text-sm">
-                <button onClick={() => scrollTo('about')} className="block text-slate-400 hover:text-white transition-colors text-left">About Us</button>
+                <Link to="/about" className="block text-slate-400 hover:text-white transition-colors">About Us</Link>
                 <button onClick={() => scrollTo('courses')} className="block text-slate-400 hover:text-white transition-colors text-left">Courses</button>
                 <button onClick={() => scrollTo('how-it-works')} className="block text-slate-400 hover:text-white transition-colors text-left">How It Works</button>
                 <button onClick={() => scrollTo('contact')} className="block text-slate-400 hover:text-white transition-colors text-left">Contact Us</button>
