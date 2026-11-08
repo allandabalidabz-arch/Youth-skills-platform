@@ -152,7 +152,9 @@ export default function Layout() {
           <div className="px-4 py-4 border-t border-slate-100 dark:border-slate-700">
             <div className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer" onClick={() => navigate('/profile')}>
               <div className="w-9 h-9 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-700 dark:text-blue-300 font-bold text-sm overflow-hidden">
-                {user?.avatar ? <img src={user.avatar} alt="" className="w-full h-full object-cover" /> : user?.name?.charAt(0).toUpperCase()}
+                {user?.avatar
+                  ? <img src={user.avatar.startsWith('/uploads/') ? `http://localhost:5000${user.avatar}` : user.avatar} alt="" className="w-full h-full object-cover" />
+                  : user?.name?.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">{user?.name}</p>

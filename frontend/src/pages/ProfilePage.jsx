@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { User, MapPin, Phone, Save, Plus, X, Lock, CreditCard } from 'lucide-react';
+import { User, MapPin, Phone, Save, Plus, X, Lock, CreditCard, Camera, Loader2 } from 'lucide-react';
 
 // Format validators (mirrors backend)
 const isValidPhone    = (phone)    => /^\+?[0-9]{7,15}$/.test(phone.trim());
-const isValidUrl      = (url)      => /^https?:\/\/.+\..+/.test(url);
 const isValidLocation = (location) => /[a-zA-Z]/.test(location);
 const isValidNRC      = (nrc)      => /^[0-9]{6}\/[0-9]{2}\/[0-9]$/.test(nrc.trim());
 
@@ -20,6 +19,9 @@ export default function ProfilePage() {
   const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [savingPw, setSavingPw] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const fileInputRef = useRef(null);
 
   const touch = (field) => () => setTouched(p => ({ ...p, [field]: true }));
 
@@ -31,16 +33,63 @@ export default function ProfilePage() {
     });
   }, []);
 
+  // Resolve avatar src — local upload or external URL
+  const getAvatarSrc = (src) => {
+    if (!src) return null;
+    if (src.startsWith('/uploads/')) return `http://localhost:5000${src}`;
+    return src;
+  };
+
+  const currentAvatar = avatarPreview || getAvatarSrc(form.avatar);
+
+  const handleAvatarClick = () => fileInputRef.current?.click();
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate client-side
+    if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type)) {
+      return toast.error('Only JPG, PNG, WEBP, or GIF images are allowed.');
+    }
+    if (file.size > 3 * 1024 * 1024) {
+      return toast.error('Image must be smaller than 3 MB.');
+    }
+
+    // Show instant preview
+    const reader = new FileReader();
+    reader.onloadend = () => setAvatarPreview(reader.result);
+    reader.readAsDataURL(file);
+
+    // Upload to backend
+    setUploadingAvatar(true);
+    try {
+      const formData = new FormData();
+      formData.append('avatar', file);
+      const res = await api.post('/users/avatar', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setForm(p => ({ ...p, avatar: res.data.avatarUrl }));
+      setAvatarPreview(null); // Use the saved path from now on
+      updateUser({ ...user, avatar: res.data.avatarUrl });
+      toast.success('Profile picture updated!');
+    } catch (err) {
+      setAvatarPreview(null);
+      toast.error(err.response?.data?.message || 'Upload failed. Please try again.');
+    } finally {
+      setUploadingAvatar(false);
+      e.target.value = '';
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     if (form.phone && !isValidPhone(form.phone)) return toast.error('Invalid phone number format.');
-    if (form.avatar && !isValidUrl(form.avatar)) return toast.error('Invalid avatar URL. Must start with http:// or https://');
     if (form.location && !isValidLocation(form.location)) return toast.error('Enter a valid location.');
     if (form.nrc && !isValidNRC(form.nrc)) return toast.error('Invalid NRC format. Use: 123456/78/9');
     setSaving(true);
     try {
-      const res = await api.put('/users/profile', { ...form, skills });
-      // Re-fetch from /auth/me to ensure sidebar and topbar reflect latest name
+      await api.put('/users/profile', { ...form, skills });
       const meRes = await api.get('/auth/me');
       updateUser({ ...meRes.data.user, skills: meRes.data.user.skills || [] });
       toast.success('Profile updated!');
@@ -88,19 +137,45 @@ export default function ProfilePage() {
 
       {activeTab === 'profile' && (
         <form onSubmit={handleSave} className="space-y-5">
-          {/* Avatar */}
-          <div className="card flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-700 dark:text-blue-300 font-bold text-2xl overflow-hidden flex-shrink-0">
-              {form.avatar ? <img src={form.avatar} alt="" className="w-full h-full object-cover" /> : user?.name?.charAt(0).toUpperCase()}
+
+          {/* Avatar upload */}
+          <div className="card flex items-center gap-5">
+            <div className="relative flex-shrink-0">
+              <div
+                onClick={handleAvatarClick}
+                className="w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-700 dark:text-blue-300 font-bold text-3xl overflow-hidden cursor-pointer ring-2 ring-offset-2 ring-blue-200 dark:ring-blue-700 hover:ring-blue-400 transition-all">
+                {uploadingAvatar ? (
+                  <Loader2 className="w-7 h-7 text-blue-500 animate-spin" />
+                ) : currentAvatar ? (
+                  <img src={currentAvatar} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  user?.name?.charAt(0).toUpperCase()
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={handleAvatarClick}
+                className="absolute -bottom-1 -right-1 w-7 h-7 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-md transition-colors">
+                <Camera className="w-3.5 h-3.5" />
+              </button>
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Avatar URL</label>
-              <input type="url" className="input" placeholder="https://..." value={form.avatar}
-                onChange={e => setForm(p => ({ ...p, avatar: e.target.value }))} onBlur={touch('avatar')} />
-              {touched.avatar && form.avatar && !isValidUrl(form.avatar) && (
-                <p className="text-xs text-red-500 mt-1">Must be a valid URL starting with https://</p>
-              )}
+              <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-1">Profile Picture</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">Click the photo to upload a new image. JPG, PNG, WEBP or GIF — max 3 MB.</p>
+              <button type="button" onClick={handleAvatarClick} disabled={uploadingAvatar}
+                className="btn-secondary text-xs py-1.5 px-4">
+                <Camera className="w-3.5 h-3.5" />
+                {uploadingAvatar ? 'Uploading...' : 'Choose Photo'}
+              </button>
             </div>
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              className="hidden"
+              onChange={handleAvatarChange}
+            />
           </div>
 
           <div className="card space-y-4">
