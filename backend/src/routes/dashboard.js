@@ -53,6 +53,7 @@ router.get('/admin', authenticate, authorize('admin'), async (req, res) => {
   // Pending counts for overview badges
   const pendingAssignments = await db.get("SELECT COUNT(*) as count FROM assignment_submissions WHERE status = 'submitted'");
   const pendingPayments = await db.get("SELECT COUNT(*) as count FROM certificate_payments WHERE status = 'pending'");
+  const openIssues = await db.get("SELECT COUNT(*) as count FROM issue_reports WHERE status = 'open'");
 
   // Recent completions — who completed what course
   const recentCompletions = await db.all(`
@@ -72,6 +73,7 @@ router.get('/admin', authenticate, authorize('admin'), async (req, res) => {
       totalCertificates: totalCerts.count,
       pendingAssignments: pendingAssignments.count,
       pendingPayments: pendingPayments.count,
+      openIssues: openIssues.count,
     },
     categoryStats,
     recentCompletions,

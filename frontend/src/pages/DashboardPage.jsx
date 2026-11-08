@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 import toast from 'react-hot-toast';
-import { BookOpen, Award, TrendingUp, CheckCircle2, Clock, ArrowRight, Users, Search, MapPin, Calendar, ChevronDown, ChevronUp, Layers, FileText, CreditCard, Star, XCircle, CheckCircle, AlertCircle } from 'lucide-react';
+import { BookOpen, Award, TrendingUp, CheckCircle2, Clock, ArrowRight, Users, Search, MapPin, Calendar, ChevronDown, ChevronUp, Layers, FileText, CreditCard, Star, XCircle, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 
 const categoryColors = {
   system: 'bg-indigo-100 text-indigo-700',
@@ -165,11 +165,19 @@ function AdminDashboardView({ data }) {
   const [processingPayment, setProcessingPayment] = useState(null);
   const [rejectReason, setRejectReason] = useState({});
 
+  // Issues state
+  const [issues, setIssues] = useState([]);
+  const [loadingIssues, setLoadingIssues] = useState(false);
+  const [resolvingId, setResolvingId] = useState(null);
+  const [resolveResponses, setResolveResponses] = useState({});
+  const [expandedIssue, setExpandedIssue] = useState(null);
+
   useEffect(() => {
     if (activeTab === 'youth') fetchUsers('');
     if (activeTab === 'modules') fetchCourses();
     if (activeTab === 'assignments') fetchSubmissions();
     if (activeTab === 'payments') fetchPayments();
+    if (activeTab === 'issues') fetchIssues();
   }, [activeTab]);
 
   const fetchUsers = async (q) => {
@@ -215,6 +223,29 @@ function AdminDashboardView({ data }) {
       setPayments(res.data.payments);
     } catch (err) { console.error(err); }
     finally { setLoadingPayments(false); }
+  };
+
+  const fetchIssues = async () => {
+    setLoadingIssues(true);
+    try {
+      const res = await api.get('/issues');
+      setIssues(res.data.issues);
+    } catch (err) { console.error(err); }
+    finally { setLoadingIssues(false); }
+  };
+
+  const handleResolveIssue = async (issueId) => {
+    setResolvingId(issueId);
+    try {
+      await api.put(`/issues/${issueId}/resolve`, { admin_response: resolveResponses[issueId] || '' });
+      toast.success('Issue marked as resolved.');
+      setExpandedIssue(null);
+      fetchIssues();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to resolve issue.');
+    } finally {
+      setResolvingId(null);
+    }
   };
 
   const handleGrade = async (submissionId) => {
@@ -281,6 +312,7 @@ function AdminDashboardView({ data }) {
     { id: 'modules', label: 'Modules', icon: Layers },
     { id: 'assignments', label: 'Assignments', icon: FileText },
     { id: 'payments', label: 'Payments', icon: CreditCard },
+    { id: 'issues', label: 'Issues', icon: AlertTriangle },
   ];
 
   return (
@@ -345,6 +377,14 @@ function AdminDashboardView({ data }) {
                 <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{stats.pendingPayments ?? 0}</p>
                 <p className="text-sm text-slate-500 dark:text-slate-400">Pending Payments</p>
                 <p className="text-xs text-green-500">Review now →</p>
+              </div>
+            </button>
+            <button onClick={() => setActiveTab('issues')} className="card flex items-center gap-4 text-left hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer w-full">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-red-100 text-red-600"><AlertTriangle className="w-6 h-6" /></div>
+              <div>
+                <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{stats.openIssues ?? 0}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Open Issues</p>
+                <p className="text-xs text-red-500">Review now →</p>
               </div>
             </button>
           </div>
@@ -682,6 +722,92 @@ function AdminDashboardView({ data }) {
                   </div>
                 )}
               </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ISSUES */}
+      {activeTab === 'issues' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-red-500" />
+              <h2 className="font-bold text-slate-800 dark:text-slate-100">Reported Issues</h2>
+              <span className="badge bg-red-100 text-red-700">
+                {issues.filter(i => i.status === 'open').length} open
+              </span>
+            </div>
+            <button onClick={fetchIssues} className="btn-secondary text-sm py-2">Refresh</button>
+          </div>
+          {loadingIssues ? (
+            <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" /></div>
+          ) : issues.length === 0 ? (
+            <div className="card text-center py-12">
+              <AlertTriangle className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+              <p className="text-slate-400 text-sm">No issues reported yet.</p>
+            </div>
+          ) : issues.map(issue => (
+            <div key={issue.id} className={`card p-0 overflow-hidden border-l-4 ${issue.status === 'resolved' ? 'border-green-500' : 'border-red-400'}`}>
+              <div className="flex items-start gap-4 p-4">
+                <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 font-bold text-sm flex-shrink-0">
+                  {issue.reporter_name?.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-0.5">
+                    <p className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{issue.reporter_name}</p>
+                    <span className="text-slate-400 text-xs">{issue.reporter_email}</span>
+                    <span className={`badge text-xs ${issue.status === 'resolved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                      {issue.status === 'resolved' ? '✅ Resolved' : '🔴 Open'}
+                    </span>
+                    <span className="badge bg-slate-100 text-slate-600 text-xs capitalize">{issue.category}</span>
+                  </div>
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{issue.subject}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Reported: {new Date(issue.created_at).toLocaleString()}</p>
+                  {issue.resolved_at && <p className="text-xs text-green-600">Resolved: {new Date(issue.resolved_at).toLocaleString()}</p>}
+                </div>
+                <button
+                  onClick={() => setExpandedIssue(expandedIssue === issue.id ? null : issue.id)}
+                  className="btn-secondary text-xs py-1.5 px-3 flex-shrink-0">
+                  {expandedIssue === issue.id ? 'Close' : issue.status === 'resolved' ? 'View' : 'Resolve'}
+                </button>
+              </div>
+
+              {expandedIssue === issue.id && (
+                <div className="border-t border-slate-100 dark:border-slate-700 p-4 space-y-4">
+                  <div>
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-2">Issue Description</p>
+                    <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
+                      <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">{issue.description}</p>
+                    </div>
+                  </div>
+                  {issue.admin_response && (
+                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-3">
+                      <p className="text-xs font-semibold text-green-700 dark:text-green-400 mb-1">Your Response</p>
+                      <p className="text-sm text-green-700 dark:text-green-300">{issue.admin_response}</p>
+                    </div>
+                  )}
+                  {issue.status === 'open' && (
+                    <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 rounded-xl p-4">
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3">Resolve this Issue</p>
+                      <textarea
+                        className="input h-24 resize-none text-sm mb-3"
+                        placeholder="Write a response to the learner (optional)..."
+                        value={resolveResponses[issue.id] || ''}
+                        onChange={e => setResolveResponses(p => ({ ...p, [issue.id]: e.target.value }))}
+                      />
+                      <button
+                        onClick={() => handleResolveIssue(issue.id)}
+                        disabled={resolvingId === issue.id}
+                        className="btn-primary text-sm py-2 bg-green-600 hover:bg-green-700">
+                        {resolvingId === issue.id
+                          ? <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                          : <><CheckCircle className="w-4 h-4" /> Mark as Resolved</>}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

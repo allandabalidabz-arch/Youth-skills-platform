@@ -18,6 +18,21 @@ async function getDb() {
     await db.exec("ALTER TABLE users ADD COLUMN nrc TEXT");
     console.log('✅ Migrated: added nrc column to users');
   }
+  // Migration: create issue_reports table if it doesn't exist
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS issue_reports (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      description TEXT NOT NULL,
+      category TEXT DEFAULT 'general',
+      status TEXT DEFAULT 'open',
+      admin_response TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      resolved_at DATETIME,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+  `);
   return db;
 }
 
@@ -177,6 +192,19 @@ async function initializeDatabase(db) {
       expires_at DATETIME NOT NULL,
       used INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS issue_reports (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      description TEXT NOT NULL,
+      category TEXT DEFAULT 'general',
+      status TEXT DEFAULT 'open',
+      admin_response TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      resolved_at DATETIME,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
   `);

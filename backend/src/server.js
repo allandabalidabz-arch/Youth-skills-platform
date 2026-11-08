@@ -13,6 +13,7 @@ const progressRoutes = require('./routes/progress');
 const certificateRoutes = require('./routes/certificates');
 const notificationRoutes = require('./routes/notifications');
 const dashboardRoutes = require('./routes/dashboard');
+const issueRoutes = require('./routes/issues');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -44,6 +45,7 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/issues', issueRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', message: 'Youth Skills Platform API', timestamp: new Date() }));
 
