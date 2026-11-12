@@ -31,15 +31,14 @@ function ProtectedRoute({ children, roles }) {
 
 function PublicRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return null;
-  // Only redirect non-admin logged-in users — admin may want to access regular login
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
   if (user && user.role !== 'admin') return <Navigate to="/dashboard" replace />;
   return children;
 }
 
 function AdminRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return null;
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
   if (user && user.role === 'admin') return <Navigate to="/dashboard" replace />;
   return children;
 }

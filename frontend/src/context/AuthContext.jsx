@@ -63,6 +63,7 @@ export function AuthProvider({ children }) {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');
     setUser(null);
+    setLoading(false);
   };
 
   const updateUser = (updatedUser) => {

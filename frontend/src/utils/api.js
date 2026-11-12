@@ -12,7 +12,7 @@ api.interceptors.request.use(config => {
   return config;
 });
 
-// Handle 401 globally
+// Handle 401 globally — only redirect if not already on a public page
 api.interceptors.response.use(
   res => res,
   err => {
@@ -21,7 +21,13 @@ api.interceptors.response.use(
       localStorage.removeItem('user');
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('user');
-      window.location.href = '/login';
+      // Only redirect if currently on a protected page
+      const publicPaths = ['/', '/login', '/register', '/admin/login', '/about', '/forgot-password', '/reset-password'];
+      const isPublic = publicPaths.some(p => window.location.pathname === p) ||
+                       window.location.pathname.startsWith('/verify/');
+      if (!isPublic) {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(err);
   }
