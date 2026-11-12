@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 const { getDb } = require('./database');
 
@@ -18,6 +20,15 @@ const issueRoutes = require('./routes/issues');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// ── 1. Security headers (helmet) ──────────────────────────────────────────
+// Adds ~14 HTTP headers that block common attacks:
+// - Clickjacking (X-Frame-Options)
+// - MIME sniffing (X-Content-Type-Options)
+// - XSS (X-XSS-Protection)
+// - Information leakage (hides Express signature)
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+
+// ── 2. CORS ───────────────────────────────────────────────────────────────
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
@@ -28,23 +39,47 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, Postman)
     if (!origin) return callback(null, true);
-    // Allow any vercel.app subdomain
     if (origin.endsWith('.vercel.app')) return callback(null, true);
-    // Allow explicitly listed origins
     if (allowedOrigins.includes(origin)) return callback(null, true);
     callback(new Error('Not allowed by CORS'));
   },
   credentials: true
 }));
+
+// ── 3. General rate limit — 200 req / 15 min per IP ──────────────────────
+// Prevents flooding / DDoS on all routes
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many requests. Please try again in a few minutes.' }
+});
+app.use(generalLimiter);
+
+// ── 4. Strict rate limit on auth routes — 10 attempts / 15 min per IP ────
+// Stops brute-force password attacks dead
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many login attempts. Please wait 15 minutes before trying again.' }
+});
+
+// ── 5. Body parsing ───────────────────────────────────────────────────────
 app.use(express.json({ limit: '6mb' }));
 app.use(express.urlencoded({ extended: true, limit: '6mb' }));
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
+// ── 6. Routes ─────────────────────────────────────────────────────────────
+// Auth routes get the strict limiter
+app.use('/api/auth', authLimiter, authRoutes);
+
+// All other routes get the general limiter (already applied globally above)
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/payments', paymentRoutes);
-app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/progress', progressRoutes);
@@ -55,6 +90,7 @@ app.use('/api/issues', issueRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', message: 'Youth Skills Platform API', timestamp: new Date() }));
 
+// ── 7. Error handler ──────────────────────────────────────────────────────
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(err.status || 500).json({ success: false, message: err.message || 'Internal server error' });
