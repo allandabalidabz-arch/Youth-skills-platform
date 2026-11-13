@@ -209,6 +209,7 @@ export default function CertificatesPage() {
   const isUnlocked = (certId) => payments[certId]?.status === 'approved';
   const isPending = (certId) => payments[certId]?.status === 'pending';
   const isRejected = (certId) => payments[certId]?.status === 'rejected';
+  const isAssignmentGraded = (cert) => cert.assignmentGraded === true;
 
   const copyVerifyLink = (certNumber) => {
     const url = `${window.location.origin}/verify/${certNumber}`;
@@ -313,14 +314,22 @@ export default function CertificatesPage() {
                 <p className="text-xs text-slate-400 mb-3">Instructor: {cert.instructor_name}</p>
                 <div className="grid grid-cols-3 gap-2">
                   {isUnlocked(cert.id) ? (
+                    /* Step 3 complete — PDF available */
                     <button onClick={() => handleDownload(cert)} disabled={downloading === cert.id} className="btn-primary text-sm py-2">
                       {downloading === cert.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Download className="w-4 h-4" /> PDF</>}
                     </button>
                   ) : isPending(cert.id) ? (
+                    /* Payment submitted, waiting admin approval */
                     <div className="flex items-center gap-1 text-yellow-600 text-xs font-medium col-span-1 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl px-2 py-2 justify-center">
                       <Clock className="w-4 h-4" /> Pending
                     </div>
+                  ) : !isAssignmentGraded(cert) ? (
+                    /* Step 2 — waiting for assignment to be graded */
+                    <div className="flex items-center gap-1 text-blue-600 text-xs font-medium col-span-1 bg-blue-50 dark:bg-blue-900/20 rounded-xl px-2 py-2 justify-center">
+                      <Clock className="w-4 h-4" /> Awaiting Grade
+                    </div>
                   ) : (
+                    /* Step 3 — assignment graded, pay to unlock */
                     <button onClick={() => setShowPayForm(p => ({ ...p, [cert.id]: !p[cert.id] }))} className="btn-secondary text-sm py-2 col-span-1">
                       <Lock className="w-4 h-4" /> 2,000 ZMW
                     </button>
@@ -333,8 +342,23 @@ export default function CertificatesPage() {
                   </a>
                 </div>
 
-                {/* Payment form */}
-                {showPayForm[cert.id] && !isUnlocked(cert.id) && (
+                {/* Step indicator */}
+                <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
+                  <span className={`flex items-center gap-1 ${isAssignmentGraded(cert) || isUnlocked(cert.id) ? 'text-green-600 font-semibold' : 'text-slate-400'}`}>
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Quizzes done
+                  </span>
+                  <span className="text-slate-300">→</span>
+                  <span className={`flex items-center gap-1 ${isAssignmentGraded(cert) ? 'text-green-600 font-semibold' : 'text-slate-400'}`}>
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Assignment graded
+                  </span>
+                  <span className="text-slate-300">→</span>
+                  <span className={`flex items-center gap-1 ${isUnlocked(cert.id) ? 'text-green-600 font-semibold' : 'text-slate-400'}`}>
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Payment approved
+                  </span>
+                </div>
+
+                {/* Payment form — only shown after assignment is graded */}
+                {showPayForm[cert.id] && !isUnlocked(cert.id) && isAssignmentGraded(cert) && (
                   <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl">
                     <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">💳 Pay 2,000 ZMW to Download</p>
                     <div className="bg-white dark:bg-slate-700 border border-yellow-300 dark:border-yellow-700 rounded-lg p-3 mb-3">
